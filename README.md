@@ -6,6 +6,5 @@
 
 Tuto is **optimised for use via a Command Line Interface (CLI)** while still offering the benefits of a Graphical User Interface (GUI). If you can type fast, Tuto lets you manage tutor contacts faster than traditional GUI apps.
 
-* For the detailed documentation of this project, see the **[Tuto Product Website](https://ay2526s2-cs2103t-t15-3.github.io/tp/)**.
-* This project is a **part of the se-education.org** initiative. If you would like to contribute code to this project, see [se-education.org](https://se-education.org/#contributing-to-se-edu) for more info.
-* 
+- For the detailed documentation of this project, see the **[Tuto Product Website](https://ay2526s2-cs2103t-t15-3.github.io/tp/)**.
+- This project is a **part of the se-education.org** initiative. If you would like to contribute code to this project, see [se-education.org](https://se-education.org/#contributing-to-se-edu) for more info.
