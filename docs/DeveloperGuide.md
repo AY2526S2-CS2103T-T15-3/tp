@@ -329,12 +329,12 @@ Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unli
 
 ### Non-Functional Requirements
 
-1. Should work on any operating system with Java `17` or above installed.
-2. Should be able to load up to 1000 tutor contacts within the first 10 seconds of application start up.
+1. The system should work on any operating system　（Windows, Linux, macOS) with Java `17` or above installed.
+2. The system should be able to load and display up to 1000 Tutor Profiles within 2 seconds of application start up.
 3. A user with above average typing speed for regular English text (i.e. not code, not system admin commands) should be able to accomplish most of the tasks faster using commands than using the mouse.
-4. The system should respond to user commands within **1 second** under normal usage conditions.
-5. The system should handle invalid commands gracefully by displaying a clear error message instead of crashing.
-6. Text file containing contacts data should be transferable and human-readable for portability
+4. The system should respond to user commands within **1 second** under normal usage conditions　(excluding file operations).
+5. The system should handle invalid Flags, Indices, or Parameters gracefully by displaying a clear error message instead of crashing.
+6. Text file containing contacts data should be transferable and human-readable for portability.
 7. The application should be usable without an internet connection.
 8. The application should not require an installer and should run from a single directory without external dependencies.
 9. The application should be packaged into a single JAR file to simplify distribution and testing.
