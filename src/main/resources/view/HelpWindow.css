@@ -16,7 +16,6 @@
     -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.05), 15, 0, 0, 4);
 }
 
-/* ── Primary Action Button (macOS System Blue) ── */
 #copyButton {
     -fx-background-color: rgba(10, 132, 255, 0.90);
     -fx-text-fill: #ffffff;
