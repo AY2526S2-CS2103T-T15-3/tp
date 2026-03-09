@@ -281,7 +281,7 @@ _{Explain here how the data archiving feature will be implemented}_
 * is reasonably comfortable using CLI apps
 
 **Value proposition**: Our address book allows Parents to easily manage a stored list of manually added freelance Tutors
-contacts for their Children’s subjects. The address book will present useful data in a structured format for Parents to 
+contacts for their Children’s subjects. The address book will present useful data in a structured format for Parents to
 make decisions of a Tutor for their Children.
 
 
