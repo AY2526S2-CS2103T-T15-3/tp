@@ -42,6 +42,7 @@ public class PersonBuilder {
         email = new Email(DEFAULT_EMAIL);
         address = new Address(DEFAULT_ADDRESS);
         subject = new Subject(DEFAULT_SUBJECT);
+        rate = new Rate(DEFAULT_RATE);
         tags = new HashSet<>();
     }
 
@@ -54,6 +55,7 @@ public class PersonBuilder {
         email = personToCopy.getEmail();
         address = personToCopy.getAddress();
         subject = personToCopy.getSubject();
+        rate = personToCopy.getRate();
         tags = new HashSet<>(personToCopy.getTags());
     }
 

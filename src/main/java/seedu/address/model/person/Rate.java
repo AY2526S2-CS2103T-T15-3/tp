@@ -4,7 +4,7 @@ import static java.util.Objects.requireNonNull;
 import static seedu.address.commons.util.AppUtil.checkArgument;
 
 /**
- * Represents a Person's name in the address book.
+ * Represents a Person's rate in the address book.
  * Guarantees: immutable; is valid as declared in {@link #isValidRate(String)}
  */
 public class Rate {
@@ -16,7 +16,7 @@ public class Rate {
      * The first character of the address must not be a whitespace,
      * otherwise " " (a blank string) becomes a valid input.
      */
-    public static final String VALIDATION_REGEX = "[\\p{Alnum}][\\p{Alnum} ]*";
+    public static final String VALIDATION_REGEX = "\\d+";
 
     public final String rate;
 
