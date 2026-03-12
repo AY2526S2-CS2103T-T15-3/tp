@@ -6,15 +6,15 @@ import java.util.function.Predicate;
  * Tests whether a {@code Person}'s subject matches the specified subject.
  */
 public class SubjectEqualsPredicate implements Predicate<Person> {
-    private final String subject;
+    private final Subject subject;
 
-    public SubjectEqualsPredicate(String subject) {
+    public SubjectEqualsPredicate(Subject subject) {
         this.subject = subject;
     }
 
     @Override
     public boolean test(Person person) {
-        return person.getSubject().subject.equalsIgnoreCase(subject);
+        return person.getSubject().equals(subject);
     }
 
     @Override
@@ -26,6 +26,6 @@ public class SubjectEqualsPredicate implements Predicate<Person> {
             return false;
         }
         SubjectEqualsPredicate otherPredicate = (SubjectEqualsPredicate) other;
-        return subject.equalsIgnoreCase(otherPredicate.subject);
+        return subject.equals(otherPredicate.subject);
     }
 }
