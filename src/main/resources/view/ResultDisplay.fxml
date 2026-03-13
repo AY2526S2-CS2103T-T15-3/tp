@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.ListView?>
 <?import javafx.scene.layout.StackPane?>
 
 <StackPane fx:id="placeHolder" styleClass="stack-pane" xmlns="http://javafx.com/javafx/17"
     xmlns:fx="http://javafx.com/fxml/1" style="-fx-background-color: transparent;">
   <TextArea fx:id="resultDisplay" editable="false" styleClass="result-display"/>
+  <ListView fx:id="resultListView" visible="false" styleClass="result-display"/>
 </StackPane>

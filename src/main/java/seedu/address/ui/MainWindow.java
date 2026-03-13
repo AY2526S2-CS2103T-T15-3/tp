@@ -107,7 +107,7 @@ public class MainWindow extends UiPart<Stage> {
      * Fills up all the placeholders of this window.
      */
     void fillInnerParts() {
-        personListPanel = new PersonListPanel(logic.getFilteredPersonList());
+        personListPanel = new PersonListPanel(logic.getAddressBook().getPersonList());
         personListPanelPlaceholder.getChildren().add(personListPanel.getRoot());
 
         resultDisplay = new ResultDisplay();
@@ -171,6 +171,10 @@ public class MainWindow extends UiPart<Stage> {
             CommandResult commandResult = logic.execute(commandText);
             logger.info("Result: " + commandResult.getFeedbackToUser());
             resultDisplay.setFeedbackToUser(commandResult.getFeedbackToUser());
+
+            if (commandResult.getFoundPersons().isPresent() && !commandResult.getFoundPersons().get().isEmpty()) {
+                resultDisplay.setPersonList(commandResult.getFoundPersons().get());
+            }
 
             if (commandResult.isShowHelp()) {
                 handleHelp();
