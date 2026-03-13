@@ -1,12 +1,19 @@
 package seedu.address.ui;
 
+import javafx.animation.KeyFrame;
+import javafx.animation.KeyValue;
+import javafx.animation.Timeline;
+import javafx.application.Platform;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextArea;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.Region;
 import javafx.scene.text.Text;
+import javafx.util.Duration;
 import seedu.address.logic.commands.CommandResult;
 import seedu.address.logic.commands.exceptions.CommandException;
 import seedu.address.logic.parser.exceptions.ParseException;
@@ -18,6 +25,8 @@ public class CommandBox extends UiPart<Region> {
 
     public static final String ERROR_STYLE_CLASS = "error";
     private static final String FXML = "CommandBox.fxml";
+    private Timeline resizeTimeline;
+    private boolean isScrollable = false;
 
     private final CommandExecutor commandExecutor;
 
@@ -33,7 +42,17 @@ public class CommandBox extends UiPart<Region> {
         // calls #setStyleToDefault() whenever there is a change to the text of the command box.
         commandTextField.textProperty().addListener((observable, oldValue, newValue) -> {
             setStyleToDefault();
-            handleHeightChange();
+            int oldLength = (oldValue == null) ? 0 : oldValue.length();
+            int newLength = (newValue == null) ? 0 : newValue.length();
+            boolean isLargeChange = Math.abs(newLength - oldLength) > 1;
+            handleHeightChange(!isLargeChange);
+        });
+
+        // Prevent scrolling when content fits
+        commandTextField.addEventFilter(ScrollEvent.SCROLL, event -> {
+            if (!isScrollable) {
+                event.consume();
+            }
         });
 
         // Add listener for Enter key
@@ -48,13 +67,14 @@ public class CommandBox extends UiPart<Region> {
         });
 
         // Also update height when width changes (e.g. window resize)
-        commandTextField.widthProperty().addListener((observable, oldValue, newValue) -> handleHeightChange());
+        commandTextField.widthProperty().addListener((observable, oldValue, newValue) -> handleHeightChange(false));
     }
 
     /**
      * Adjusts the height of the command box based on its content.
+     * @param shouldAnimate Whether to animate the height change.
      */
-    private void handleHeightChange() {
+    private void handleHeightChange(boolean shouldAnimate) {
         Text text = new Text(commandTextField.getText());
         text.setFont(commandTextField.getFont());
 
@@ -64,22 +84,60 @@ public class CommandBox extends UiPart<Region> {
             return;
         }
 
-        // Assuming around 20px padding (standard/CSS)
-        text.setWrappingWidth(width - 24);
+        // Assuming specific padding and borders from CSS (12px vertical, 16px horizontal, 1.5px border)
+        // We subtract a significantly larger buffer to ensure the helper Text wraps BEFORE the TextArea does
+        text.setWrappingWidth(width - 60);
 
         double height = text.getLayoutBounds().getHeight();
 
-        // Add vertical padding (top + bottom)
-        double newHeight = height + 24;
+        // Add vertical padding (top + bottom) + borders + buffer
+        double newHeight = height + 40;
 
-        // Enforce constraints (min 50, max 300)
+        // Enforce constraints (min 50, max 400)
         if (newHeight < 50) {
             newHeight = 50;
-        } else if (newHeight > 300) {
-            newHeight = 300;
         }
 
-        commandTextField.setPrefHeight(newHeight);
+        double maxHeight = 200; // aligned with FXML
+        boolean wasScrollable = isScrollable;
+        isScrollable = newHeight > maxHeight;
+        boolean transitionedToScrollable = !wasScrollable && isScrollable;
+        double targetHeight = Math.min(newHeight, maxHeight);
+
+        // Manage scrollbar visibility: show only if content exceeds max height
+        ScrollPane scrollPane = (ScrollPane) commandTextField.lookup(".scroll-pane");
+        if (scrollPane != null) {
+            if (newHeight > maxHeight) {
+                scrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
+            } else {
+                scrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+            }
+        }
+
+        if (commandTextField.getPrefHeight() != targetHeight || transitionedToScrollable) {
+            if (resizeTimeline != null) {
+                resizeTimeline.stop();
+            }
+
+            if (shouldAnimate) {
+                resizeTimeline = new Timeline(new KeyFrame(Duration.millis(150),
+                        new KeyValue(commandTextField.prefHeightProperty(), targetHeight)));
+
+                // If we are fully expanded (fitting all text), reset scroll to top to ensure first row is visible
+                if (newHeight <= maxHeight || transitionedToScrollable) {
+                    resizeTimeline.setOnFinished(event -> commandTextField.setScrollTop(0));
+                }
+
+                resizeTimeline.play();
+            } else {
+                commandTextField.setPrefHeight(targetHeight);
+                if (newHeight <= maxHeight) {
+                    commandTextField.setScrollTop(0);
+                } else if (transitionedToScrollable) {
+                    Platform.runLater(() -> commandTextField.setScrollTop(0));
+                }
+            }
+        }
     }
 
     /**
