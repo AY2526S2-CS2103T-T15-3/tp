@@ -124,11 +124,25 @@
     -fx-padding: 12 15 12 15;
 }
 
+/* Ensure alternating row colors for Person List (White - Pink - White - Pink) */
+/* Even rows (0, 2...) are White */
+.list-cell:filled:even {
+    -fx-background-color: rgba(255, 255, 255, 0.88);
+    -fx-border-color: rgba(255, 255, 255, 0.95);
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.08), 12, 0, 0, 3);
+}
+
+/* Odd rows (1, 3...) are Pink */
+.list-cell:filled:odd {
+    -fx-background-color: rgba(252, 240, 248, 0.7);
+    -fx-border-color: rgba(255, 255, 255, 0.7);
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.05), 10, 0, 0, 2);
+}
+
 .list-cell:filled:hover {
-    -fx-background-color: rgba(255, 248, 250, 0.96);
-    -fx-border-color: rgba(255, 255, 255, 1.0);
-    -fx-effect: dropshadow(gaussian, rgba(180, 100, 120, 0.14), 16, 0, 0, 4);
-    -fx-cursor: hand;
+    -fx-background-color: rgba(245, 225, 240, 0.95);
+    -fx-border-color: rgba(200, 150, 190, 0.55);
+    -fx-effect: dropshadow(gaussian, rgba(180, 100, 160, 0.20), 14, 0, 0, 3);
 }
 
 .list-cell:filled:selected {
@@ -173,12 +187,48 @@
     -fx-border-radius: 14px;
     -fx-padding: 15;
     -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.08), 14, 0, 0, 4);
+
+    /* Standardized text styling to match command box */
+    -fx-font-family: "SF Pro", "Helvetica Neue", Arial, sans-serif;
+    -fx-font-size: 14pt;
+    -fx-text-fill: #1a2530;
 }
 
 .result-display .content,
 .result-display .viewport {
     -fx-background-color: transparent;
     -fx-border-color: transparent;
+}
+
+/* ── Result Display List View Styling ── */
+
+/* Ensure cells in result display have alternating colors for contrast */
+/* First item (index 0, even) takes a muted pink style */
+.result-display .list-cell:filled:even {
+    -fx-background-color: rgba(252, 240, 248, 0.7);
+    -fx-border-color: rgba(255, 255, 255, 0.7);
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.05), 10, 0, 0, 2);
+}
+
+/* Second item (index 1, odd) stays 'white' */
+.result-display .list-cell:filled:odd {
+    -fx-background-color: rgba(255, 255, 255, 0.88);
+    -fx-border-color: rgba(255, 255, 255, 0.95);
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.08), 12, 0, 0, 3);
+}
+
+/* Hover effects for result list */
+.result-display .list-cell:filled:hover {
+    -fx-background-color: rgba(245, 225, 240, 0.95);
+    -fx-border-color: rgba(200, 150, 190, 0.55);
+    -fx-effect: dropshadow(gaussian, rgba(180, 100, 160, 0.20), 14, 0, 0, 3);
+}
+
+/* Ensure selection is distinct from alternating rows */
+.result-display .list-cell:filled:selected {
+    -fx-background-color: rgba(245, 225, 240, 0.95);
+    -fx-border-color: rgba(200, 150, 190, 0.55);
+    -fx-effect: dropshadow(gaussian, rgba(180, 100, 160, 0.20), 14, 0, 0, 3);
 }
 
 /* ── Tags ── */
