@@ -81,7 +81,11 @@ public class CommandBox extends UiPart<Region> {
         text.setWrappingWidth(width - 60); // Buffer for padding and scrollbar
 
         double height = text.getLayoutBounds().getHeight();
-        double newHeight = height + 30; // Buffer for vertical padding
+
+        double fontSize = commandTextField.getFont().getSize();
+        double verticalBuffer = fontSize + 20;
+
+        double newHeight = Math.ceil(height + verticalBuffer);
 
         if (newHeight < 50) {
             newHeight = 50;
