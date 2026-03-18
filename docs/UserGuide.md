@@ -4,9 +4,9 @@
   pageNav: 3
 ---
 
-# AB-3 User Guide
+# Tuto User Guide
 
-AddressBook Level 3 (AB3) is a **desktop app for managing contacts, optimized for use via a  Line Interface** (CLI) while still having the benefits of a Graphical User Interface (GUI). If you can type fast, AB3 can get your contact management tasks done faster than traditional GUI apps.
+Tuto is a **desktop app for managing contacts, optimized for use via a  Line Interface** (CLI) while still having the benefits of a Graphical User Interface (GUI). If you can type fast, AB3 can get your contact management tasks done faster than traditional GUI apps.
 
 <!-- * Table of Contents -->
 <page-nav-print />
@@ -18,11 +18,11 @@ AddressBook Level 3 (AB3) is a **desktop app for managing contacts, optimized fo
 1. Ensure you have Java `17` or above installed in your Computer.<br>
    **Mac users:** Ensure you have the precise JDK version prescribed [here](https://se-education.org/guides/tutorials/javaInstallationMac.html).
 
-1. Download the latest `.jar` file from [here](https://github.com/se-edu/addressbook-level3/releases).
+1. Download the latest `.jar` file from [here](https://github.com/AY2526S2-CS2103T-T15-3/tp/releases).
 
 1. Copy the file to the folder you want to use as the _home folder_ for your AddressBook.
 
-1. Open a command terminal, `cd` into the folder you put the jar file in, and use the `java -jar addressbook.jar` command to run the application.<br>
+1. Open a command terminal, `cd` into the folder you put the jar file in, and use the `java -jar tuto.jar` command to run the application.<br>
    A GUI similar to the below should appear in a few seconds. Note how the app contains some sample data.<br>
    ![Ui](images/Ui.png)
 
@@ -114,23 +114,32 @@ Examples:
 *  `edit 1 p/91234567 e/johndoe@example.com` Edits the phone number and email address of the 1st person to be `91234567` and `johndoe@example.com` respectively.
 *  `edit 2 n/Betsy Crower t/` Edits the name of the 2nd person to be `Betsy Crower` and clears all existing tags.
 
-### Locating persons by name: `find`
+### Locating persons: `find`
 
-Finds persons whose names contain any of the given keywords.
+Finds persons whose **name**, **rate**, or **subject** match the given keyword.
 
-Format: `find KEYWORD [MORE_KEYWORDS]`
+Format: `find n/NAME_KEYWORD [MORE_NAME_KEYWORDS]`  
+Format: `find r/RATE`  
+Format: `find s/SUBJECT`
 
-* The search is case-insensitive. e.g `hans` will match `Hans`
-* The order of the keywords does not matter. e.g. `Hans Bo` will match `Bo Hans`
-* Only the name is searched.
-* Only full words will be matched e.g. `Han` will not match `Hans`
-* Persons matching at least one keyword will be returned (i.e. `OR` search).
-  e.g. `Hans Bo` will return `Hans Gruber`, `Bo Yang`
+* The search is case-insensitive. e.g `n/hans` will match `Hans`
+* The order of the name keywords does not matter. e.g `n/Hans Bo` will match `Bo Hans`
+* Only full words will be matched for names e.g `n/Han` will not match `Hans`
+* Spaces after the prefix are optional. e.g. `n/Victoria` and `n/ Victoria` both work
+* Persons matching at least one name keyword will be returned (i.e. `OR` search).  
+  e.g `n/Hans Bo` will return `Hans Gruber`, `Bo Yang`
+* Rate searches match persons whose rate is exactly the given value.
+* Subject searches match persons who have the specified subject.
+* Only **one search prefix** (`n/`, `r/`, or `s/`) can be used in a single command.
 
 Examples:
-* `find John` returns `john` and `John Doe`
-* `find alex david` returns `Alex Yeoh`, `David Li`<br>
-  ![result for 'find alex david'](images/findAlexDavidResult.png)
+
+* `find n/John` returns `john` and `John Doe`
+* `find r/17` returns persons whose payment rate per hour is `17`
+* `find s/Math` returns persons who have the subject `Math`<br>
+* `find n/alex david` returns `Alex Yeoh`, `David Li`
+
+![result for 'find n/alex david'](images/findAlexDavidResult.png)
 
 ### Deleting a person : `delete`
 
@@ -201,6 +210,6 @@ Action     | Format, Examples
 **Clear**  | `clear`
 **Delete** | `delete INDEX`<br> e.g., `delete 3`
 **Edit**   | `edit INDEX [n/NAME] [p/PHONE_NUMBER] [e/EMAIL] [a/ADDRESS] [t/TAG]…​`<br> e.g.,`edit 2 n/James Lee e/jameslee@example.com`
-**Find**   | `find KEYWORD [MORE_KEYWORDS]`<br> e.g., `find James Jake`
+**Find** | `find n/NAME_KEYWORD [MORE_NAME_KEYWORDS]` \| `find r/RATE` \| `find s/SUBJECT`<br> e.g. `find n/James Jake`, `find r/25`, `find s/Biology`
 **List**   | `list`
 **Help**   | `help`
