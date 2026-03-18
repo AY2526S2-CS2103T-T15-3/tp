@@ -118,15 +118,15 @@ Examples:
 
 Finds persons whose **name**, **rate**, or **subject** match the given keyword.
 
-Format: `find n/NAME_KEYWORD [MORE_NAME_KEYWORDS]`  
-Format: `find r/RATE`  
+Format: `find n/NAME_KEYWORD [MORE_NAME_KEYWORDS]`
+Format: `find r/RATE`
 Format: `find s/SUBJECT`
 
 * The search is case-insensitive. e.g `n/hans` will match `Hans`
 * The order of the name keywords does not matter. e.g `n/Hans Bo` will match `Bo Hans`
 * Only full words will be matched for names e.g `n/Han` will not match `Hans`
 * Spaces after the prefix are optional. e.g. `n/Victoria` and `n/ Victoria` both work
-* Persons matching at least one name keyword will be returned (i.e. `OR` search).  
+* Persons matching at least one name keyword will be returned (i.e. `OR` search).
   e.g `n/Hans Bo` will return `Hans Gruber`, `Bo Yang`
 * Rate searches match persons whose rate is exactly the given value.
 * Subject searches match persons who have the specified subject.

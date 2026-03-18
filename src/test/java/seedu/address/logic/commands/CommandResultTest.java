@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static seedu.address.testutil.TestUtil.pairOf;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -11,7 +12,7 @@ import java.util.List;
 
 import org.junit.jupiter.api.Test;
 
-import static seedu.address.testutil.TestUtil.pairOf;
+
 
 public class CommandResultTest {
     @Test
@@ -78,14 +79,14 @@ public class CommandResultTest {
     }
 
     @Test
-    public void isShowHelp_and_isExit_defaultFalse() {
+    public void showHelpExit_defaultFalse() {
         CommandResult commandResult = new CommandResult("feedback");
         assertFalse(commandResult.isShowHelp());
         assertFalse(commandResult.isExit());
     }
 
     @Test
-    public void isShowHelp_and_isExit_trueWhenSet() {
+    public void showHelpExit_trueWhenSet() {
         CommandResult commandResult = new CommandResult("feedback", true, true);
         assertTrue(commandResult.isShowHelp());
         assertTrue(commandResult.isExit());
@@ -129,5 +130,4 @@ public class CommandResultTest {
         assertTrue(s.contains(cr.getFeedbackToUser()));
         assertTrue(s.contains("Eve"));
     }
-    
 }
