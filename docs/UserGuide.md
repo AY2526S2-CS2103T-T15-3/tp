@@ -84,7 +84,7 @@ Format: `add n/NAME p/PHONE_NUMBER e/EMAIL [a/ADDRESS] s/SUBJECT r/RATE [t/TAG]â
 
 <box type="tip" seamless>
 
-**Tip:** A person can have any number of tags (including 0) and the address is optional. 
+**Tip:** A person can have any number of tags (including 0).
 
 </box>
 
