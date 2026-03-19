@@ -6,6 +6,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 
 import seedu.address.commons.core.index.Index;
+import seedu.address.logic.commands.CommandResult;
 import seedu.address.model.Model;
 import seedu.address.model.person.Person;
 
@@ -51,5 +52,19 @@ public class TestUtil {
      */
     public static Person getPerson(Model model, Index index) {
         return model.getFilteredPersonList().get(index.getZeroBased());
+    }
+
+    /**
+     * Creates a simple {@code Person} test object with the given name.
+     */
+    public static Person makePerson(String name) {
+        return new PersonBuilder().withName(name).build();
+    }
+
+    /**
+     * Creates a {@code CommandResult.PersonIndexPair} for the given name and index.
+     */
+    public static CommandResult.PersonIndexPair pairOf(String name, int index) {
+        return new CommandResult.PersonIndexPair(makePerson(name), index);
     }
 }
