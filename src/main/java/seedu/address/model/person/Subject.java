@@ -39,14 +39,6 @@ public class Subject {
         return test.matches(VALIDATION_REGEX);
     }
 
-    /**
-     * Returns true if this subject is the same as the other subject, ignoring case.
-     */
-    public boolean isSameSubject(Subject otherSubject) {
-        requireNonNull(otherSubject);
-        return subject.equalsIgnoreCase(otherSubject.subject);
-    }
-
     @Override
     public String toString() {
         return subject;
