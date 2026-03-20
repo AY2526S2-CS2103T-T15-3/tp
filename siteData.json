@@ -109,7 +109,7 @@
       "title": "User Guide",
       "headings": {
         "tuto-user-guide": "Tuto User Guide",
-        "quick-start": "Quick Start",
+        "quick-start": "Quick start",
         "step-1-install-java": "Step 1 — Install Java",
         "step-2-download-tuto": "Step 2 — Download Tuto",
         "step-3-launch-tuto": "Step 3 — Launch Tuto",
@@ -118,7 +118,7 @@
         "features": "Features",
         "notes-on-command-format": "Notes on Command Format",
         "viewing-help-help": "Viewing Help : help",
-        "adding-a-tutor-add": "Adding a Tutor : add",
+        "adding-a-person-add": "Adding a person: add",
         "listing-all-tutors-list": "Listing All Tutors : list",
         "editing-a-tutor-profile-edit": "Editing a Tutor Profile : edit",
         "finding-tutors-find": "Finding Tutors : find",
@@ -127,10 +127,9 @@
         "exiting-tuto-exit": "Exiting Tuto : exit",
         "saving-your-data": "Saving Your Data",
         "editing-the-data-file-directly": "Editing the Data File Directly",
-        "archiving-data-coming-in-v2-0": "Archiving Data [coming in v2.0]",
         "faq": "FAQ",
         "known-issues": "Known Issues",
-        "command-summary": "Command Summary"
+        "command-summary": "Command summary"
       },
       "headingKeywords": {}
     },
