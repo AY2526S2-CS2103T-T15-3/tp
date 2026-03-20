@@ -1,24 +1,19 @@
 ---
-layout: default.md
-title: "User Guide"
-pageNav: 3
+  layout: default.md
+  title: "User Guide"
+  pageNav: 3
 ---
 
 # Tuto User Guide
 
-**Tuto** is a desktop app that helps **parents manage a list of freelance tutors** for their children. It is optimised for users who prefer typing commands over clicking through menus, while still providing a clean visual interface to view tutor information at a glance.
-
-> **Who is this guide for?**
-> This guide is written for parents who are comfortable using a keyboard and want to manage tutor contacts efficiently. No prior technical experience is required — if you can open a terminal and type commands, you are ready to use Tuto.
-
----
+Tuto is a **desktop app for managing contacts, optimized for use via a  Line Interface** (CLI) while still having the benefits of a Graphical User Interface (GUI). If you can type fast, AB3 can get your contact management tasks done faster than traditional GUI apps.
 
 <!-- * Table of Contents -->
 <page-nav-print />
 
----
+--------------------------------------------------------------------------------------------------------------------
 
-## Quick Start
+## Quick start
 
 Follow these steps to get Tuto running on your computer in under 5 minutes.
 
@@ -35,15 +30,11 @@ java -version
 ```
 You should see `17` or higher in the output.
 
----
-
 ### Step 2 — Download Tuto
 
 Download the latest `tuto.jar` file from the [Tuto releases page](https://github.com/AY2526S2-CS2103T-T15-3/tp/releases).
 
 Move the file into a dedicated folder (e.g., `~/tuto/`). This folder will store your data going forward.
-
----
 
 ### Step 3 — Launch Tuto
 
@@ -61,8 +52,6 @@ A window similar to the one below should appear within a few seconds, pre-loaded
 
 ![Tuto UI on first launch](images/Ui.png)
 
----
-
 ### Step 4 — Try Your First Commands
 
 Type a command into the **Command Box** at the top and press **Enter** to run it. Here are a few to try:
@@ -78,8 +67,6 @@ Type a command into the **Command Box** at the top and press **Enter** to run it
 
 > **Tip:** The [Command Summary](#command-summary) at the bottom of this guide is a handy reference once you are familiar with the commands.
 
----
-
 ## Understanding the Interface
 
 Tuto's interface has three main areas:
@@ -90,7 +77,7 @@ Tuto's interface has three main areas:
 
 Each tutor card in the panel shows the tutor's name, phone number, email, subject, and hourly rate. Tags (if any) appear as labels on the card.
 
----
+--------------------------------------------------------------------------------------------------------------------
 
 ## Features
 
@@ -110,8 +97,6 @@ The following conventions apply to all commands in this guide:
 
 </box>
 
----
-
 ### Viewing Help : `help`
 
 Opens a link to this User Guide.
@@ -120,11 +105,13 @@ Opens a link to this User Guide.
 
 **Expected output:** A pop-up window appears with a link to the online User Guide.
 
-![Help window](images/helpMessage.png)
+![help message](images/helpMessage.png)
 
----
+### Adding a person: `add`
 
-### Adding a Tutor : `add`
+Adds a person to the address book.
+
+Format: `a## Adding a Tutor : `add`
 
 Adds a new tutor profile to Tuto.
 
@@ -170,9 +157,6 @@ Adds Betsy Crowe as a Biology tutor with an address and two tags.
 ```
 New person added: John Doe; Phone: 98765432; Email: johnd@example.com; Address: ; Subject: Chemistry; Rate: 50; Tags:
 ```
-
----
-
 ### Listing All Tutors : `list`
 
 Displays all tutor profiles stored in Tuto.
@@ -182,8 +166,6 @@ Displays all tutor profiles stored in Tuto.
 **Expected output:** The Tutor List Panel refreshes to show all contacts. The Result Display shows the number of tutors listed.
 
 > **Tip:** Use `list` to reset the view after a `find` command has filtered your results.
-
----
 
 ### Editing a Tutor Profile : `edit`
 
@@ -224,9 +206,6 @@ Changes the 1st tutor's subject to Physics and rate to $30/hr.
 ```
 Edited Person: John Doe; Phone: 91234567; Email: johndoe@example.com; Address: ; Subject: Chemistry; Rate: 50; Tags:
 ```
-
----
-
 ### Finding Tutors : `find`
 
 Searches for tutors by name, subject, or hourly rate.
@@ -272,14 +251,12 @@ find n/Alex David
 ```
 Returns tutors named Alex or David.
 
-![Result for 'find n/alex david'](images/findAlexDavidResult.png)
+![result for 'find n/alex david'](images/findAlexDavidResult.png)
 
 **Expected output:**
 ```
 2 persons listed!
 ```
-
----
 
 ### Deleting a Tutor : `delete`
 
@@ -313,8 +290,6 @@ Deletes the 1st tutor returned in the Biology search results.
 Deleted Person: Betsy Crowe; Phone: 1234567; ...
 ```
 
----
-
 ### Clearing All Tutors : `clear`
 
 Removes **all** tutor profiles from Tuto.
@@ -332,8 +307,6 @@ Removes **all** tutor profiles from Tuto.
 Address book has been cleared!
 ```
 
----
-
 ### Exiting Tuto : `exit`
 
 Closes the application.
@@ -341,8 +314,6 @@ Closes the application.
 **Format:** `exit`
 
 Your data is saved automatically — there is no need to save before exiting.
-
----
 
 ### Saving Your Data
 
@@ -354,8 +325,6 @@ Tuto saves all tutor data automatically to a JSON file after every command that 
 
 No manual saving is needed.
 
----
-
 ### Editing the Data File Directly
 
 Advanced users may edit the data file manually using any text editor.
@@ -366,13 +335,7 @@ Advanced users may edit the data file manually using any text editor.
 
 </box>
 
----
-
-### Archiving Data `[coming in v2.0]`
-
-_Details coming soon._
-
----
+--------------------------------------------------------------------------------------------------------------------
 
 ## FAQ
 
@@ -380,28 +343,23 @@ _Details coming soon._
 
 A: Install Tuto on the new computer and run it once to generate the default data folder. Then copy the `addressbook.json` file from your old computer into the `data/` folder on the new one, replacing the empty file.
 
----
-
 **Q: Tuto opened off-screen after I disconnected an external monitor. What do I do?**
 
 A: Delete the `preferences.json` file in the same folder as `tuto.jar`, then relaunch the app. This resets the window position.
-
----
 
 **Q: I ran `help` again but the Help Window did not appear. Why?**
 
 A: The Help Window may be minimised. Check your taskbar and restore it manually.
 
----
+--------------------------------------------------------------------------------------------------------------------
 
 ## Known Issues
 
 1. **Off-screen window after disconnecting a monitor:** Delete `preferences.json` and relaunch Tuto to reset window position.
 2. **Help Window does not reappear:** If the Help Window is minimised, running `help` again will not open a new one. Restore the minimised window from your taskbar.
+--------------------------------------------------------------------------------------------------------------------
 
----
-
-## Command Summary
+## Command summary
 
 | Action | Format | Example |
 |---|---|---|
