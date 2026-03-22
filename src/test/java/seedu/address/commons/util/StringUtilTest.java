@@ -123,6 +123,48 @@ public class StringUtilTest {
         assertTrue(StringUtil.containsWordIgnoreCase("AAA bBb ccc  bbb", "bbB"));
     }
 
+    //---------------- Tests for containsWordPrefixIgnoreCase --------------------------------------
+
+    @Test
+    public void containsWordPrefixIgnoreCase_nullPrefix_throwsNullPointerException() {
+        assertThrows(NullPointerException.class, () -> StringUtil.containsWordPrefixIgnoreCase(
+                "typical sentence", null));
+    }
+
+    @Test
+    public void containsWordPrefixIgnoreCase_emptyPrefix_throwsIllegalArgumentException() {
+        assertThrows(IllegalArgumentException.class, "Prefix parameter cannot be empty", ()
+            -> StringUtil.containsWordPrefixIgnoreCase("typical sentence", "  "));
+    }
+
+    @Test
+    public void containsWordPrefixIgnoreCase_multipleWords_throwsIllegalArgumentException() {
+        assertThrows(IllegalArgumentException.class, "Prefix parameter should be a single word", ()
+            -> StringUtil.containsWordPrefixIgnoreCase("typical sentence", "aaa BBB"));
+    }
+
+    @Test
+    public void containsWordPrefixIgnoreCase_nullSentence_throwsNullPointerException() {
+        assertThrows(NullPointerException.class, () -> StringUtil.containsWordPrefixIgnoreCase(null, "abc"));
+    }
+
+    @Test
+    public void containsWordPrefixIgnoreCase_validInputs_correctResult() {
+        assertFalse(StringUtil.containsWordPrefixIgnoreCase("", "a")); // Boundary case
+        assertFalse(StringUtil.containsWordPrefixIgnoreCase("    ", "a"));
+
+        assertTrue(StringUtil.containsWordPrefixIgnoreCase("Alice Bob", "Ali"));
+        assertTrue(StringUtil.containsWordPrefixIgnoreCase("Alice Bob", "alice")); // case-insensitive
+
+        assertFalse(StringUtil.containsWordPrefixIgnoreCase("Alice Bob", "li"));
+
+        assertTrue(StringUtil.containsWordPrefixIgnoreCase("Alice Alia", "Ali"));
+
+        assertFalse(StringUtil.containsWordPrefixIgnoreCase("Malice", "ali"));
+
+        assertTrue(StringUtil.containsWordPrefixIgnoreCase("  AAA   bBb   ccc  ", "aa"));
+    }
+
     //---------------- Tests for getDetails --------------------------------------
 
     /*

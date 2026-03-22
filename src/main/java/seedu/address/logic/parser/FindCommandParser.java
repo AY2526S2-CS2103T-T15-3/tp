@@ -6,6 +6,7 @@ import static seedu.address.logic.parser.CliSyntax.PREFIX_RATE;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_SUBJECT;
 
 import java.util.Arrays;
+import java.util.Collections;
 
 import seedu.address.logic.commands.FindCommand;
 import seedu.address.logic.parser.exceptions.ParseException;
@@ -83,14 +84,41 @@ public class FindCommandParser implements Parser<FindCommand> {
         return new FindCommand(new NameContainsKeywordsPredicate(Arrays.asList(nameKeywords)));
     }
 
+    /**
+     * Parses the subject argument from the given {@code ArgumentMultimap} and returns a {@code FindCommand}.
+     *
+     * This method extracts the raw value associated with {@code PREFIX_SUBJECT}, trims it, and delegates
+     * validation and predicate construction to {@link #createSubjectPredicate(String)}.
+     *
+     * @param argMultimap the tokenized arguments containing the subject prefix; must contain a
+     *                    value for {@code PREFIX_SUBJECT}
+     * @return a {@code FindCommand} that filters persons by the parsed subject
+     */
     private FindCommand parseSubject(ArgumentMultimap argMultimap) throws ParseException {
         String subjectArgs = argMultimap.getValue(PREFIX_SUBJECT).get().trim();
+        return new FindCommand(createSubjectPredicate(subjectArgs));
+    }
 
-        if (subjectArgs.isEmpty() || !Subject.isValidSubject(subjectArgs)) {
+    /**
+     * Creates a {@code SubjectEqualsPredicate} for the given raw subject argument.
+     *
+     * The method performs null-checking, trims surrounding whitespace, validates the trimmed subject and constructs
+     * a predicate that matches persons whose subject set equals the single validated subject.
+     *
+     * @param subjectArgs the raw subject argument (may contain surrounding whitespace)
+     * @return a {@code SubjectEqualsPredicate} matching the validated subject
+     */
+    private SubjectEqualsPredicate createSubjectPredicate(String subjectArgs) throws ParseException {
+        if (subjectArgs == null) {
             throw new ParseException(Subject.MESSAGE_CONSTRAINTS);
         }
 
-        return new FindCommand(new SubjectEqualsPredicate(new Subject(subjectArgs)));
+        String trimmed = subjectArgs.trim();
+        if (trimmed.isEmpty() || !Subject.isValidSubject(trimmed)) {
+            throw new ParseException(Subject.MESSAGE_CONSTRAINTS);
+        }
+
+        return new SubjectEqualsPredicate(Collections.singleton(new Subject(trimmed)));
     }
 
     private FindCommand parseRate(ArgumentMultimap argMultimap) throws ParseException {
