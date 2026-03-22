@@ -124,8 +124,8 @@ The following conventions apply to all commands in this guide:
 * Items in `[square brackets]` are **optional**.<br>
   e.g. `[a/ADDRESS]` means the address field can be left out.
 
-* Items followed by `…` can be **used multiple times or omitted entirely**.<br>
-  e.g. `[t/TAG]…` allows zero, one, or more tags: `t/experienced`, `t/experienced t/recommended`.
+* Items followed by `…` can be **used multiple times**.<br>
+  e.g. `[t/TAG]…` allows zero, one, or more tags: `t/home`, `t/experienced t/recommended`.
 
 * **Parameters can be given in any order.**<br>
   e.g. `n/NAME p/PHONE` and `p/PHONE n/NAME` are both valid.
@@ -176,13 +176,14 @@ add n/NAME p/PHONE_NUMBER e/EMAIL [a/ADDRESS] s/SUBJECT r/RATE [t/TAG]…
 
 <box type="tip" seamless>
 
-**Tip:** You can attach multiple tags to a tutor to help you categorise them, e.g. `t/experienced t/recommended`.
+**Tip:** Tags are powerful ways to organise contacts. You can use multiple tags in a tutor contact to provide more information, e.g. `t/home` for home tutoring 
+services. 
 
 </box>
 
 <box type="warning" seamless>
 
-**Note:** Adding a tutor with the same name as an existing entry is not allowed. Tuto treats this as a duplicate. If two tutors happen to share a name, consider using a middle initial or a distinguishing tag to differentiate them.
+**Note:** Adding a tutor with the same name as an existing entry is not allowed. Tuto treats this as a duplicate. If two tutors happen to share a name, consider using a middle initial to differentiate them.
 
 </box>
 
