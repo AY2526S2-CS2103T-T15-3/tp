@@ -69,4 +69,12 @@ shadowJar {
     archiveFileName = 'tuto.jar'
 }
 
+run {
+    enableAssertions = true
+}
+
+test {
+    enableAssertions = true
+}
+
 defaultTasks 'clean', 'test'
