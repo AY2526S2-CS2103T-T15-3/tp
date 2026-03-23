@@ -94,6 +94,18 @@ public class ModelManager implements Model {
     }
 
     @Override
+    public boolean hasDuplicatePhone(Person person) {
+        requireNonNull(person);
+        return addressBook.hasDuplicatePhone(person);
+    }
+
+    @Override
+    public boolean hasDuplicateEmail(Person person) {
+        requireNonNull(person);
+        return addressBook.hasDuplicateEmail(person);
+    }
+
+    @Override
     public void deletePerson(Person target) {
         addressBook.removePerson(target);
     }

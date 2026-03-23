@@ -58,6 +58,16 @@ public interface Model {
     boolean hasPerson(Person person);
 
     /**
+     * Returns true if a person with the same phone number exists in the address book.
+     */
+    boolean hasDuplicatePhone(Person person);
+
+    /**
+     * Returns true if a person with the same email exists in the address book.
+     */
+    boolean hasDuplicateEmail(Person person);
+
+    /**
      * Deletes the given person.
      * The person must exist in the address book.
      */
