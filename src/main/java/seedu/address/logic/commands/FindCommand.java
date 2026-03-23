@@ -22,12 +22,13 @@ public class FindCommand extends Command {
 
     public static final String COMMAND_WORD = "find";
 
-    public static final String MESSAGE_USAGE = COMMAND_WORD + ": Finds persons by name or rate or subject.\n"
-            + "Parameters: n/NAME [MORE_KEYWORDS]... OR r/RATE OR s/SUBJECT\n"
-            + "Examples: \n"
-            + COMMAND_WORD + " n/Alice Bob\n"
-            + COMMAND_WORD + " r/17"
-            + COMMAND_WORD + " s/Biology";
+    public static final String MESSAGE_USAGE = COMMAND_WORD + ": Finds tutors by name, subject, and/or hourly rate.\n"
+            + "Parameters: [n/NAME [MORE_NAME_KEYWORDS]] [s/SUBJECT]... [r/RATE]\n"
+            + "Examples:\n"
+            + COMMAND_WORD + " n/Jo\n"
+            + COMMAND_WORD + " s/Math s/Sci\n"
+            + COMMAND_WORD + " r/16 s/Math\n"
+            + COMMAND_WORD + " n/Alex r/20 s/Chem";
 
     private final Predicate<Person> predicate;
 
