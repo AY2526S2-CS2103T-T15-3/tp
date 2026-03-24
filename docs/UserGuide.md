@@ -267,7 +267,7 @@ Displays all tutor profiles stored in Tuto.
 
 **Format:** `list`
 
-
+---
 ### Finding Tutors : `find`
 
 Searches for tutors by name, subject, or hourly rate.
@@ -415,13 +415,13 @@ A: The Help Window may be minimised. Check your taskbar and restore it manually.
 
 ## Command Summary
 
-| Action | Format | Example |
-|---|---|---|
-| **Help** | `help` | `help` |
-| **Add** | `add n/NAME p/PHONE_NUMBER e/EMAIL s/SUBJECT1 s/SUBJECT2 ... s/SUBJECTn r/RATE [a/ADDRESS] [t/TAG]…​` <br> e.g., `add n/James Ho p/22224444 e/jamesho@example.com a/123, Clementi Rd, 1234665 s/Biology r/45 t/friend t/colleague`|
-| **List** | `list` | `list` |
-| **Edit** | `edit INDEX [n/NAME] [p/PHONE] [e/EMAIL] [a/ADDRESS] [s/SUBJECT] [r/RATE] [t/TAG]…` | `edit 2 n/James Lee e/james@example.com` |
-| **Find** | `find n/KEYWORD [MORE_KEYWORDS]` \| `find s/SUBJECT` \| `find r/RATE` | `find n/James`, `find s/Biology`, `find r/45` |
-| **Delete** | `delete INDEX` | `delete 3` |
-| **Clear** | `clear` | `clear` |
-| **Exit** | `exit` | `exit` |
+| Action | Format | Example                                                                                                            |
+|---|---|--------------------------------------------------------------------------------------------------------------------|
+| **Help** | `help` | `help`                                                                                                             |
+| **Add** | `add n/NAME p/PHONE_NUMBER e/EMAIL s/SUBJECT1 s/SUBJECT2 ... s/SUBJECTn r/RATE [a/ADDRESS] [t/TAG]…​` |  `add n/James Ho p/22224444 e/jamesho@example.com a/123, Clementi Rd, 1234665 s/Biology r/45 t/friend t/colleague` |
+| **List** | `list` | `list`                                                                                                             |
+| **Edit** | `edit INDEX [n/NAME] [p/PHONE] [e/EMAIL] [a/ADDRESS] [s/SUBJECT] [r/RATE] [t/TAG]…` | `edit 2 n/James Lee e/james@example.com`                                                                           |
+| **Find** | `find n/KEYWORD [MORE_KEYWORDS]` \| `find s/SUBJECT` \| `find r/RATE` | `find n/James`, `find s/Biology`, `find r/45`                                                                      |
+| **Delete** | `delete INDEX` | `delete 3`                                                                                                         |
+| **Clear** | `clear` | `clear`                                                                                                            |
+| **Exit** | `exit` | `exit`                                                                                                             |
