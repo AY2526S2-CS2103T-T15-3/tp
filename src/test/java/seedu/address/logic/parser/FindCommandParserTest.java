@@ -13,6 +13,7 @@ import org.junit.jupiter.api.Test;
 import seedu.address.logic.commands.FindCommand;
 import seedu.address.model.person.Person;
 import seedu.address.model.person.Subject;
+import seedu.address.model.tag.Tag;
 import seedu.address.testutil.PersonBuilder;
 
 public class FindCommandParserTest {
@@ -144,6 +145,62 @@ public class FindCommandParserTest {
     }
 
     @Test
+    public void parse_validTagArg_returnsFindCommand() throws Exception {
+        FindCommand command = parser.parse(" t/friend");
+
+        Person friend = new PersonBuilder().withTags("friend").build();
+        Person stranger = new PersonBuilder().withTags("colleague").build();
+
+        assertTrue(command.getPredicate().test(friend));
+        assertFalse(command.getPredicate().test(stranger));
+    }
+
+    @Test
+    public void parse_tagWithWhitespace_returnsFindCommand() throws Exception {
+        FindCommand command = parser.parse(" t/  friend  ");
+
+        Person friend = new PersonBuilder().withTags("friend").build();
+        Person stranger = new PersonBuilder().withTags("colleague").build();
+
+        assertTrue(command.getPredicate().test(friend));
+        assertFalse(command.getPredicate().test(stranger));
+    }
+
+    @Test
+    public void parse_invalidTag_throwsParseException() {
+        assertParseFailure(parser, " t/!tag", Tag.MESSAGE_CONSTRAINTS);
+        assertParseFailure(parser, " t/ ", Tag.MESSAGE_CONSTRAINTS);
+    }
+
+    @Test
+    public void parse_preambleWithTag_throwsParseException() throws Exception {
+        // Now that t/ is allowed with a preamble, this should parse and produce a combined predicate.
+        FindCommand command = parser.parse(" Alice t/friend");
+
+        Person aliceFriend = new PersonBuilder().withName("Alice").withTags("friend").build();
+        Person aliceOther = new PersonBuilder().withName("Alice").withTags("colleague").build();
+        Person bobFriend = new PersonBuilder().withName("Bob").withTags("friend").build();
+
+        assertTrue(command.getPredicate().test(aliceFriend));
+        assertFalse(command.getPredicate().test(aliceOther));
+        assertFalse(command.getPredicate().test(bobFriend));
+    }
+
+    @Test
+    public void parse_preambleWithMultipleUnsupportedPrefixes_throwsParseException() throws Exception {
+        String preambleMsg = "When using universal search (keywords before prefixes), only the following "
+                + "prefixes may be used to further refine the search: n/, s/, r/, t/.\n"
+                + "Note: any words appearing after a prefix are treated as that prefix's value (e.g. 'r/500 alice' "
+                + "treats 'alice' as part of the r/ value).";
+
+        String expected = preambleMsg + "\nUnsupported flags present: p/.\n"
+                + "Remove these flags or place the keywords after the prefixes.\n\n"
+                + FindCommand.MESSAGE_USAGE;
+
+        assertParseFailure(parser, " Alice p/85355255 t/friend", expected);
+    }
+
+    @Test
     public void parse_multiplePrefixes_returnsFindCommand() throws Exception {
         FindCommand command = parser.parse(" n/Ali r/17 s/Bio");
 
@@ -188,5 +245,49 @@ public class FindCommandParserTest {
         assertTrue(command.getPredicate().test(biologyTutor));
         assertTrue(command.getPredicate().test(mathTutor));
         assertFalse(command.getPredicate().test(physicsTutor));
+    }
+
+    @Test
+    public void parse_multipleTagKeywords_returnsFindCommand() throws Exception {
+        // multiple t/ prefixes
+        // No preamble -> specific find -> Inclusive (OR) logic
+        FindCommand command1 = parser.parse(" t/friend t/colleague");
+
+        Person friend = new PersonBuilder().withTags("friend").build();
+        Person colleague = new PersonBuilder().withTags("colleague").build();
+        Person both = new PersonBuilder().withTags("friend", "colleague").build();
+        Person other = new PersonBuilder().withTags("acquaintance").build();
+
+        // Inclusive: friend OR colleague
+        assertTrue(command1.getPredicate().test(friend));
+        assertTrue(command1.getPredicate().test(colleague));
+        assertTrue(command1.getPredicate().test(both));
+        assertFalse(command1.getPredicate().test(other));
+
+        // multiple keywords in a single t/ value
+        // No preamble -> Inclusive (OR) logic
+        FindCommand command2 = parser.parse(" t/friend colleague");
+
+        assertTrue(command2.getPredicate().test(friend));
+        assertTrue(command2.getPredicate().test(colleague));
+        assertTrue(command2.getPredicate().test(both));
+        assertFalse(command2.getPredicate().test(other));
+    }
+
+    @Test
+    public void parse_universalAndMultipleTagKeywords_returnsExclusiveFindCommand() throws Exception {
+        // Preamble present -> Exclusive (AND) logic for tags
+        // Find universal "Alice" AND (tag "friend" AND tag "colleague")
+        FindCommand command = parser.parse(" Alice t/friend t/colleague");
+
+        Person aliceBoth = new PersonBuilder().withName("Alice").withTags("friend", "colleague").build();
+        Person aliceFriendOnly = new PersonBuilder().withName("Alice").withTags("friend").build();
+        Person aliceColleagueOnly = new PersonBuilder().withName("Alice").withTags("colleague").build();
+        Person bobBoth = new PersonBuilder().withName("Bob").withTags("friend", "colleague").build();
+
+        assertTrue(command.getPredicate().test(aliceBoth));
+        assertFalse(command.getPredicate().test(aliceFriendOnly)); // Missing colleague
+        assertFalse(command.getPredicate().test(aliceColleagueOnly)); // Missing friend
+        assertFalse(command.getPredicate().test(bobBoth)); // Missing Alice
     }
 }

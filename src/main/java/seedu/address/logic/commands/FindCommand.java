@@ -26,6 +26,8 @@ public class FindCommand extends Command {
     public static final String MESSAGE_USAGE = COMMAND_WORD + ": Finds tutors by name, subject, hourly rate, "
             + "or universally across all fields.\n"
             + "Parameters: [KEYWORD [MORE_KEYWORDS]] [n/NAME [MORE_NAME_KEYWORDS]] [s/SUBJECT]... [r/RATE]\n"
+            + "Note: Unprefixed keywords (universal search) must appear before any prefixes.\n"
+            + "If keywords are placed after a prefix, they are treated as that prefix's value.\n"
             + "Examples:\n"
             + COMMAND_WORD + " alice\n"
             + COMMAND_WORD + " 50\n"
