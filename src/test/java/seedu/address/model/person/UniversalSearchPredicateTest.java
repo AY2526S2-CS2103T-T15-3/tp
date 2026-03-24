@@ -42,43 +42,35 @@ public class UniversalSearchPredicateTest {
     @Test
     public void test_universalSearch_returnsTrue() {
         // Name match (prefix)
-        UniversalSearchPredicate predicate = new UniversalSearchPredicate(Collections.singletonList("Ali"));
-        assertTrue(predicate.test(new PersonBuilder().withName("Alice Bob").build()));
+        assertMatch("Ali", new PersonBuilder().withName("Alice Bob").build());
 
         // Phone match (prefix)
-        predicate = new UniversalSearchPredicate(Collections.singletonList("123"));
-        assertTrue(predicate.test(new PersonBuilder().withPhone("12345").build()));
+        assertMatch("123", new PersonBuilder().withPhone("12345").build());
 
         // Email match (prefix)
-        predicate = new UniversalSearchPredicate(Collections.singletonList("ali"));
-        assertTrue(predicate.test(new PersonBuilder().withEmail("alice@example.com").build()));
+        assertMatch("ali", new PersonBuilder().withEmail("alice@example.com").build());
 
         // Address match (prefix)
-        predicate = new UniversalSearchPredicate(Collections.singletonList("Jurong"));
-        assertTrue(predicate.test(new PersonBuilder().withAddress("Jurong West").build()));
+        assertMatch("Jurong", new PersonBuilder().withAddress("Jurong West").build());
 
         // Subject match (prefix)
-        predicate = new UniversalSearchPredicate(Collections.singletonList("Mat"));
-        assertTrue(predicate.test(new PersonBuilder().withSubject("Math").build()));
+        assertMatch("Mat", new PersonBuilder().withSubject("Math").build());
 
         // Rate match (prefix)
-        predicate = new UniversalSearchPredicate(Collections.singletonList("5"));
-        assertTrue(predicate.test(new PersonBuilder().withRate("50").build()));
+        assertMatch("5", new PersonBuilder().withRate("50").build());
 
         // Tag match (prefix)
-        predicate = new UniversalSearchPredicate(Collections.singletonList("fri"));
-        assertTrue(predicate.test(new PersonBuilder().withTags("friend").build()));
+        assertMatch("fri", new PersonBuilder().withTags("friend").build());
 
         // Multiple keywords, one matches
-        predicate = new UniversalSearchPredicate(Arrays.asList("NoMatch", "Ali"));
+        UniversalSearchPredicate predicate = new UniversalSearchPredicate(Arrays.asList("NoMatch", "Ali"));
         assertTrue(predicate.test(new PersonBuilder().withName("Alice Bob").build()));
     }
 
     @Test
     public void test_universalSearch_returnsFalse() {
         // Non-matching keyword
-        UniversalSearchPredicate predicate = new UniversalSearchPredicate(Collections.singletonList("Carol"));
-        assertFalse(predicate.test(new PersonBuilder().withName("Alice Bob").build()));
+        assertNoMatch("Carol", new PersonBuilder().withName("Alice Bob").build());
     }
 
     @Test
@@ -88,5 +80,17 @@ public class UniversalSearchPredicateTest {
 
         String expected = UniversalSearchPredicate.class.getCanonicalName() + "{keywords=" + keywords + "}";
         assertEquals(expected, predicate.toString());
+    }
+
+    // ================= HELPER METHODS =================
+
+    private void assertMatch(String keyword, Person person) {
+        UniversalSearchPredicate predicate = new UniversalSearchPredicate(Collections.singletonList(keyword));
+        assertTrue(predicate.test(person), "Expected predicate to match Person with keyword: " + keyword);
+    }
+
+    private void assertNoMatch(String keyword, Person person) {
+        UniversalSearchPredicate predicate = new UniversalSearchPredicate(Collections.singletonList(keyword));
+        assertFalse(predicate.test(person), "Expected predicate NOT to match Person with keyword: " + keyword);
     }
 }

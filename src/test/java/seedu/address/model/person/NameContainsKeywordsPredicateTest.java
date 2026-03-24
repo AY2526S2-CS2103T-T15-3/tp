@@ -37,6 +37,24 @@ public class NameContainsKeywordsPredicateTest {
 
         // different person -> returns false
         assertFalse(firstPredicate.equals(secondPredicate));
+
+        // different isMatchAll -> returns false
+        assertFalse(firstPredicate.equals(new NameContainsKeywordsPredicate(firstPredicateKeywordList, true)));
+    }
+
+    @Test
+    public void test_nameContainsKeywordsMatchAll_returnsCheck() {
+        // Match All: "Alice" AND "Bob"
+        NameContainsKeywordsPredicate predicate = new NameContainsKeywordsPredicate(Arrays.asList("Alice", "Bob"), true);
+
+        // Matches both -> True
+        assertTrue(predicate.test(new PersonBuilder().withName("Alice Bob").build()));
+
+        // Matches one -> False
+        assertFalse(predicate.test(new PersonBuilder().withName("Alice Carol").build()));
+
+         // Matches neither -> False
+        assertFalse(predicate.test(new PersonBuilder().withName("Carol David").build()));
     }
 
     @Test
@@ -79,7 +97,7 @@ public class NameContainsKeywordsPredicateTest {
         List<String> keywords = List.of("keyword1", "keyword2");
         NameContainsKeywordsPredicate predicate = new NameContainsKeywordsPredicate(keywords);
 
-        String expected = NameContainsKeywordsPredicate.class.getCanonicalName() + "{keywords=" + keywords + "}";
+        String expected = NameContainsKeywordsPredicate.class.getCanonicalName() + "{keywords=" + keywords + ", isMatchAll=false}";
         assertEquals(expected, predicate.toString());
     }
 }

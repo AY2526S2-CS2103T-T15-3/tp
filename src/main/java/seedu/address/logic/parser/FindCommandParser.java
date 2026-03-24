@@ -21,6 +21,7 @@ import seedu.address.model.person.Person;
 import seedu.address.model.person.Rate;
 import seedu.address.model.person.RateEqualsPredicate;
 import seedu.address.model.person.Subject;
+import seedu.address.model.person.SubjectContainsKeywordsPredicate;
 import seedu.address.model.person.UniversalSearchPredicate;
 import seedu.address.model.tag.Tag;
 import seedu.address.model.tag.TagContainsKeywordsPredicate;
@@ -45,8 +46,21 @@ public class FindCommandParser implements Parser<FindCommand> {
     public FindCommand parse(String args) throws ParseException {
         ArgumentMultimap argMultimap = tokenizeAndValidate(args);
 
+        // Validate combinations (preamble + unsupported prefixes) early.
         validatePreamblePrefixCombination(argMultimap);
 
+        // Build the combined predicate in a single helper to keep this method high-level.
+        Predicate<Person> combinedPredicate = buildCombinedPredicate(argMultimap);
+
+        return new FindCommand(combinedPredicate);
+    }
+
+    /**
+     * Assemble the combined predicate from the argument multimap. Each specific parser is
+     * invoked only if its corresponding prefix/preamble is present. This keeps the high-level
+     * parsing flow at a single abstraction level.
+     */
+    private Predicate<Person> buildCombinedPredicate(ArgumentMultimap argMultimap) throws ParseException {
         Predicate<Person> combinedPredicate = person -> true;
 
         if (hasPreamble(argMultimap)) {
@@ -69,7 +83,7 @@ public class FindCommandParser implements Parser<FindCommand> {
             combinedPredicate = combinedPredicate.and(parseTagPredicate(argMultimap));
         }
 
-        return new FindCommand(combinedPredicate);
+        return combinedPredicate;
     }
 
     private ArgumentMultimap tokenizeAndValidate(String args) throws ParseException {
@@ -104,17 +118,7 @@ public class FindCommandParser implements Parser<FindCommand> {
         if (!hasPreamble(argMultimap)) {
             return;
         }
-
-        List<String> unsupported = new ArrayList<>();
-        if (hasPhone(argMultimap)) {
-            unsupported.add("p/");
-        }
-        if (hasEmail(argMultimap)) {
-            unsupported.add("e/");
-        }
-        if (hasAddress(argMultimap)) {
-            unsupported.add("a/");
-        }
+        List<String> unsupported = collectUnsupportedPrefixes(argMultimap);
 
         if (!unsupported.isEmpty()) {
             String joined = String.join(", ", unsupported);
@@ -126,9 +130,31 @@ public class FindCommandParser implements Parser<FindCommand> {
         }
     }
 
+    private List<String> collectUnsupportedPrefixes(ArgumentMultimap argMultimap) {
+        List<String> unsupported = new ArrayList<>();
+        if (hasPhone(argMultimap)) {
+            unsupported.add("p/");
+        }
+        if (hasEmail(argMultimap)) {
+            unsupported.add("e/");
+        }
+        if (hasAddress(argMultimap)) {
+            unsupported.add("a/");
+        }
+        return unsupported;
+    }
+
     private Predicate<Person> parseUniversalSearchPredicate(ArgumentMultimap argMultimap) {
-        String[] keywords = argMultimap.getPreamble().split("\\s+");
-        return new UniversalSearchPredicate(Arrays.asList(keywords));
+        List<String> keywords = normalizePreambleKeywords(argMultimap.getPreamble());
+        return new UniversalSearchPredicate(keywords);
+    }
+
+    private List<String> normalizePreambleKeywords(String preamble) {
+        if (preamble == null || preamble.trim().isEmpty()) {
+            return List.of();
+        }
+        String[] parts = preamble.trim().split("\\s+");
+        return Arrays.asList(parts);
     }
 
     private Predicate<Person> parseNamePredicate(ArgumentMultimap argMultimap) throws ParseException {
@@ -140,7 +166,8 @@ public class FindCommandParser implements Parser<FindCommand> {
         }
 
         String[] nameKeywords = nameArgs.split("\\s+");
-        return new NameContainsKeywordsPredicate(Arrays.asList(nameKeywords));
+        boolean isUniversalSearch = hasPreamble(argMultimap);
+        return new NameContainsKeywordsPredicate(Arrays.asList(nameKeywords), isUniversalSearch);
     }
 
     /**
@@ -156,30 +183,48 @@ public class FindCommandParser implements Parser<FindCommand> {
         List<String> subjectArgs = argMultimap.getAllValues(PREFIX_SUBJECT);
         List<String> normalizedSubjects = normalizeAndValidateSubjects(subjectArgs);
 
-        return person -> person.getSubjects().stream()
-                .map(subject -> subject.subject.toLowerCase())
-                .anyMatch(personSubject ->
-                        normalizedSubjects.stream().anyMatch(keyword -> personSubject.startsWith(keyword)));
+        boolean isUniversalSearch = hasPreamble(argMultimap);
+        return new SubjectContainsKeywordsPredicate(normalizedSubjects, isUniversalSearch);
     }
 
     private List<String> normalizeAndValidateSubjects(List<String> subjectArgs) throws ParseException {
-        if (subjectArgs.isEmpty()) {
-            throw new ParseException(
-                    String.format(MESSAGE_INVALID_COMMAND_FORMAT, FindCommand.MESSAGE_USAGE));
-        }
+        ensureNonEmptyArgs(subjectArgs);
 
         List<String> normalized = new ArrayList<>();
         for (String subjectArg : subjectArgs) {
-            String trimmed = subjectArg.trim();
-
-            if (trimmed.isEmpty() || !Subject.isValidSubject(trimmed)) {
-                throw new ParseException(Subject.MESSAGE_CONSTRAINTS);
-            }
-
+            String trimmed = trimOrEmpty(subjectArg);
+            validateSubjectTrimmed(trimmed);
             normalized.add(trimmed.toLowerCase());
         }
 
         return normalized;
+    }
+
+    /**
+     * Ensure the provided argument list is not empty. Throws a ParseException with
+     * the standard usage message when empty.
+     */
+    private void ensureNonEmptyArgs(List<String> args) throws ParseException {
+        if (args == null || args.isEmpty()) {
+            throw new ParseException(
+                    String.format(MESSAGE_INVALID_COMMAND_FORMAT, FindCommand.MESSAGE_USAGE));
+        }
+    }
+
+    /**
+     * Trim the input string safely (returns empty string for null).
+     */
+    private String trimOrEmpty(String s) {
+        return s == null ? "" : s.trim();
+    }
+
+    /**
+     * Validate a trimmed subject string. Throws ParseException on invalid subject.
+     */
+    private void validateSubjectTrimmed(String trimmed) throws ParseException {
+        if (trimmed.isEmpty() || !Subject.isValidSubject(trimmed)) {
+            throw new ParseException(Subject.MESSAGE_CONSTRAINTS);
+        }
     }
 
     private Predicate<Person> parseRatePredicate(ArgumentMultimap argMultimap) throws ParseException {
@@ -195,37 +240,38 @@ public class FindCommandParser implements Parser<FindCommand> {
     private Predicate<Person> parseTagPredicate(ArgumentMultimap argMultimap) throws ParseException {
         List<String> tagArgs = argMultimap.getAllValues(PREFIX_TAG);
         List<String> normalizedTags = normalizeAndValidateTags(tagArgs);
-
-        // If a preamble (universal search) is present, use exclusive filtering (AND logic).
-        // Otherwise (specific find), use inclusive filtering (OR logic).
+        
         boolean isUniversalSearch = hasPreamble(argMultimap);
         return new TagContainsKeywordsPredicate(normalizedTags, isUniversalSearch);
     }
 
     private List<String> normalizeAndValidateTags(List<String> tagArgs) throws ParseException {
-        if (tagArgs.isEmpty()) {
-            throw new ParseException(
-                    String.format(MESSAGE_INVALID_COMMAND_FORMAT, FindCommand.MESSAGE_USAGE));
-        }
+        ensureNonEmptyArgs(tagArgs);
 
         List<String> normalized = new ArrayList<>();
         for (String tagArg : tagArgs) {
-            String trimmed = tagArg.trim();
-
-            if (trimmed.isEmpty()) {
-                throw new ParseException(Tag.MESSAGE_CONSTRAINTS);
-            }
-
-            String[] keywords = trimmed.split("\\s+");
-            for (String keyword : keywords) {
-                if (!Tag.isValidTagName(keyword)) {
-                    throw new ParseException(Tag.MESSAGE_CONSTRAINTS);
-                }
-                normalized.add(keyword.toLowerCase());
-            }
+            normalized.addAll(parseTagKeywords(tagArg));
         }
 
         return normalized;
+    }
+
+    private List<String> parseTagKeywords(String tagArg) throws ParseException {
+        String trimmed = tagArg.trim();
+
+        if (trimmed.isEmpty()) {
+            throw new ParseException(Tag.MESSAGE_CONSTRAINTS);
+        }
+
+        String[] keywords = trimmed.split("\\s+");
+        List<String> parsedKeywords = new ArrayList<>();
+        for (String keyword : keywords) {
+            if (!Tag.isValidTagName(keyword)) {
+                throw new ParseException(Tag.MESSAGE_CONSTRAINTS);
+            }
+            parsedKeywords.add(keyword.toLowerCase());
+        }
+        return parsedKeywords;
     }
 
     private boolean hasName(ArgumentMultimap argMultimap) {

@@ -142,5 +142,48 @@ public class SubjectEqualsPredicateTest {
         SubjectEqualsPredicate p = new SubjectEqualsPredicate(Collections.singleton(new Subject("Bio")));
         assertFalse(p.equals(new Object()));
     }
+
+    // ------------------ New tests for splitLowerWords and matchesMultiWordPrefix ------------------
+
+    @Test
+    public void splitLowerWords_trimsAndSplits_multipleSpaces() {
+        SubjectEqualsPredicate predicate = new SubjectEqualsPredicate(Collections.singleton(new Subject("Bio")));
+        // ensure that internal extra whitespace does not affect matching (no leading/trailing spaces)
+        assertTrue(predicate.test(new PersonBuilder().withSubject("Biology   Lab").build()));
+        // a single condensed word still matches prefix
+        assertTrue(predicate.test(new PersonBuilder().withSubject("Biology").build()));
+    }
+
+    @Test
+    public void matchesMultiWordPrefix_multipleAlignment_matchesAtAnyPosition() {
+        // target has two words; person subject contains them starting at index 1
+        SubjectEqualsPredicate predicate = new SubjectEqualsPredicate(Collections.singleton(new Subject("bio geo")));
+        assertTrue(predicate.test(new PersonBuilder().withSubject("intro Biology Geography Lab").build()));
+        // also matches when alignment is at start
+        assertTrue(predicate.test(new PersonBuilder().withSubject("Biology Geography Lab").build()));
+    }
+
+    @Test
+    public void matchesMultiWordPrefix_nonConsecutiveWords_noMatch() {
+        SubjectEqualsPredicate predicate = new SubjectEqualsPredicate(Collections.singleton(new Subject("bio lab")));
+        // words 'bio' and 'lab' are present but not consecutively -> should NOT match
+        assertFalse(predicate.test(new PersonBuilder().withSubject("Biology something Lab").build()));
+    }
+
+    @Test
+    public void matchesMultiWordPrefix_personShorterThanTarget_noMatch() {
+        SubjectEqualsPredicate predicate = new SubjectEqualsPredicate(Collections.singleton(new Subject("bio geo")));
+        // person has only one word, target requires two -> no match
+        assertFalse(predicate.test(new PersonBuilder().withSubject("Biology").build()));
+    }
+
+    @Test
+    public void matchesMultiWordPrefix_partialPrefixAndCaseInsensitive_behaviour() {
+        // partial prefix for first word and case-insensitive second word
+        SubjectEqualsPredicate predicate = new SubjectEqualsPredicate(Collections.singleton(new Subject("bio geo")));
+        assertTrue(predicate.test(new PersonBuilder().withSubject("biology GEOGRAPHY").build()));
+        // mismatch on second word should fail
+        assertFalse(predicate.test(new PersonBuilder().withSubject("biology chemistry").build()));
+    }
 }
 

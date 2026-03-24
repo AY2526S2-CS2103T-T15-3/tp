@@ -1,27 +1,53 @@
 package seedu.address.model.tag;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 import seedu.address.commons.util.ToStringBuilder;
 import seedu.address.model.person.Person;
 
 /**
- * Tests that a {@code Person}'s {@code Tag}s matches any of the keywords given.
+ * Tests that a {@code Person}'s {@code Tag}s matches given keywords.
+ *
+ * Supports two matching modes controlled by {@code isMatchAll}:
+ * - If true, all keywords must match (AND semantics).
+ * - If false, any keyword may match (OR semantics).
  */
 public class TagContainsKeywordsPredicate implements Predicate<Person> {
     private final List<String> keywords;
-    private final boolean matchAll;
+    private final List<String> normalizedKeywordsLower;
+    private final boolean isMatchAll;
 
     /**
      * Constructs a {@code TagContainsKeywordsPredicate}.
      *
-     * @param keywords The list of keywords to search for.
-     * @param matchAll If true, matches all keywords (AND logic). If false, matches any keyword (OR logic).
+     * @param keywords The list of keywords to search for (must not be null).
+     * @param isMatchAll If true, matches all keywords (AND logic). If false, matches any keyword (OR logic).
      */
-    public TagContainsKeywordsPredicate(List<String> keywords, boolean matchAll) {
-        this.keywords = keywords;
-        this.matchAll = matchAll;
+    public TagContainsKeywordsPredicate(List<String> keywords, boolean isMatchAll) {
+        Objects.requireNonNull(keywords, "keywords must not be null");
+        this.keywords = Collections.unmodifiableList(new ArrayList<>(keywords));
+        this.normalizedKeywordsLower = normalizeKeywordsLower(this.keywords);
+        this.isMatchAll = isMatchAll;
+    }
+
+    /**
+     * Normalize the supplied keywords to a lower-cased, trimmed, unmodifiable list.
+     * This keeps the constructor at a higher level of abstraction.
+     */
+    private static List<String> normalizeKeywordsLower(List<String> keywords) {
+        if (keywords == null || keywords.isEmpty()) {
+            return Collections.emptyList();
+        }
+        return Collections.unmodifiableList(
+                keywords.stream()
+                        .map(s -> s == null ? "" : s.trim().toLowerCase())
+                        .collect(Collectors.toList())
+        );
     }
 
     /**
@@ -35,17 +61,40 @@ public class TagContainsKeywordsPredicate implements Predicate<Person> {
 
     @Override
     public boolean test(Person person) {
-        if (matchAll) {
-            return keywords.stream()
-                    .allMatch(keyword -> person.getTags().stream()
-                            .map(tag -> tag.tagName.toLowerCase())
-                            .anyMatch(personTag -> personTag.startsWith(keyword.toLowerCase())));
-        } else {
-            return keywords.stream()
-                    .anyMatch(keyword -> person.getTags().stream()
-                            .map(tag -> tag.tagName.toLowerCase())
-                            .anyMatch(personTag -> personTag.startsWith(keyword.toLowerCase())));
+        // Single-level-of-abstraction entry: validate, prepare, then delegate to the chosen matching strategy.
+        if (isKeywordsEmpty()) {
+            return false;
         }
+
+        List<String> personTagNamesLower = getPersonTagNamesLower(person);
+
+        return isMatchAll ? matchesAll(personTagNamesLower) : matchesAny(personTagNamesLower);
+    }
+
+    private boolean isKeywordsEmpty() {
+        return normalizedKeywordsLower.isEmpty();
+    }
+
+    private List<String> getPersonTagNamesLower(Person person) {
+        // Compute lowercase tag names once per invocation to avoid repeated toLowerCase calls.
+        return person.getTags().stream()
+                .map(tag -> tag.tagName == null ? "" : tag.tagName.toLowerCase())
+                .collect(Collectors.toList());
+    }
+
+    private boolean matchesAll(List<String> personTagNamesLower) {
+        return normalizedKeywordsLower.stream()
+                .allMatch(keywordLower -> hasTagMatchingKeywordLower(personTagNamesLower, keywordLower));
+    }
+
+    private boolean matchesAny(List<String> personTagNamesLower) {
+        return normalizedKeywordsLower.stream()
+                .anyMatch(keywordLower -> hasTagMatchingKeywordLower(personTagNamesLower, keywordLower));
+    }
+
+    private boolean hasTagMatchingKeywordLower(List<String> personTagNamesLower, String keywordLower) {
+        return personTagNamesLower.stream()
+                .anyMatch(personTag -> personTag.startsWith(keywordLower));
     }
 
     @Override
@@ -61,14 +110,14 @@ public class TagContainsKeywordsPredicate implements Predicate<Person> {
 
         TagContainsKeywordsPredicate otherTagContainsKeywordsPredicate = (TagContainsKeywordsPredicate) other;
         return keywords.equals(otherTagContainsKeywordsPredicate.keywords)
-                && matchAll == otherTagContainsKeywordsPredicate.matchAll;
+                && isMatchAll == otherTagContainsKeywordsPredicate.isMatchAll;
     }
 
     @Override
     public String toString() {
         return new ToStringBuilder(this)
                 .add("keywords", keywords)
-                .add("matchAll", matchAll)
+                .add("isMatchAll", isMatchAll)
                 .toString();
     }
 }

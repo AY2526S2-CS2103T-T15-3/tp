@@ -8,6 +8,8 @@ import static seedu.address.logic.parser.CliSyntax.PREFIX_NAME;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_RATE;
 import static seedu.address.logic.parser.CommandParserTestUtil.assertParseFailure;
 
+import java.util.Arrays;
+
 import org.junit.jupiter.api.Test;
 
 import seedu.address.logic.commands.FindCommand;
@@ -20,6 +22,24 @@ public class FindCommandParserTest {
 
     private final FindCommandParser parser = new FindCommandParser();
 
+    // ================= HELPER METHODS =================
+
+    private void assertMatch(FindCommand command, Person... persons) {
+        for (Person person : persons) {
+            assertTrue(command.getPredicate().test(person),
+                    "Expected match for person: " + person);
+        }
+    }
+
+    private void assertNoMatch(FindCommand command, Person... persons) {
+        for (Person person : persons) {
+            assertFalse(command.getPredicate().test(person),
+                    "Expected NO match for person: " + person);
+        }
+    }
+
+    // ================= FAILURE TESTS =================
+
     @Test
     public void parse_emptyArg_throwsParseException() {
         assertParseFailure(parser, "     ",
@@ -27,167 +47,30 @@ public class FindCommandParserTest {
     }
 
     @Test
-    public void parse_universalOnly_returnsFindCommand() throws Exception {
-        FindCommand command = parser.parse(" Bob");
-        // Preamble is "Bob"
+    public void parse_invalidValue_throwsParseException() {
+        // Invalid Subject (cannot be empty, must be alphabetic)
+        assertParseFailure(parser, " s/ ", Subject.MESSAGE_CONSTRAINTS);
+        assertParseFailure(parser, " s/!bio", Subject.MESSAGE_CONSTRAINTS);
 
-        Person bob = new PersonBuilder().withName("Bob Tan").build();
-        Person alice = new PersonBuilder().withName("Alice").build();
-
-        assertTrue(command.getPredicate().test(bob));
-        assertFalse(command.getPredicate().test(alice));
+        // Invalid Tag (alphanumeric)
+        assertParseFailure(parser, " t/!tag", Tag.MESSAGE_CONSTRAINTS);
+        assertParseFailure(parser, " t/ ", Tag.MESSAGE_CONSTRAINTS);
+        // "friend!" is invalid, "friend colleague" is valid (2 keywords)
+        assertParseFailure(parser, " t/friend!", Tag.MESSAGE_CONSTRAINTS);
     }
 
     @Test
-    public void parse_universalAndPrefix_returnsCombinedFindCommand() throws Exception {
-        FindCommand command = parser.parse(" Bob s/Math");
-        // Universal "Bob" AND Subject "Math"
-
-        Person bobMath = new PersonBuilder().withName("Bob").withSubject("Math").build();
-
-        // matches Universal but not Subject
-        Person bobSci = new PersonBuilder().withName("Bob").withSubject("Science").build();
-
-        // matches Subject but not Universal (Alice doesn't contain "Bob")
-        Person aliceMath = new PersonBuilder().withName("Alice").withSubject("Math").build();
-
-        assertTrue(command.getPredicate().test(bobMath));
-        assertFalse(command.getPredicate().test(bobSci));
-        assertFalse(command.getPredicate().test(aliceMath));
-    }
-
-    @Test
-    public void parse_duplicateNamePrefix_throwsParseException() {
+    public void parse_duplicatePrefix_throwsParseException() {
+        // Duplicate Name not allowed
         assertParseFailure(parser, " n/Alice n/Bob",
                 getErrorMessageForDuplicatePrefixes(PREFIX_NAME));
-    }
-
-    @Test
-    public void parse_duplicateRatePrefix_throwsParseException() {
+        // Duplicate Rate not allowed
         assertParseFailure(parser, " r/10 r/20",
                 getErrorMessageForDuplicatePrefixes(PREFIX_RATE));
     }
 
     @Test
-    public void parse_duplicateSubjectPrefix_allowed() throws Exception {
-        FindCommand command = parser.parse(" s/Bio s/Math");
-
-        Person biologyTutor = new PersonBuilder().withSubject("Biology").build();
-        Person mathTutor = new PersonBuilder().withSubject("Math").build();
-        Person physicsTutor = new PersonBuilder().withSubject("Physics").build();
-
-        assertTrue(command.getPredicate().test(biologyTutor));
-        assertTrue(command.getPredicate().test(mathTutor));
-        assertFalse(command.getPredicate().test(physicsTutor));
-    }
-
-    @Test
-    public void parse_invalidSubject_throwsParseException() {
-        assertParseFailure(parser, " s/ ", Subject.MESSAGE_CONSTRAINTS);
-        assertParseFailure(parser, " s/!bio", Subject.MESSAGE_CONSTRAINTS);
-    }
-
-    @Test
-    public void parse_validNameArg_returnsFindCommand() throws Exception {
-        FindCommand command = parser.parse(" n/Ali Bob");
-
-        Person alice = new PersonBuilder().withName("Alice Pauline").build();
-        Person bob = new PersonBuilder().withName("Bob Tan").build();
-        Person charlie = new PersonBuilder().withName("Charlie Lim").build();
-
-        assertTrue(command.getPredicate().test(alice));
-        assertTrue(command.getPredicate().test(bob));
-        assertFalse(command.getPredicate().test(charlie));
-    }
-
-    @Test
-    public void parse_validRateArg_returnsFindCommand() throws Exception {
-        FindCommand command = parser.parse(" r/17");
-
-        Person rate17 = new PersonBuilder().withRate("17").build();
-        Person rate18 = new PersonBuilder().withRate("18").build();
-
-        assertTrue(command.getPredicate().test(rate17));
-        assertFalse(command.getPredicate().test(rate18));
-    }
-
-    @Test
-    public void parse_validRateWithLeadingZeroes_returnsFindCommand() throws Exception {
-        FindCommand command = parser.parse(" r/007");
-
-        Person rate007 = new PersonBuilder().withRate("007").build();
-        Person rate7 = new PersonBuilder().withRate("7").build();
-
-        assertTrue(command.getPredicate().test(rate007));
-        assertFalse(command.getPredicate().test(rate7));
-    }
-
-    @Test
-    public void parse_validSubjectArg_returnsFindCommand() throws Exception {
-        FindCommand command = parser.parse(" s/Bio");
-
-        Person biologyTutor = new PersonBuilder().withSubject("Biology").build();
-        Person mathTutor = new PersonBuilder().withSubject("Math").build();
-
-        assertTrue(command.getPredicate().test(biologyTutor));
-        assertFalse(command.getPredicate().test(mathTutor));
-    }
-
-    @Test
-    public void parse_subjectWithWhitespace_returnsFindCommand() throws Exception {
-        FindCommand command = parser.parse(" s/  Bio  ");
-
-        Person biologyTutor = new PersonBuilder().withSubject("Biology").build();
-        Person chemistryTutor = new PersonBuilder().withSubject("Chemistry").build();
-
-        assertTrue(command.getPredicate().test(biologyTutor));
-        assertFalse(command.getPredicate().test(chemistryTutor));
-    }
-
-    @Test
-    public void parse_validTagArg_returnsFindCommand() throws Exception {
-        FindCommand command = parser.parse(" t/friend");
-
-        Person friend = new PersonBuilder().withTags("friend").build();
-        Person stranger = new PersonBuilder().withTags("colleague").build();
-
-        assertTrue(command.getPredicate().test(friend));
-        assertFalse(command.getPredicate().test(stranger));
-    }
-
-    @Test
-    public void parse_tagWithWhitespace_returnsFindCommand() throws Exception {
-        FindCommand command = parser.parse(" t/  friend  ");
-
-        Person friend = new PersonBuilder().withTags("friend").build();
-        Person stranger = new PersonBuilder().withTags("colleague").build();
-
-        assertTrue(command.getPredicate().test(friend));
-        assertFalse(command.getPredicate().test(stranger));
-    }
-
-    @Test
-    public void parse_invalidTag_throwsParseException() {
-        assertParseFailure(parser, " t/!tag", Tag.MESSAGE_CONSTRAINTS);
-        assertParseFailure(parser, " t/ ", Tag.MESSAGE_CONSTRAINTS);
-    }
-
-    @Test
-    public void parse_preambleWithTag_throwsParseException() throws Exception {
-        // Now that t/ is allowed with a preamble, this should parse and produce a combined predicate.
-        FindCommand command = parser.parse(" Alice t/friend");
-
-        Person aliceFriend = new PersonBuilder().withName("Alice").withTags("friend").build();
-        Person aliceOther = new PersonBuilder().withName("Alice").withTags("colleague").build();
-        Person bobFriend = new PersonBuilder().withName("Bob").withTags("friend").build();
-
-        assertTrue(command.getPredicate().test(aliceFriend));
-        assertFalse(command.getPredicate().test(aliceOther));
-        assertFalse(command.getPredicate().test(bobFriend));
-    }
-
-    @Test
-    public void parse_preambleWithMultipleUnsupportedPrefixes_throwsParseException() throws Exception {
+    public void parse_unsupportedPrefixWithPreamble_throwsParseException() {
         String preambleMsg = "When using universal search (keywords before prefixes), only the following "
                 + "prefixes may be used to further refine the search: n/, s/, r/, t/.\n"
                 + "Note: any words appearing after a prefix are treated as that prefix's value (e.g. 'r/500 alice' "
@@ -200,94 +83,178 @@ public class FindCommandParserTest {
         assertParseFailure(parser, " Alice p/85355255 t/friend", expected);
     }
 
+    // ================= SUCCESS TESTS =================
+
     @Test
-    public void parse_multiplePrefixes_returnsFindCommand() throws Exception {
-        FindCommand command = parser.parse(" n/Ali r/17 s/Bio");
-
-        Person matchingPerson = new PersonBuilder()
-                .withName("Alice Pauline")
-                .withRate("17")
-                .withSubject("Biology")
-                .build();
-
-        Person wrongName = new PersonBuilder()
-                .withName("Brenda Pauline")
-                .withRate("17")
-                .withSubject("Biology")
-                .build();
-
-        Person wrongRate = new PersonBuilder()
-                .withName("Alice Pauline")
-                .withRate("18")
-                .withSubject("Biology")
-                .build();
-
-        Person wrongSubject = new PersonBuilder()
-                .withName("Alice Pauline")
-                .withRate("17")
-                .withSubject("Math")
-                .build();
-
-        assertTrue(command.getPredicate().test(matchingPerson));
-        assertFalse(command.getPredicate().test(wrongName));
-        assertFalse(command.getPredicate().test(wrongRate));
-        assertFalse(command.getPredicate().test(wrongSubject));
+    public void parse_validArgs_returnsFindCommand() throws Exception {
+        // This method intentionally left blank — tests split into focused methods below.
     }
 
     @Test
-    public void parse_multipleSubjects_returnsFindCommand() throws Exception {
-        FindCommand command = parser.parse(" s/Bio s/Math");
-
-        Person biologyTutor = new PersonBuilder().withSubject("Biology").build();
-        Person mathTutor = new PersonBuilder().withSubject("Math").build();
-        Person physicsTutor = new PersonBuilder().withSubject("Physics").build();
-
-        assertTrue(command.getPredicate().test(biologyTutor));
-        assertTrue(command.getPredicate().test(mathTutor));
-        assertFalse(command.getPredicate().test(physicsTutor));
+    public void parse_universalOnly_returnsFindCommand() throws Exception {
+        FindCommand commandUniversal = parser.parse(" Bob");
+        assertMatch(commandUniversal, personWithName("Bob Tan"));
+        assertNoMatch(commandUniversal, personWithName("Alice"));
     }
 
     @Test
-    public void parse_multipleTagKeywords_returnsFindCommand() throws Exception {
-        // multiple t/ prefixes
-        // No preamble -> specific find -> Inclusive (OR) logic
-        FindCommand command1 = parser.parse(" t/friend t/colleague");
-
-        Person friend = new PersonBuilder().withTags("friend").build();
-        Person colleague = new PersonBuilder().withTags("colleague").build();
-        Person both = new PersonBuilder().withTags("friend", "colleague").build();
-        Person other = new PersonBuilder().withTags("acquaintance").build();
-
-        // Inclusive: friend OR colleague
-        assertTrue(command1.getPredicate().test(friend));
-        assertTrue(command1.getPredicate().test(colleague));
-        assertTrue(command1.getPredicate().test(both));
-        assertFalse(command1.getPredicate().test(other));
-
-        // multiple keywords in a single t/ value
-        // No preamble -> Inclusive (OR) logic
-        FindCommand command2 = parser.parse(" t/friend colleague");
-
-        assertTrue(command2.getPredicate().test(friend));
-        assertTrue(command2.getPredicate().test(colleague));
-        assertTrue(command2.getPredicate().test(both));
-        assertFalse(command2.getPredicate().test(other));
+    public void parse_specificNameMultipleKeywords_returnsFindCommand() throws Exception {
+        FindCommand commandName = parser.parse(" n/Ali Bob");
+        assertMatch(commandName, personWithName("Alice Pauline"), personWithName("Bob Tan"));
+        assertNoMatch(commandName, personWithName("Charlie"));
     }
 
     @Test
-    public void parse_universalAndMultipleTagKeywords_returnsExclusiveFindCommand() throws Exception {
-        // Preamble present -> Exclusive (AND) logic for tags
-        // Find universal "Alice" AND (tag "friend" AND tag "colleague")
+    public void parse_specificRate_leadingZeroes_returnsFindCommand() throws Exception {
+        FindCommand commandRate = parser.parse(" r/007");
+        assertMatch(commandRate, personWithRate("007"));
+        assertNoMatch(commandRate, personWithRate("7"));
+    }
+
+    @Test
+    public void parse_specificSubject_whitespaceHandling_returnsFindCommand() throws Exception {
+        FindCommand commandSubject = parser.parse(" s/  Bio  ");
+        assertMatch(commandSubject, personWithSubject("Biology"));
+        assertNoMatch(commandSubject, personWithSubject("Chemistry"));
+    }
+
+    @Test
+    public void parse_specificTag_whitespaceHandling_returnsFindCommand() throws Exception {
+        FindCommand commandTag = parser.parse(" t/  friend  ");
+        assertMatch(commandTag, personWithTags("friend"));
+        assertNoMatch(commandTag, personWithTags("stranger"));
+    }
+
+    @Test
+    public void parse_multipleFields_returnsCombinedFindCommand() throws Exception {
+        // Intentionally left blank; scenarios split into focused tests below.
+    }
+
+    @Test
+    public void parse_universalPlusSubject_returnsAndLogic() throws Exception {
+        FindCommand command1 = parser.parse(" Bob s/Math");
+        assertMatch(command1, personWithNameAndSubject("Bob", "Math"));
+        assertNoMatch(command1, personWithNameAndSubject("Bob", "Science"), personWithNameAndSubject("Alice", "Math"));
+    }
+
+    @Test
+    public void parse_multiplePrefixes_nameRateSubject_returnsAndLogic() throws Exception {
+        FindCommand command2 = parser.parse(" n/Ali r/17 s/Bio");
+        assertMatch(command2, personWithNameRateSubject("Alice", "17", "Biology"));
+        assertNoMatch(command2,
+                personWithNameRateSubject("Brenda", "17", "Biology"),
+                personWithNameRateSubject("Alice", "18", "Biology"),
+                personWithNameRateSubject("Alice", "17", "Math"));
+    }
+
+    @Test
+    public void parse_multipleValuesForField_returnsFindCommand() throws Exception {
+        // Intentionally blank; split into focused tests below.
+    }
+
+    @Test
+    public void parse_multipleSubjects_orLogic_returnsFindCommand() throws Exception {
+        FindCommand commandSubject = parser.parse(" s/Bio s/Math");
+        assertMatch(commandSubject, personWithSubject("Biology"), personWithSubject("Math"));
+        assertNoMatch(commandSubject, personWithSubject("Physics"));
+    }
+
+    @Test
+    public void parse_multipleTags_orLogic_returnsFindCommand() throws Exception {
+        FindCommand commandTagPrefixes = parser.parse(" t/friend t/colleague");
+        FindCommand commandTagTokens = parser.parse(" t/friend colleague");
+
+        Person friend = personWithTags("friend");
+        Person colleague = personWithTags("colleague");
+        Person both = personWithTags("friend", "colleague");
+        Person other = personWithTags("stranger");
+
+        for (FindCommand cmd : Arrays.asList(commandTagPrefixes, commandTagTokens)) {
+            assertMatch(cmd, friend, colleague, both);
+            assertNoMatch(cmd, other);
+        }
+    }
+
+    @Test
+    public void parse_hybridTagLogic_returnsCorrectFindCommand() throws Exception {
+        // Universal Search (Preamble) + Tags -> Exclusive (AND) Logic for tags
+        // Find is filtered by "Alice" AND has ALL tags ("friend" AND "colleague")
         FindCommand command = parser.parse(" Alice t/friend t/colleague");
 
-        Person aliceBoth = new PersonBuilder().withName("Alice").withTags("friend", "colleague").build();
-        Person aliceFriendOnly = new PersonBuilder().withName("Alice").withTags("friend").build();
-        Person aliceColleagueOnly = new PersonBuilder().withName("Alice").withTags("colleague").build();
-        Person bobBoth = new PersonBuilder().withName("Bob").withTags("friend", "colleague").build();
+        Person aliceBoth = personWithNameAndTags("Alice", "friend", "colleague");
+        Person aliceFriend = personWithNameAndTags("Alice", "friend");
+        Person aliceColleague = personWithNameAndTags("Alice", "colleague");
+        Person bobBoth = personWithNameAndTags("Bob", "friend", "colleague");
 
-        assertTrue(command.getPredicate().test(aliceBoth));
-        assertFalse(command.getPredicate().test(aliceFriendOnly)); // Missing colleague
-        assertFalse(command.getPredicate().test(aliceColleagueOnly)); // Missing friend
-        assertFalse(command.getPredicate().test(bobBoth)); // Missing Alice
+        assertMatch(command, aliceBoth);
+        assertNoMatch(command, aliceFriend, aliceColleague, bobBoth);
+    }
+
+    @Test
+    public void parse_hybridNameLogic_returnsCorrectFindCommand() throws Exception {
+        // Universal Search + Name -> Exclusive (AND) Logic for name keywords
+        String preamble = "keyword";
+        FindCommand command = parser.parse(preamble + " n/Alice Pauline");
+
+        Person alicePauline = personWithNameAndRate("Alice Pauline", "25");
+        Person aliceTan = personWithNameAndRate("Alice Tan", "25");
+        Person paulineLim = personWithNameAndRate("Pauline Lim", "25");
+
+        command = parser.parse(" 25 n/Alice Pauline");
+
+        assertMatch(command, alicePauline);
+        assertNoMatch(command, aliceTan, paulineLim);
+    }
+
+    @Test
+    public void parse_hybridSubjectLogic_returnsCorrectFindCommand() throws Exception {
+        // Universal Search + Subject -> Exclusive (AND) Logic for subjects
+        Person mathPhysics = personWithRateAndSubjects("50", "Math", "Physics");
+        Person mathOnly = personWithRateAndSubjects("50", "Math");
+        Person physicsOnly = personWithRateAndSubjects("50", "Physics");
+
+        // Preamble "50" matches all. s/Math s/Physics means must have Math AND Physics
+        FindCommand command = parser.parse(" 50 s/Math s/Physics");
+
+        assertMatch(command, mathPhysics);
+        assertNoMatch(command, mathOnly, physicsOnly);
+    }
+
+    // ================= PERSON FACTORY HELPERS =================
+
+    private Person personWithName(String name) {
+        return new PersonBuilder().withName(name).build();
+    }
+
+    private Person personWithRate(String rate) {
+        return new PersonBuilder().withRate(rate).build();
+    }
+
+    private Person personWithSubject(String subject) {
+        return new PersonBuilder().withSubject(subject).build();
+    }
+
+    private Person personWithTags(String... tags) {
+        return new PersonBuilder().withTags(tags).build();
+    }
+
+    private Person personWithNameAndSubject(String name, String subject) {
+        return new PersonBuilder().withName(name).withSubject(subject).build();
+    }
+
+    private Person personWithNameRateSubject(String name, String rate, String subject) {
+        return new PersonBuilder().withName(name).withRate(rate).withSubject(subject).build();
+    }
+
+    private Person personWithNameAndTags(String name, String... tags) {
+        return new PersonBuilder().withName(name).withTags(tags).build();
+    }
+
+    private Person personWithNameAndRate(String name, String rate) {
+        return new PersonBuilder().withName(name).withRate(rate).build();
+    }
+
+    private Person personWithRateAndSubjects(String rate, String... subjects) {
+        return new PersonBuilder().withRate(rate).withSubject(subjects).build();
     }
 }

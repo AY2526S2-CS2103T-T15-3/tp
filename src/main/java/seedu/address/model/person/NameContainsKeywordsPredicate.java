@@ -11,15 +11,59 @@ import seedu.address.commons.util.ToStringBuilder;
  */
 public class NameContainsKeywordsPredicate implements Predicate<Person> {
     private final List<String> keywords;
+    private final boolean isMatchAll;
 
-    public NameContainsKeywordsPredicate(List<String> keywords) {
+    /**
+     * Constructs a {@code NameContainsKeywordsPredicate}.
+     *
+     * @param keywords The list of keywords to search for.* @param isMatchAll If true, matches all keywords (AND logic). If false, matches any keyword (OR logic).
+     */
+    public NameContainsKeywordsPredicate(List<String> keywords, boolean isMatchAll) {
         this.keywords = keywords;
+        this.isMatchAll = isMatchAll;
+    }
+
+    /**
+     * Constructs a {@code NameContainsKeywordsPredicate} with default matching logic (OR).
+     *
+     * @param keywords The list of keywords to search for.
+     */
+    public NameContainsKeywordsPredicate(List<String> keywords) {
+        this(keywords, false);
     }
 
     @Override
     public boolean test(Person person) {
+        // Single-level-of-abstraction: validate -> prepare -> delegate to matching strategy.
+        if (isKeywordsEmpty()) {
+            return false;
+        }
+
+        String fullName = getPersonFullName(person);
+
+        return isMatchAll ? matchesAll(fullName) : matchesAny(fullName);
+    }
+
+    private boolean isKeywordsEmpty() {
+        return keywords == null || keywords.isEmpty();
+    }
+
+    private String getPersonFullName(Person person) {
+        return person.getName().fullName;
+    }
+
+    private boolean matchesAll(String fullName) {
         return keywords.stream()
-                .anyMatch(keyword -> StringUtil.containsWordPrefixIgnoreCase(person.getName().fullName, keyword));
+                .allMatch(keyword -> matchesKeyword(fullName, keyword));
+    }
+
+    private boolean matchesAny(String fullName) {
+        return keywords.stream()
+                .anyMatch(keyword -> matchesKeyword(fullName, keyword));
+    }
+
+    private boolean matchesKeyword(String fullName, String keyword) {
+        return StringUtil.containsWordPrefixIgnoreCase(fullName, keyword);
     }
 
     @Override
@@ -34,11 +78,15 @@ public class NameContainsKeywordsPredicate implements Predicate<Person> {
         }
 
         NameContainsKeywordsPredicate otherNameContainsKeywordsPredicate = (NameContainsKeywordsPredicate) other;
-        return keywords.equals(otherNameContainsKeywordsPredicate.keywords);
+        return keywords.equals(otherNameContainsKeywordsPredicate.keywords)
+                && isMatchAll == otherNameContainsKeywordsPredicate.isMatchAll;
     }
 
     @Override
     public String toString() {
-        return new ToStringBuilder(this).add("keywords", keywords).toString();
+        return new ToStringBuilder(this)
+                .add("keywords", keywords)
+                .add("isMatchAll", isMatchAll)
+                .toString();
     }
 }
