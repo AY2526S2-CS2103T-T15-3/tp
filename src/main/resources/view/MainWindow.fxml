@@ -12,7 +12,7 @@
 <?import javafx.scene.layout.VBox?>
 
 <fx:root type="javafx.stage.Stage" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
-         title="Tuto" minWidth="1200" minHeight="700" onCloseRequest="#handleExit">
+         title="Tuto" minWidth="1024" minHeight="700" onCloseRequest="#handleExit">
   <icons>
     <Image url="@/images/address_book_32.png" />
   </icons>
@@ -43,7 +43,7 @@
           <SplitPane style="-fx-background-color: transparent;">
             <items>
               <!-- Left Side: Person List -->
-              <VBox fx:id="personList" minWidth="400" prefWidth="400">
+              <VBox fx:id="personList" minWidth="350" prefWidth="350">
                  <padding>
                     <Insets top="0" right="15" bottom="0" left="0" />
                  </padding>
@@ -56,10 +56,10 @@
                     <Insets top="0" right="0" bottom="0" left="15" />
                 </padding>
                 <StackPane fx:id="resultDisplayPlaceholder" VBox.vgrow="ALWAYS"
-                           minWidth="600" style="-fx-background-color: transparent;">
+                           minWidth="450" style="-fx-background-color: transparent;">
                 </StackPane>
 
-                <StackPane fx:id="commandBoxPlaceholder" VBox.vgrow="NEVER" minWidth="600" minHeight="67.5"
+                <StackPane fx:id="commandBoxPlaceholder" VBox.vgrow="NEVER" minWidth="450" minHeight="67.5"
                            maxHeight="200"
                            style="-fx-background-color: transparent;">
                 </StackPane>
