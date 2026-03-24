@@ -43,7 +43,6 @@ This guide is written for parents who are comfortable using a keyboard and want 
   - [FAQ](#faq)
   - [Known Issues](#known-issues)
   - [Command Summary](#command-summary)
-- [| **Exit** | `exit` | `exit` |](#-exit--exit--exit-)
 ---
 
 ## Quick Start
