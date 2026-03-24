@@ -80,17 +80,19 @@ Format: `help`
 
 Adds a person to the address book.
 
-Format: `add n/NAME p/PHONE_NUMBER e/EMAIL [a/ADDRESS] s/SUBJECT r/RATE [t/TAG]…​`
+Format: `add n/NAME p/PHONE_NUMBER e/EMAIL s/SUBJECT1 s/SUBJECT2 ... s/SUBJECTN r/RATE [a/ADDRESS] [t/TAG]…​`
 
 <box type="tip" seamless>
 
-**Tip:** A person can have any number of tags (including 0).
+**Tip:** 
+1. A person can have any number of tags (including 0) and more than one subjects.
+2. The parameters of the command can be entered in any orders.
 
 </box>
 
 Examples:
-* `add n/John Doe p/98765432 e/johnd@example.com s/Chemistry r/50`
-* `add n/Betsy Crowe t/friend e/betsycrowe@example.com a/Newgate Prison p/1234567 s/Biology r/ 55 t/criminal`
+* `add n/John Doe p/98765432 e/johnd@example.com s/Chemistry s/Biology r/50`
+* `add n/Betsy Crowe t/friend e/betsycrowe@example.com a/Clementi Avenue 1 p/1234567 s/Biology r/ 55 t/Colleague`
 
 ### Listing all persons : `list`
 
@@ -208,7 +210,7 @@ _Details coming soon ..._
 
 Action     | Format, Examples
 -----------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------
-**Add**    | `add n/NAME p/PHONE_NUMBER e/EMAIL [a/ADDRESS] s/SUBJECT r/RATE [t/TAG]…​` <br> e.g., `add n/James Ho p/22224444 e/jamesho@example.com a/123, Clementi Rd, 1234665 s/Biology r/45 t/friend t/colleague`
+**Add**    | `add n/NAME p/PHONE_NUMBER e/EMAIL s/SUBJECT1 s/SUBJECT2 ... s/SUBJECTN r/RATE [a/ADDRESS] [t/TAG]…​` <br> e.g., `add n/James Ho p/22224444 e/jamesho@example.com a/123, Clementi Rd, 1234665 s/Biology r/45 t/friend t/colleague`
 **Clear**  | `clear`
 **Delete** | `delete INDEX`<br> e.g., `delete 3`
 **Edit**   | `edit INDEX [n/NAME] [p/PHONE_NUMBER] [e/EMAIL] [a/ADDRESS] [s/SUBJECT] [r/RATE] [t/TAG]…​`<br> e.g., `edit 2 n/James Lee e/jameslee@example.com`, `edit 1 s/Math r/25`
