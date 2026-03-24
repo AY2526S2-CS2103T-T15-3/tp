@@ -20,14 +20,14 @@ public final class PersonListSortComparator {
     public static Comparator<Person> forFieldAndOrder(PersonSortField field, PersonSortOrder order) {
         Comparator<Person> primary;
         switch (field) {
-            case NAME:
-                primary = BY_NAME;
-                break;
-            case RATE:
-                primary = Comparator.comparing(p -> new BigInteger(p.getRate().rate));
-                break;
-            default:
-                throw new AssertionError(field);
+        case NAME:
+            primary = BY_NAME;
+            break;
+        case RATE:
+            primary = Comparator.comparing(p -> new BigInteger(p.getRate().rate));
+            break;
+        default:
+            throw new AssertionError(field);
         }
         if (order == PersonSortOrder.DESCENDING) {
             primary = primary.reversed();
