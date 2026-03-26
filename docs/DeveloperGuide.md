@@ -118,12 +118,27 @@ How the `Logic` component works:
 
 Here are the other classes in `Logic` (omitted from the class diagram above) that are used for parsing a user command:
 
-<puml src="diagrams/ParserClasses.puml" width="600"/>
+<puml src="diagrams/ParserClasses.puml" width="600"></puml>
 
 How the parsing works:
 
 - When called upon to parse a user command, the `AddressBookParser` class creates an `XYZCommandParser` (`XYZ` is a placeholder for the specific command name e.g., `AddCommandParser`) which uses the other classes shown above to parse the user command and create a `XYZCommand` object (e.g., `AddCommand`) which the `AddressBookParser` returns back as a `Command` object.
 - All `XYZCommandParser` classes (e.g., `AddCommandParser`, `DeleteCommandParser`, ...) inherit from the `Parser` interface so that they can be treated similarly where possible e.g, during testing.
+
+### Find command
+
+The `find` command allows users to filter the displayed person list based on the specified search criteria.
+
+The diagram below shows the parser classes involved in handling the `find` command.
+
+<puml src="diagrams/FindParserClassDiagram.puml" width="500" />
+
+When the user enters a `find` command, `AddressBookParser` identifies the command word and creates a `FindCommandParser`.  
+`FindCommandParser` then parses the input arguments and constructs a `FindCommand`, which is returned as a `Command` object for execution.
+
+Upon execution, `FindCommand` calls `Model#updateFilteredPersonList(...)` to update the displayed list according to the given predicate.
+
+The `find` command can support different forms of filtering through different predicates, making the search functionality flexible and extensible.
 
 ### Model component
 
