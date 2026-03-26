@@ -283,6 +283,8 @@ Searches for tutors by name, subject, or hourly rate. Can combine prefixes (`n/`
   - e.g. `find s/Mat` matches "Math", "Mathematics"
 - Multiple name keywords return tutors matching any of the keywords (OR logic). 
   - e.g. `find n/Han Bo` returns all tutors with names starting with "Han" or "Bo" (e.g. "Hans", "Bo").
+- Multiple subject prefixes return tutors matching any of the keywords (OR logic).
+  - e.g. `find s/Math s/Chemistry` returns all tutors with subject Math or Chemistry.
 - Spaces after prefixes are optional (`find n/John` and `find n/ John` both work)
 - When different prefixes are used together, tutors must match **all conditions**  
   (e.g. `find n/Alex r/40 s/Math` returns tutors named Alex, charging 40, and teaching Math)
@@ -302,11 +304,11 @@ Searches for tutors by name, subject, or hourly rate. Can combine prefixes (`n/`
 `find n/John`  
 Returns all tutors with "John" in their name.
 
-`find s/Mathematics`  
-Returns tutors who teach Mathematics.
+`find s/Math`  
+Returns tutors who teach Math.
 
-`find s/Math s/Science`  
-Returns tutors who teach Math **AND** Science.
+`find s/Math s/Chemistry`  
+Returns tutors who teach Math **OR** Chemistry.
 
 `find r/50`  
 Returns tutors charging exactly $50/hr.
@@ -317,7 +319,7 @@ Returns tutors named Alex, charging $40, **AND** teaching Physics.
 ![Result for 'find n/alex david'](images/findAlexDavidResult.png)
 
 **Expected output:**
-If there are matching tutors, it will show only matching tutors. 
+If there are matching tutors, it will show only matching tutors on the right panel. 
 
 Else, will display:
 ```
