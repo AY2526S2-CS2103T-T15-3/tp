@@ -3,9 +3,16 @@
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.ListView?>
 <?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.VBox?>
 
 <StackPane fx:id="placeHolder" styleClass="stack-pane" xmlns="http://javafx.com/javafx/17"
     xmlns:fx="http://javafx.com/fxml/1" style="-fx-background-color: transparent;">
   <TextArea fx:id="resultDisplay" editable="false" wrapText="true" styleClass="result-display"/>
-  <ListView fx:id="resultListView" visible="false" styleClass="result-display"/>
+  <VBox spacing="8">
+    <TextArea fx:id="resultDescriptionDisplay" editable="false" wrapText="true"
+              styleClass="result-display" VBox.vgrow="NEVER" visible="false"
+              style="-fx-max-height: 120;"/>
+    <ListView fx:id="resultListView" visible="false" styleClass="result-display" VBox.vgrow="ALWAYS"/>
+  </VBox>
 </StackPane>

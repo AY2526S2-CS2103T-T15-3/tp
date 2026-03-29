@@ -54,8 +54,9 @@ public class FindCommandParser implements Parser<FindCommand> {
 
         // Build the combined predicate in a single helper to keep this method high-level.
         Predicate<Person> combinedPredicate = buildCombinedPredicate(argMultimap);
+        String findDescription = buildFindDescription(argMultimap);
 
-        return new FindCommand(combinedPredicate);
+        return new FindCommand(combinedPredicate, findDescription);
     }
 
     /**
@@ -87,6 +88,47 @@ public class FindCommandParser implements Parser<FindCommand> {
         }
 
         return combinedPredicate;
+    }
+
+    private String buildFindDescription(ArgumentMultimap argMultimap) {
+        List<String> parts = new ArrayList<>();
+
+        String preamble = argMultimap.getPreamble().trim();
+        if (!preamble.isEmpty()) {
+            parts.add("universal search: '" + preamble + "'");
+        }
+
+        if (argMultimap.getValue(PREFIX_NAME).isPresent()) {
+            String nameValue = argMultimap.getValue(PREFIX_NAME).get().trim();
+            parts.add("name: '" + nameValue + "'");
+        }
+
+        if (!argMultimap.getAllValues(PREFIX_SUBJECT).isEmpty()) {
+            String subjectValue = String.join(", ",
+                    argMultimap.getAllValues(PREFIX_SUBJECT).stream()
+                            .map(String::trim)
+                            .toList());
+            parts.add("subject: '" + subjectValue + "'");
+        }
+
+        if (argMultimap.getValue(PREFIX_RATE).isPresent()) {
+            String rateValue = argMultimap.getValue(PREFIX_RATE).get().trim();
+            parts.add("hourly payment rate: '" + rateValue + "'");
+        }
+
+        if (!argMultimap.getAllValues(PREFIX_TAG).isEmpty()) {
+            String tagValue = String.join(", ",
+                    argMultimap.getAllValues(PREFIX_TAG).stream()
+                            .map(String::trim)
+                            .toList());
+            parts.add("tag: '" + tagValue + "'");
+        }
+
+        if (parts.isEmpty()) {
+            return "";
+        }
+
+        return String.join(", ", parts);
     }
 
     private ArgumentMultimap tokenizeAndValidate(String args) throws ParseException {

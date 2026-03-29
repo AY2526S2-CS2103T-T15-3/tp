@@ -21,7 +21,6 @@ import java.util.stream.Collectors;
 
 import org.junit.jupiter.api.Test;
 
-import seedu.address.logic.Messages;
 import seedu.address.logic.commands.CommandResult.PersonIndexPair;
 import seedu.address.model.Model;
 import seedu.address.model.ModelManager;
@@ -85,8 +84,6 @@ public class FindCommandTest {
         // Construct expected message
         List<Person> foundPersons = Arrays.asList(CARL);
         List<PersonIndexPair> expectedPairs = new ArrayList<>();
-        StringBuilder sb = new StringBuilder();
-        sb.append(String.format(MESSAGE_PERSONS_LISTED_OVERVIEW, foundPersons.size()));
 
         // Indices must match the displayed list (filtered + sorted), same as
         // FindCommand. This is because of how sortedPersons is implemented - which
@@ -95,10 +92,9 @@ public class FindCommandTest {
         List<Person> displayedPersons = expectedModel.getFilteredPersonList();
         for (Person p : foundPersons) {
             int index = displayedPersons.indexOf(p) + 1;
-            sb.append("\n").append(index).append(". ").append(Messages.format(p));
             expectedPairs.add(new PersonIndexPair(p, index));
         }
-        String expectedMessage = sb.toString();
+        String expectedMessage = String.format(MESSAGE_PERSONS_LISTED_OVERVIEW, foundPersons.size());
 
         CommandResult expectedCommandResult = new CommandResult(expectedMessage, expectedPairs);
 
@@ -115,8 +111,6 @@ public class FindCommandTest {
         // Search for "Physics" (Carl), "Bio" (Elle - prefix), "60" (Fiona - rate)
         List<Person> foundPersons = Arrays.asList(CARL, ELLE, FIONA);
         List<PersonIndexPair> expectedPairs = new ArrayList<>();
-        StringBuilder sb = new StringBuilder();
-        sb.append(String.format(MESSAGE_PERSONS_LISTED_OVERVIEW, foundPersons.size()));
 
         // Indices must match the displayed list (filtered + sorted), same as
         // FindCommand. This is because of how sortedPersons is implemented - which
@@ -125,10 +119,9 @@ public class FindCommandTest {
         List<Person> displayedPersons = expectedModel.getFilteredPersonList();
         for (Person p : foundPersons) {
             int index = displayedPersons.indexOf(p) + 1;
-            sb.append("\n").append(index).append(". ").append(Messages.format(p));
             expectedPairs.add(new PersonIndexPair(p, index));
         }
-        String expectedMessage = sb.toString();
+        String expectedMessage = String.format(MESSAGE_PERSONS_LISTED_OVERVIEW, foundPersons.size());
 
         CommandResult expectedCommandResult = new CommandResult(expectedMessage, expectedPairs);
 
@@ -147,17 +140,15 @@ public class FindCommandTest {
 
         List<Person> foundPersons = Arrays.asList(BENSON, DANIEL);
         List<PersonIndexPair> expectedPairs = new ArrayList<>();
-        StringBuilder sb = new StringBuilder();
-        sb.append(String.format(MESSAGE_PERSONS_LISTED_OVERVIEW, foundPersons.size()));
 
         List<Person> displayedPersons = expectedModel.getFilteredPersonList();
         for (Person p : foundPersons) {
             int index = displayedPersons.indexOf(p) + 1;
-            sb.append("\n").append(index).append(". ").append(Messages.format(p));
             expectedPairs.add(new PersonIndexPair(p, index));
         }
 
-        CommandResult expectedCommandResult = new CommandResult(sb.toString(), expectedPairs);
+        String expectedMessage = String.format(MESSAGE_PERSONS_LISTED_OVERVIEW, foundPersons.size());
+        CommandResult expectedCommandResult = new CommandResult(expectedMessage, expectedPairs);
         NameContainsKeywordsPredicate predicate = preparePredicate("Meier");
         FindCommand command = new FindCommand(predicate);
 
@@ -171,7 +162,7 @@ public class FindCommandTest {
     public void toStringMethod() {
         NameContainsKeywordsPredicate predicate = new NameContainsKeywordsPredicate(Arrays.asList("keyword"));
         FindCommand findCommand = new FindCommand(predicate);
-        String expected = FindCommand.class.getCanonicalName() + "{predicate=" + predicate + "}";
+        String expected = FindCommand.class.getCanonicalName() + "{predicate=" + predicate + ", findDescription=}";
         assertEquals(expected, findCommand.toString());
     }
 
