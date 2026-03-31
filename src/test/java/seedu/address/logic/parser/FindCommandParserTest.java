@@ -193,18 +193,19 @@ public class FindCommandParserTest {
 
     @Test
     public void parse_hybridNameLogic_returnsCorrectFindCommand() throws Exception {
-        // Universal Search + Name -> Exclusive (AND) Logic for name keywords
+        // Universal Search + Name -> Inclusive (OR) Logic for name keywords
         String preamble = "keyword";
         FindCommand command = parser.parse(preamble + " n/Alice Pauline");
 
         Person alicePauline = personWithNameAndRate("Alice Pauline", "25");
         Person aliceTan = personWithNameAndRate("Alice Tan", "25");
         Person paulineLim = personWithNameAndRate("Pauline Lim", "25");
+        Person bobChoo = personWithNameAndRate("Bob Choo", "25");
 
         command = parser.parse(" 25 n/Alice Pauline");
 
-        assertMatch(command, alicePauline);
-        assertNoMatch(command, aliceTan, paulineLim);
+        assertMatch(command, alicePauline, aliceTan, paulineLim);
+        assertNoMatch(command, bobChoo);
     }
 
     @Test

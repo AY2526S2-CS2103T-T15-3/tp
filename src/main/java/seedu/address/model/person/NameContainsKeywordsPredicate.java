@@ -30,7 +30,7 @@ public class NameContainsKeywordsPredicate implements Predicate<Person> {
 
         String fullName = getPersonFullName(person);
 
-        return matchesAll(fullName);
+        return matchesAny(fullName);
     }
 
     private boolean isKeywordsEmpty() {
@@ -41,9 +41,9 @@ public class NameContainsKeywordsPredicate implements Predicate<Person> {
         return person.getName().fullName;
     }
 
-    private boolean matchesAll(String fullName) {
+    private boolean matchesAny(String fullName) {
         return keywords.stream()
-                .allMatch(keyword -> matchesKeyword(fullName, keyword));
+                .anyMatch(keyword -> matchesKeyword(fullName, keyword));
     }
 
     private boolean matchesKeyword(String fullName, String keyword) {
