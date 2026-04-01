@@ -11,6 +11,7 @@ package "Parser classes" {
     class "<<interface>>\nParser" as Parser
     class AddressBookParser
     class FindCommandParser
+    class CliSyntax
     class ArgumentMultimap
     class ArgumentTokenizer
     class Prefix
@@ -25,6 +26,7 @@ FindCommandParser ..> FindCommand : <<create>>
 AddressBookParser ..> Command : <<use>>
 FindCommandParser .up.|> Parser
 
+FindCommandParser ..> CliSyntax
 FindCommandParser ..> ArgumentMultimap
 FindCommandParser ..> ArgumentTokenizer
 ArgumentTokenizer .left.> ArgumentMultimap
