@@ -38,8 +38,15 @@ public class SubjectContainsKeywordsPredicate implements Predicate<Person> {
 
     private List<String> getPersonSubjectsLower(Person person) {
         return person.getSubjects().stream()
-                .map(subject -> subject.subject == null ? "" : subject.subject.toLowerCase())
+                .map(subject -> getLowerSubject(subject))
                 .toList();
+    }
+
+    private String getLowerSubject(Subject subject) {
+        if (subject.subject == null) {
+            return "";
+        }
+        return subject.subject.toLowerCase();
     }
 
     private boolean matchesAll(List<String> personSubjectsLower) {
@@ -48,11 +55,27 @@ public class SubjectContainsKeywordsPredicate implements Predicate<Person> {
     }
 
     private boolean hasSubjectMatchingKeywordLower(List<String> personSubjectsLower, String keyword) {
-        String kwLower = keyword == null ? "" : keyword.toLowerCase().trim().replaceAll("\\s+", " ");
+        String kwLower;
+        if (keyword == null) {
+            kwLower = "";
+        } else {
+            kwLower = keyword.toLowerCase().trim().replaceAll("\\s+", " ");
+        }
+
         return personSubjectsLower.stream()
-                .map(subject -> subject.trim().replaceAll("\\s+", " "))
-                .anyMatch(normalizedSubject -> normalizedSubject.startsWith(kwLower) 
-                        || normalizedSubject.contains(" " + kwLower));
+                .map(subject -> normalizeSpaces(subject))
+                .anyMatch(normalizedSubject -> isSubjectMatchingNormalizedKeyword(normalizedSubject, kwLower));
+    }
+
+    private String normalizeSpaces(String subject) {
+        return subject.trim().replaceAll("\\s+", " ");
+    }
+
+    private boolean isSubjectMatchingNormalizedKeyword(String normalizedSubject, String kwLower) {
+        if (normalizedSubject.startsWith(kwLower)) {
+            return true;
+        }
+        return normalizedSubject.contains(" " + kwLower);
     }
 
     @Override
