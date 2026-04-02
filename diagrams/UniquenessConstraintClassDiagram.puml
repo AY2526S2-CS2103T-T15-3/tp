@@ -1,0 +1,42 @@
+@startuml
+skinparam classAttributeIconSize 0
+skinparam monochrome true
+skinparam shadowing false
+skinparam CircledCharacterRadius 0
+skinparam CircledCharacterFontSize 0
+
+class AddCommand {
+  +execute(model)
+}
+class EditCommand {
+  +execute(model)
+}
+interface Model <<Interface>> {
+  +hasPerson(person)
+  +hasDuplicatePhone(person)
+  +hasDuplicateEmail(person)
+  +addPerson(person)
+  +setPerson(target, editedPerson)
+}
+class ModelManager {
+  -addressBook : AddressBook
+}
+class AddressBook {
+  -persons : UniquePersonList
+}
+class UniquePersonList {
+  +contains(person)
+  +hasDuplicatePhone(person)
+  +hasDuplicateEmail(person)
+  +add(person)
+  +setPerson(target, editedPerson)
+}
+class Person
+
+AddCommand ..> Model : uses
+EditCommand ..> Model : uses
+Model <|.. ModelManager
+ModelManager *-- AddressBook
+AddressBook *-- UniquePersonList
+UniquePersonList *-- Person
+@enduml

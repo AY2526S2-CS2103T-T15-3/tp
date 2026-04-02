@@ -1,0 +1,26 @@
+@startuml
+skinparam ArrowThickness 1.1
+actor User
+participant AddCommand
+participant Model
+
+User -> AddCommand : execute(model)
+
+AddCommand -> Model : hasPerson(toAdd)
+alt duplicate name
+    AddCommand --> User : CommandException\n(MESSAGE_DUPLICATE_PERSON)
+else no duplicate name
+    AddCommand -> Model : hasDuplicatePhone(toAdd)
+    alt duplicate phone
+        AddCommand --> User : CommandException\n(MESSAGE_DUPLICATE_PHONE)
+    else no duplicate phone
+        AddCommand -> Model : hasDuplicateEmail(toAdd)
+        alt duplicate email
+            AddCommand --> User : CommandException\n(MESSAGE_DUPLICATE_EMAIL)
+        else no duplicates
+            AddCommand -> Model : addPerson(toAdd)
+            AddCommand --> User : CommandResult\n(MESSAGE_SUCCESS)
+        end
+    end
+end
+@enduml
