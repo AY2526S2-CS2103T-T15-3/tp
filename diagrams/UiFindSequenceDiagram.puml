@@ -6,6 +6,7 @@ box UI UI_COLOR_T1
 participant ":MainWindow" as MainWindow UI_COLOR
 participant ":CommandBox" as CommandBox UI_COLOR
 participant ":ResultDisplay" as ResultDisplay UI_COLOR
+participant ":PersonListPanel" as PersonListPanel UI_COLOR
 end box
 
 box Logic LOGIC_COLOR_T1
@@ -85,6 +86,9 @@ deactivate FindCommand
 
 LogicManager --> MainWindow : r
 deactivate LogicManager
+
+MainWindow -> PersonListPanel : refreshHeaderLabels()
+PersonListPanel --> MainWindow
 
 MainWindow -> ResultDisplay : setFeedbackToUser(r.feedback)
 activate ResultDisplay
