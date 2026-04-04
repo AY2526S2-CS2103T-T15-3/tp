@@ -12,7 +12,6 @@ class EditCommand {
   +execute(model)
 }
 interface Model <<Interface>> {
-  +hasPerson(person)
   +hasDuplicatePhone(person)
   +hasDuplicateEmail(person)
   +addPerson(person)
@@ -31,7 +30,9 @@ class UniquePersonList {
   +add(person)
   +setPerson(target, editedPerson)
 }
-class Person
+class Person {
+  +isSamePerson(otherPerson)
+}
 
 AddCommand ..> Model : uses
 EditCommand ..> Model : uses
