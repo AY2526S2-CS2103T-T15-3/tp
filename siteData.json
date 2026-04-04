@@ -47,6 +47,7 @@
         "architecture": "Architecture",
         "ui-component": "UI component",
         "logic-component": "Logic component",
+        "find-command": "Find command",
         "model-component": "Model component",
         "storage-component": "Storage component",
         "common-classes": "Common classes",
