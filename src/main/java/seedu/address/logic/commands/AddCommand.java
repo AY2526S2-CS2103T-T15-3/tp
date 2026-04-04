@@ -9,8 +9,9 @@ import static seedu.address.logic.parser.CliSyntax.PREFIX_RATE;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_SUBJECT;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_TAG;
 
+import java.util.List;
+
 import seedu.address.commons.util.ToStringBuilder;
-import seedu.address.logic.Messages;
 import seedu.address.logic.commands.exceptions.CommandException;
 import seedu.address.model.Model;
 import seedu.address.model.person.Person;
@@ -40,7 +41,7 @@ public class AddCommand extends Command {
             + PREFIX_TAG + "F2F "
             + PREFIX_TAG + "cafe";
 
-    public static final String MESSAGE_SUCCESS = "New person added: %1$s";
+    public static final String MESSAGE_SUCCESS = "New tutor added!";
     public static final String MESSAGE_DUPLICATE_PHONE = "This phone number already exists!";
     public static final String MESSAGE_DUPLICATE_EMAIL = "This email already exists!";
 
@@ -67,7 +68,11 @@ public class AddCommand extends Command {
         }
 
         model.addPerson(toAdd);
-        return new CommandResult(String.format(MESSAGE_SUCCESS, Messages.format(toAdd)));
+        int displayedIndex = model.getFilteredPersonList().indexOf(toAdd) + 1;
+        List<CommandResult.PersonIndexPair> personsToDisplay =
+                List.of(new CommandResult.PersonIndexPair(toAdd, displayedIndex));
+
+        return new CommandResult(MESSAGE_SUCCESS, personsToDisplay);
     }
 
     @Override

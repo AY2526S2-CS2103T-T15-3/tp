@@ -52,7 +52,11 @@ public class PersonCard extends UiPart<Region> {
     public PersonCard(Person person, int displayedIndex) {
         super(FXML);
         this.person = person;
-        id.setText(displayedIndex + ". ");
+        if (displayedIndex > 0) {
+            id.setText(displayedIndex + ". ");
+        } else {
+            id.setText("");
+        }
         name.setText(person.getName().fullName);
         phone.setText("Phone Number: " + person.getPhone().value);
 
