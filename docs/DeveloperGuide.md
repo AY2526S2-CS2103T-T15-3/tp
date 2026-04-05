@@ -344,7 +344,7 @@ Users can combine general search keywords with specific attribute filters to eff
 - If the search arguments are empty or invalid, a `ParseException` is thrown during parsing and the `Command` object is not created.
 - If the search yields no matches, `FindCommand` still executes successfully. The displayed list is simply empty, but the query bar in the UI is still appropriately updated to show what keywords were searched.
 
-
+---
 
 ### \[Proposed\] Undo/redo feature
 
@@ -400,21 +400,23 @@ make decisions of a Tutor for their Children.
 
 Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unlikely to have) - `*`
 
-| Priority | As a …​ | I can…​                                                         | So that...​                                                         |
-|----------|---------|-----------------------------------------------------------------|---------------------------------------------------------------------|
-| `* * *`  | parent  | add a tutor profile with name,phone,email,subject and rate      | I can keep track of tutors for my child                             |
-| `* * *`  | parent  | view all tutors profiles in a list                              | I can have an overview of available tutors for my child             |
-| `* * *`  | parent  | view a tutor's full profile details                             | I can evaluate if the tutor is suitable for my child                |
-| `* * *`  | parent  | delete a tutor profile                                          | I can remove outdated or irrelevant tutors                          |
-| `* * *`  | parent  | edit a tutor's details                                          | I can keep tutor information up to date                             |
-| `* * *`  | parent  | search tutors by subject                                        | I can match tutors to my child's academic needs                     |
-| `* * *`  | parent  | search tutors by name                                           | I can quickly locate a specific tutor                               |
-| `* * *`  | parent  | search tutors within a rate range                               | I can shortlist affordable tutors within my budget                  |
-| `* * `   | parent  | search tutors by multiple attributes (e.g. name, subject, rate) | I can refine my search results                                      |
-| `* * `   | parent  | tag tutors with labels                                          | I can categorise or leave a note on tutors for easier management    |
-| `* * `   | parent  | clear all entries                                               | I can reset the application to an empty state                       |
-| `*  `    | parent  | sort tutors by ascending or descending rate                     | I can easily identify the most affordable and most expensive tutors |
-| `*  `    | parent  | sort tutors by alphabetical order                               | I can browse through Tuto in a predictable manner                   |
+| Priority | As a ... | I can ...                                                                   | So that ...                                                         |
+|----------|----------|-----------------------------------------------------------------------------|---------------------------------------------------------------------|
+| `* * *`  | parent   | add a tutor profile with name, phone, email, subject, rate                  | I can keep track of tutors for my child                             |
+| `* * *`  | parent   | view all tutors profiles in a list                                          | I can have an overview of available tutors for my child             |
+| `* * *`  | parent   | view a tutor's full profile details                                         | I can evaluate if the tutor is suitable for my child                |
+| `* * *`  | parent   | delete a tutor profile                                                      | I can remove outdated or irrelevant tutors                          |
+| `* * *`  | parent   | edit a tutor's details                                                      | I can keep tutor information up to date                             |
+| `* * *`  | parent   | search tutors by subject                                                    | I can match tutors to my child's academic needs                     |
+| `* * *`  | parent   | search tutors by name                                                       | I can quickly locate a specific tutor                               |
+| `* * *`  | parent   | search tutors within a rate range                                           | I can shortlist affordable tutors within my budget                  |
+| `* *`    | parent   | search tutors by multiple attributes (e.g. name, subject, rate)             | I can refine my search results                                      |
+| `* *`    | parent   | search tutors by entering keyword(s)                                        | I can quickly find all tutors that matches my search                | 
+| `* *`    | parent   | search tutors by entering keyword(s) and narrow down my search with filters | I can have accurate and relevant search results                     |
+| `* *`    | parent   | tag tutors with labels                                                      | I can categorise or leave a note on tutors for easier management    |
+| `* *`    | parent   | clear all entries                                                           | I can reset the application to an empty state                       |
+| `*`      | parent   | sort tutors by ascending or descending rate                                 | I can easily identify the most affordable and most expensive tutors |
+| `*`      | parent   | sort tutors by alphabetical order                                           | I can browse through Tuto in a predictable manner                   |
 
 ### Use cases
 
