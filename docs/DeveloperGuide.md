@@ -499,14 +499,15 @@ Guarantees: If MSS completes until step 4, the Tutor Contact will be updated in 
 
 - **Command**: The entire line of text entered by the user (containing the command word, flags, and parameters) to execute a specific task.
 - **Command Word**: The first word of a Command (e.g., add, edit, delete) that identifies the action to be performed.
-- **Flag**: A specific prefix (e.g., /n, /p, /e) used to identify the type of data following it.
+- **Prefix**: A specific prefix (e.g., /n, /p, /e) used to identify the type of data following it.
 - **Human-readable**: A file format (like JSON or Text) that allows data to be read and edited using a standard text editor, without Tuto.
 - **Index**: The number displayed next to a tutor's name in the contact list (e.g., the 3 in 3. John Doe). Used to select a specific tutor for commands like edit or delete.
 - **JAR File**: The file format used to distribute Tuto, allowing it to run on any computer with Java installed without a setup wizard.
 - **Parameter**: The specific information provided after a Flag (e.g., John is the parameter for /n).
 - **Subject**: The academic discipline a tutor teaches (e.g., Math, Physics).
 - **Tutor Profile**: The complete set of data (Name, Phone, Email, etc.) stored for one specific tutor.
-
+- **Model**: The component responsible for storing and managing application data
+- 
 ---
 
 ## **Appendix: Instructions for manual testing**
