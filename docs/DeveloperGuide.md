@@ -46,7 +46,7 @@ It is intended for future developers, maintainers, and anyone interested in unde
 
 ## **Acknowledgements**
 
-_{ list here sources of all reused/adapted ideas, code, documentation, and third-party libraries -- include links to the original source as well }_
+- This project is based on the AddressBook-Level3 (AB3) codebase from [se-education/addressbook-level3](https://github.com/se-edu/addressbook-level3).
 
 ---
 
@@ -339,6 +339,28 @@ Users can search for specific attributes using prefixes (e.g., `n/`, `s/`, `r/`,
 Users can combine general search keywords with specific attribute filters to effectively refine their results.
 - **Example:** `find alice r/<50`
 - **Implementation:** When `FindCommandParser` detects both a preamble and specific prefixes, it validates that only supported refinement prefixes (`n/`, `s/`, `r/`, `t/`) are used to prevent logical conflicts. It then constructs a **combined predicate** by chaining the `UniversalSearchPredicate` and the attribute-specific predicates together using a logical `AND` (`Predicate.and()`). This ensures the displayed list heavily filters the broad keyword search against the strict attribute constraints.
+
+#### Design Considerations
+
+**Aspect: Search Modalities and User Experience**
+
+The design of the `find` command heavily factors in natural human searching patterns and the progressive disclosure of complexity.
+
+- **Low-information exploration (Typing less to discover more):** When a user is unsure of exact profile details, they logically gravitate towards broad, search-engine-style keyword searches. The **General (Universal) Search** caters to this by requiring zero prefixes, lowering the cognitive barrier and friction to entry. If you don't know exactly what you want, you type less.
+- **High-information precision (Determinate filtering):** When a user knows exactly what they want (e.g., a specific name under a strict budget), they need structured tools to zero-in on candidates. **Attribute Filtering** provides rigorous control. The more you know, the more you filter.
+- **Progressive refinement:** The **General Search + Attribute Filtering** modality allows users to cast a wide net initially, completely naturally, and optionally tack on filters to eliminate noise once they see the broad results.
+
+**Alternative 1 (Current choice): Flexible multi-modal search (Universal + Attributes)**
+- **Pros:** Scales dynamically with the user's familiarity and immediate needs. It models real-world workflows seamlessly.
+- **Cons / Opportunity costs:** Significantly increases the architectural complexity of the `FindCommandParser`. It introduces edge-case ambiguities where universal keywords logically clash with prefix arguments, requiring us to enforce explicit validation rules (e.g., restricting which abstract prefixes can confidently be used alongside universal search) and write much more comprehensive unit tests for combinations.
+
+**Alternative 2: Strict prefix-only search (Default behavior)**
+- **Pros:** Extremely straightforward to implement and parse. It completely eliminates ambiguity in user intent.
+- **Cons:** High friction UX. Users are forced to remember and strictly type specific prefixes (`n/`, `s/`) even for the absolute simplest queries, slowing down natural exploration.
+
+**Alternative 3: Pure universal keyword search**
+- **Pros:** Maximum simplicity for both the user interface and the underlying parser.
+- **Cons:** Severely lacks precision. Evaluating mathematical bounds (like finding a tutor whose rate is `<50`) or filtering strictly by a subject is practically impossible to guarantee using flat string-matching.
 
 #### Alternative flows
 - If the search arguments are empty or invalid, a `ParseException` is thrown during parsing and the `Command` object is not created.
