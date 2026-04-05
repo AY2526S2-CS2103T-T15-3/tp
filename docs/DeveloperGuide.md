@@ -89,6 +89,7 @@ The `UI` component,
 The following sequence diagram illustrates the interactions between the `UI` and `Logic` components when executing a `Find` name command attribute on the updated UI.
 
 <puml src="diagrams/UiFindSequenceDiagram.puml" alt="Interactions between the UI and Logic Components for the `find n/john` command" />
+<puml src="diagrams/FindSequenceDiagram.puml" alt="Logic and Model Components for the `find n/john` command" />
 
 
 ### Logic component
@@ -125,20 +126,7 @@ How the parsing works:
 - When called upon to parse a user command, the `AddressBookParser` class creates an `XYZCommandParser` (`XYZ` is a placeholder for the specific command name e.g., `AddCommandParser`) which uses the other classes shown above to parse the user command and create a `XYZCommand` object (e.g., `AddCommand`) which the `AddressBookParser` returns back as a `Command` object.
 - All `XYZCommandParser` classes (e.g., `AddCommandParser`, `DeleteCommandParser`, ...) inherit from the `Parser` interface so that they can be treated similarly where possible e.g, during testing.
 
-### Find command
 
-The `find` command allows users to filter the displayed person list based on the specified search criteria.
-
-The diagram below shows the parser classes involved in handling the `find` command.
-
-<puml src="diagrams/FindParserClassDiagram.puml" width="500"/>
-
-When the user enters a `find` command, `AddressBookParser` identifies the command word and creates a `FindCommandParser`.  
-`FindCommandParser` then parses the input arguments and constructs a `FindCommand`, which is returned as a `Command` object for execution.
-
-Upon execution, `FindCommand` calls `Model#updateFilteredPersonList(...)` to update the displayed list according to the given predicate.
-
-The `find` command can support different forms of filtering through different predicates, making the search functionality flexible and extensible.
 ### Model component
 
 **API** : [`Model.java`](https://github.com/AY2526S2-CS2103T-T15-3/tp/tree/master/src/main/java/seedu/address/model/Model.java)
@@ -264,6 +252,43 @@ The following diagram illustrates how duplicate checks are performed during an `
 
 <puml src="diagrams/UniquenessConstraintSequence.puml" />
 
+### Finding a Tutor : `find`
+
+Finds a tutor profile saved in Tuto. The sequence diagrams below illustrate the interactions between the UI, Logic, and Model 
+components during the execution of the `find` command.
+
+The `find` command is processed in two main phases: parsing the query to construct the appropriate predicate, and executing the search to update the `Model` and `UI`.
+
+The sequence of interactions is as follows:
+1. The user enters the `find` command with the search keywords, which is received by `LogicManager`.
+2. `LogicManager` calls `AddressBookParser` to parse the input.
+3. `AddressBookParser` identifies the command word and delegates parsing to `FindCommandParser`.
+4. `FindCommandParser` parses the arguments and constructs a predicate based on the search criteria.
+5. `FindCommandParser` creates a `FindCommand` object containing the constructed predicate.
+6. The `FindCommand` is returned to `LogicManager`.
+7. `LogicManager` executes the command by calling `FindCommand#execute(Model)`.
+8. `FindCommand` calls `Model#updateFilteredPersonList(...)` using the predicate to filter the displayed list.
+9. `FindCommand` generates a `CommandResult` containing the `foundPersons` (the filtered list) and a `description` of the search query. This result is returned to the user interface.
+10. The UI receives the `CommandResult`. Notably, it updates the query bar (`ResultDisplay`) to display the description of what was searched, then lists the internally matched tutors.
+
+The diagram below shows how the UI interactions are executed after the command returns.
+
+<puml src="diagrams/UiFindSequenceDiagram.puml" />
+
+The diagram below illustrates the interactions inside the Logic and Model components.
+
+<puml src="diagrams/FindSequenceDiagram.puml" />
+
+The diagram below shows the parser classes involved in handling the `find` command.
+
+<puml src="diagrams/FindParserClassDiagram.puml" width="500"/>
+
+#### Alternative flows
+- If the search arguments are empty or invalid, a `ParseException` is thrown during parsing and the `Command` object is not created.
+- If the search yields no matches, `FindCommand` still executes successfully. The displayed list is simply empty, but the query bar in the UI is still appropriately updated to show what keywords were searched.
+
+
+
 ### \[Proposed\] Undo/redo feature
 
 
@@ -319,20 +344,20 @@ make decisions of a Tutor for their Children.
 Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unlikely to have) - `*`
 
 | Priority | As a …​ | I can…​                                                         | So that...​                                                         |
-| ----- | ------- |-----------------------------------------------------------------|---------------------------------------------------------------------|
-| `* * *` | parent  | add a tutor profile with name,phone,email,subject and rate      | I can keep track of tutors for my child                             |
-| `* * *` | parent  | view all tutors profiles in a list                              | I can have an overview of available tutors for my child             |
-| `* * *` | parent  | view a tutor's full profile details                             | I can evaluate if the tutor is suitable for my child                |
-| `* * *` | parent  | delete a tutor profile                                          | I can remove outdated or irrelevant tutors                          |
-| `* * *` | parent  | edit a tutor's details                                          | I can keep tutor information up to date                             |
-| `* * *` | parent  | search tutors by subject                                        | I can match tutors to my child's academic needs                     |
-| `* * *` | parent  | search tutors by name                                           | I can quickly locate a specific tutor                               |
-| `* * *` | parent  | search tutors within a rate range                               | I can shortlist affordable tutors within my budget                  |
-| `* * ` | parent  | search tutors by multiple attributes (e.g. name, subject, rate) | I can refine my search results                                      |
-| `* * ` | parent  | tag tutors with labels                                          | I can categorise or leave a note on tutors for easier management    |
-| `* * ` | parent  | clear all entries                                               | I can reset the application to an empty state                       |
-| `*  ` | parent  | sort tutors by ascending or descending rate                     | I can easily identify the most affordable and most expensive tutors |
-| `*  ` | parent  | sort tutors by alphabetical order                               | I can browse through Tuto in a predictable manner                   |
+|----------|---------|-----------------------------------------------------------------|---------------------------------------------------------------------|
+| `* * *`  | parent  | add a tutor profile with name,phone,email,subject and rate      | I can keep track of tutors for my child                             |
+| `* * *`  | parent  | view all tutors profiles in a list                              | I can have an overview of available tutors for my child             |
+| `* * *`  | parent  | view a tutor's full profile details                             | I can evaluate if the tutor is suitable for my child                |
+| `* * *`  | parent  | delete a tutor profile                                          | I can remove outdated or irrelevant tutors                          |
+| `* * *`  | parent  | edit a tutor's details                                          | I can keep tutor information up to date                             |
+| `* * *`  | parent  | search tutors by subject                                        | I can match tutors to my child's academic needs                     |
+| `* * *`  | parent  | search tutors by name                                           | I can quickly locate a specific tutor                               |
+| `* * *`  | parent  | search tutors within a rate range                               | I can shortlist affordable tutors within my budget                  |
+| `* * `   | parent  | search tutors by multiple attributes (e.g. name, subject, rate) | I can refine my search results                                      |
+| `* * `   | parent  | tag tutors with labels                                          | I can categorise or leave a note on tutors for easier management    |
+| `* * `   | parent  | clear all entries                                               | I can reset the application to an empty state                       |
+| `*  `    | parent  | sort tutors by ascending or descending rate                     | I can easily identify the most affordable and most expensive tutors |
+| `*  `    | parent  | sort tutors by alphabetical order                               | I can browse through Tuto in a predictable manner                   |
 
 ### Use cases
 
