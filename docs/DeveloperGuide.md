@@ -277,6 +277,16 @@ This ensures that name conflicts are detected first, followed by contact informa
   - **Alternative 2:** Rates allow decimal values
       - Pros: More flexible and accommodates all possible pricing formats
       - Cons: Adds unnecessary complexity for a feature that is rarely used in practice
+
+**Aspect: Address field is optional**
+
+- **Alternative 1 (current choice):** Address field is optional
+    - Pros: Accounts for the case where tuition may be done online and hence tutor's address is not needed
+    - Cons: User may forget to add address field of tutor in cases where face-to-face tuition is arranged and address is needed to meet the tutor
+
+- **Alternative 2:** Address field is mandatory 
+    - Pros: Serves as a reminder to user to record address of tutor in cases where face-to-face tuition is arranged
+    - Cons: Does not account for the case where tuition may be done online and hence tutor's address is not needed
     
 #### Class Diagram
 
@@ -659,8 +669,60 @@ testers are expected to do more _exploratory_ testing.
 3. _{ more test cases …​ }_
 
 ### Adding a person
-1. Test case: `add n/Joe p/12345678 e/joe@example.com`
-
+1. Adding a person with all fields given
+    1. Prerequisites: No person in the list of tutor profiles has the contact number `91234567` and/or email address `jane@example.com`
+    2. Test case: `add n/Jane Smith p/91234567 e/jane@example.com a/Clementi 6th Street s/Mathematics r/60 t/friend`<br>
+       Expected: A card displaying the newly added tutor details is displayed and the profile is added to list of tutor profiles
+2. Adding a person with no fields given
+    1. Test case: `add`<br>
+       Expected: No person is added. An error message that displays the correct command format and an example is shown
+3. Adding a person with any of the mandatory fields (e.g. name, phone number, email, subject, rate) missing
+    1. Prerequisites: No person in the list of tutor profiles has the contact number `91234567` and/or email address `jane@example.com`
+    2. Test case: `add p/91234567 e/jane@example.com s/Mathematics r/60`<br>
+       Expected: No person is added. An error message that displays the correct command format and an example is shown
+    3. Test case: `add n/Jane Smith e/jane@example.com s/Mathematics r/60`<br>
+       Expected: No person is added. An error message that displays the correct command format and an example is shown
+    4. Test case: `add n/Jane Smith p/91234567 s/Mathematics r/60`<br>
+       Expected: No person is added. An error message that displays the correct command format and an example is shown
+    5. Test case: `add n/Jane Smith p/91234567 e/jane@example.com r/60`<br>
+       Expected: No person is added. An error message that displays the correct command format and an example is shown
+    6. Test case: `add n/Jane Smith p/91234567 e/jane@example.com s/Mathematics`<br>
+       Expected: No person is added. An error message that displays the correct command format and an example is shown
+4. Adding a person with any/all optional fields missing
+    1. Prerequisites: No person in the list of tutor profiles has the contact number `91234567` and/or email address `jane@example.com`
+    2. Test case: `add n/Jane Smith p/91234567 e/jane@example.com s/Mathematics r/60 t/friend`<br>
+       Expected: A card displaying the newly added tutor details is displayed and the profile is added to list of tutor profiles
+    3. Test case: `add n/Jane Smith p/91234567 e/jane@example.com s/Mathematics r/60`<br>
+       Expected: A card displaying the newly added tutor details is displayed and the profile is added to list of tutor profiles
+    4. Test case: `add n/Jane Smith p/91234567 e/jane@example.com a/Clementi 6th Street s/Mathematics r/60`<br>
+       Expected: A card displaying the newly added tutor details is displayed and the profile is added to list of tutor profiles
+5. Adding a person with multiple subjects:
+    1. Prerequisites: No person in the list of tutor profiles has the contact number `91234567` and/or email address `jane@example.com`
+    2. Test case: `add n/Jane Smith p/91234567 e/jane@example.com a/Clementi 6th Street s/Mathematics s/Korean r/60 t/friend`<br>
+       Expected: A card displaying the newly added tutor details is displayed and the profile is added to list of tutor profiles
+6. Adding a person with multiple values specified for the same field:
+    1. Prerequisites: No person in the list of tutor profiles has the contact number `91234567` and/or email address `jane@example.com`
+    2. Test case: `add n/Jane Smith n/jon p/91234567 e/jane@example.com a/Clementi 6th Street s/Mathematics s/Korean r/60 t/friend`<br>
+       Expected: No person is added. An error message indicating that multiple values have been specified for the field `n/`
+    3. Test case: `add n/Jane Smith p/91234567 p/98765443 e/jane@example.com a/Clementi 6th Street s/Mathematics s/Korean r/60 t/friend`<br>
+       Expected: No person is added. An error message indicating that multiple values have been specified for the field `p/`
+    4. Test case: `add n/Jane Smith p/91234567 e/jane@example.com e/jon@example.com a/Clementi 6th Street s/Mathematics s/Korean r/60 t/friend`<br>
+       Expected: No person is added. An error message indicating that multiple values have been specified for the field `e/`
+    5. Test case: `add n/Jane Smith p/91234567 e/jane@example.com a/Clementi 6th Street a/Clementi 7th Street s/Mathematics s/Korean r/60 t/friend`<br>
+       Expected: No person is added. An error message indicating that multiple values have been specified for the field `a/`
+    6. Test case: `add n/Jane Smith p/91234567 e/jane@example.com a/Clementi 6th Street s/Mathematics s/Korean r/60 r/70 t/friend`<br>
+       Expected: No person is added. An error message indicating that multiple values have been specified for the field `r/`
+7. Adding a person with inappropriate value for `phone number` field:
+    1. Prerequisites: No person in the list of tutor profiles has the contact number `91234567` and/or email address `jane@example.com`
+    2. Test case: `add n/Jane Smith p/91s34567 e/jane@example.com a/Clementi 6th Street s/Mathematics s/Korean r/60 t/friend`<br>
+       Expected: No person is added. An error message indicating that phone number can only contain numbers and should be at least 3 digits long is shown
+    3. Test case: `add n/Jane Smith p/91 e/jane@example.com a/Clementi 6th Street s/Mathematics s/Korean r/60 t/friend`<br>
+       Expected: No person is added. An error message indicating that phone number can only contain numbers and should be at least 3 digits long is shown
+8. Adding a person with inappropriate value for `rate` field:
+    1. Prerequisites: No person in the list of tutor profiles has the contact number `91234567` and email address `jane@example.com`
+    2. Test case: `add n/Jane Smith p/91234567 e/jane@example.com a/Clementi 6th Street s/Mathematics r/s t/friend`<br>
+       Expected: No person is added. An error message indicating that rates can only contain numbers is shown 
+   
 ### Deleting a person
 
 1. Deleting a person while all persons are being shown
