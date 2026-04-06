@@ -52,13 +52,20 @@ public class PersonCard extends UiPart<Region> {
     public PersonCard(Person person, int displayedIndex) {
         super(FXML);
         this.person = person;
-        if (displayedIndex > 0) {
-            id.setText(displayedIndex + ". ");
-        } else {
-            id.setText("");
-        }
+        initializeIdAndName(displayedIndex);
+        initializeContactDetails();
+        initializeAcademicDetails();
+        initializeTags();
+    }
+
+    private void initializeIdAndName(int displayedIndex) {
+        id.setText(displayedIndex + ". ");
         name.setText(person.getName().fullName);
+    }
+
+    private void initializeContactDetails() {
         phone.setText("Phone Number: " + person.getPhone().value);
+        email.setText("Email Address: " + person.getEmail().value);
 
         boolean hasAddress = person.getAddress().value != null;
         if (hasAddress) {
@@ -66,14 +73,18 @@ public class PersonCard extends UiPart<Region> {
         } else {
             address.setText("Address: Not Provided");
         }
+    }
 
+    private void initializeAcademicDetails() {
         String subjectText = person.getSubjects().stream()
                         .map(Subject -> Subject.subject)
                         .sorted()
                         .collect(Collectors.joining(", "));
         subject.setText("Subject: " + subjectText);
         rate.setText("Hourly Payment Rate: " + person.getRate().rate);
-        email.setText("Email Address: " + person.getEmail().value);
+    }
+
+    private void initializeTags() {
         person.getTags().stream()
                 .sorted(Comparator.comparing(tag -> tag.tagName))
                 .forEach(tag -> tags.getChildren().add(new Label(tag.tagName)));

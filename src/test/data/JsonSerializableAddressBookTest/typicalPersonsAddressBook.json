@@ -5,7 +5,7 @@
     "phone" : "94351253",
     "email" : "alice@example.com",
     "address" : "123, Jurong West Ave 6, #08-111",
-    "subject" : [ "Math" ],
+    "subjects" : [ "Math" ],
     "rate" : "25",
     "tags" : [ "friends" ]
   }, {
@@ -13,7 +13,7 @@
     "phone" : "98765432",
     "email" : "johnd@example.com",
     "address" : "311, Clementi Ave 2, #02-25",
-    "subject" : [ "English" ],
+    "subjects" : [ "English" ],
     "rate" : "100",
     "tags" : [ "owesMoney", "friends" ]
   }, {
@@ -21,7 +21,7 @@
     "phone" : "95352563",
     "email" : "heinz@example.com",
     "address" : "wall street",
-    "subject" : [ "Physics" ],
+    "subjects" : [ "Physics" ],
     "rate" : "30",
     "tags" : [ ]
   }, {
@@ -29,7 +29,7 @@
     "phone" : "87652533",
     "email" : "cornelia@example.com",
     "address" : "10th street",
-    "subject" : [ "Chemistry" ],
+    "subjects" : [ "Chemistry" ],
     "rate" : "40",
     "tags" : [ "friends" ]
   }, {
@@ -37,7 +37,7 @@
     "phone" : "9482224",
     "email" : "werner@example.com",
     "address" : "michegan ave",
-    "subject" : [ "Biology" ],
+    "subjects" : [ "Biology" ],
     "rate" : "50",
     "tags" : [ ]
   }, {
@@ -45,7 +45,7 @@
     "phone" : "9482427",
     "email" : "lydia@example.com",
     "address" : "little tokyo",
-    "subject" : [ "History" ],
+    "subjects" : [ "History" ],
     "rate" : "60",
     "tags" : [ ]
   }, {
@@ -53,7 +53,7 @@
     "phone" : "9482442",
     "email" : "anna@example.com",
     "address" : "4th street",
-    "subject" : [ "Geography" ],
+    "subjects" : [ "Geography" ],
     "rate" : "70",
     "tags" : [ ]
   } ]

@@ -39,10 +39,8 @@ public class EditCommand extends Command {
 
     public static final String COMMAND_WORD = "edit";
 
-    public static final String MESSAGE_USAGE = COMMAND_WORD + ": Edits the details of the person identified "
-            + "by the index number used in the displayed person list. "
-            + "Existing values will be overwritten by the input values.\n"
-            + "Parameters: INDEX (must be a positive integer) "
+    public static final String MESSAGE_USAGE = COMMAND_WORD + ": Edits the details of the tutor by their list index.\n"
+            + "Format: " + COMMAND_WORD + " INDEX "
             + "[" + PREFIX_NAME + "NAME] "
             + "[" + PREFIX_PHONE + "PHONE] "
             + "[" + PREFIX_EMAIL + "EMAIL] "
@@ -54,10 +52,13 @@ public class EditCommand extends Command {
             + PREFIX_PHONE + "91234567 "
             + PREFIX_EMAIL + "johndoe@example.com";
 
-    public static final String MESSAGE_EDIT_PERSON_SUCCESS = "Tutor updated!";
+    public static final String MESSAGE_EDIT_PERSON_SUCCESS = "Edited tutor: %1$s";
     public static final String MESSAGE_NOT_EDITED = "At least one field to edit must be provided.";
-    public static final String MESSAGE_DUPLICATE_PHONE = "This phone number already exists in the address book.";
-    public static final String MESSAGE_DUPLICATE_EMAIL = "This email already exists in the address book.";
+    public static final String MESSAGE_DUPLICATE_PERSON = "This tutor already exists in Tuto!";
+    public static final String MESSAGE_DUPLICATE_PHONE = "Another tutor already uses this phone number!";
+    public static final String MESSAGE_DUPLICATE_EMAIL = "Another tutor already uses this email address!";
+
+
 
     private final Index index;
     private final EditPersonDescriptor editPersonDescriptor;

@@ -73,7 +73,7 @@ public class FindCommandTest {
         FindCommand command = new FindCommand(predicate);
         expectedModel.updateFilteredPersonList(PREDICATE_SHOW_ALL_PERSONS);
 
-        CommandResult expectedCommandResult = new CommandResult(expectedMessage, Collections.emptyList());
+        CommandResult expectedCommandResult = new CommandResult(expectedMessage, Collections.emptyList(), "");
 
         assertCommandSuccess(command, model, expectedCommandResult, expectedModel);
         assertEquals(expectedModel.getFilteredPersonList(), model.getFilteredPersonList());
@@ -96,7 +96,7 @@ public class FindCommandTest {
         }
         String expectedMessage = String.format(MESSAGE_PERSONS_LISTED_OVERVIEW, foundPersons.size());
 
-        CommandResult expectedCommandResult = new CommandResult(expectedMessage, expectedPairs);
+        CommandResult expectedCommandResult = new CommandResult(expectedMessage, expectedPairs, "");
 
         NameContainsKeywordsPredicate predicate = preparePredicate("Carl Kurz");
         FindCommand command = new FindCommand(predicate);
@@ -123,7 +123,7 @@ public class FindCommandTest {
         }
         String expectedMessage = String.format(MESSAGE_PERSONS_LISTED_OVERVIEW, foundPersons.size());
 
-        CommandResult expectedCommandResult = new CommandResult(expectedMessage, expectedPairs);
+        CommandResult expectedCommandResult = new CommandResult(expectedMessage, expectedPairs, "");
 
         UniversalSearchPredicate predicate = new UniversalSearchPredicate(Arrays.asList("Physics", "Bio", "60"));
         FindCommand command = new FindCommand(predicate);
@@ -148,7 +148,7 @@ public class FindCommandTest {
         }
 
         String expectedMessage = String.format(MESSAGE_PERSONS_LISTED_OVERVIEW, foundPersons.size());
-        CommandResult expectedCommandResult = new CommandResult(expectedMessage, expectedPairs);
+        CommandResult expectedCommandResult = new CommandResult(expectedMessage, expectedPairs, "");
         NameContainsKeywordsPredicate predicate = preparePredicate("Meier");
         FindCommand command = new FindCommand(predicate);
 

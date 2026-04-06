@@ -23,6 +23,7 @@ public class CommandResult {
     private final boolean exit;
 
     private final List<PersonIndexPair> foundPersons;
+    private final String description;
 
     /**
      * Constructs a {@code CommandResult} with the specified fields.
@@ -32,6 +33,7 @@ public class CommandResult {
         this.showHelp = showHelp;
         this.exit = exit;
         this.foundPersons = null;
+        this.description = null;
     }
 
     /**
@@ -47,10 +49,19 @@ public class CommandResult {
      * and list of found persons.
      */
     public CommandResult(String feedbackToUser, List<PersonIndexPair> foundPersons) {
+        this(feedbackToUser, foundPersons, null);
+    }
+
+    /**
+     * Constructs a {@code CommandResult} with the specified {@code feedbackToUser},
+     * list of found persons, and find description.
+     */
+    public CommandResult(String feedbackToUser, List<PersonIndexPair> foundPersons, String description) {
         this.feedbackToUser = requireNonNull(feedbackToUser);
         this.showHelp = false;
         this.exit = false;
         this.foundPersons = foundPersons;
+        this.description = description;
     }
 
     public String getFeedbackToUser() {
@@ -59,6 +70,10 @@ public class CommandResult {
 
     public Optional<List<PersonIndexPair>> getFoundPersons() {
         return Optional.ofNullable(foundPersons);
+    }
+
+    public Optional<String> getDescription() {
+        return Optional.ofNullable(description);
     }
 
     public boolean isShowHelp() {
@@ -84,12 +99,13 @@ public class CommandResult {
         return feedbackToUser.equals(otherCommandResult.feedbackToUser)
                 && showHelp == otherCommandResult.showHelp
                 && exit == otherCommandResult.exit
-                && Objects.equals(foundPersons, otherCommandResult.foundPersons);
+                && Objects.equals(foundPersons, otherCommandResult.foundPersons)
+                && Objects.equals(description, otherCommandResult.description);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(feedbackToUser, showHelp, exit, foundPersons);
+        return Objects.hash(feedbackToUser, showHelp, exit, foundPersons, description);
     }
 
     @Override
@@ -100,6 +116,9 @@ public class CommandResult {
                 .add("exit", exit);
         if (foundPersons != null) {
             builder.add("foundPersons", foundPersons);
+        }
+        if (description != null) {
+            builder.add("description", description);
         }
         return builder.toString();
     }

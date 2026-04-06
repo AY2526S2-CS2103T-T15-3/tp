@@ -23,21 +23,11 @@ public class FindCommand extends Command {
 
     public static final String COMMAND_WORD = "find";
 
-    public static final String MESSAGE_USAGE = COMMAND_WORD + ": Finds tutors by name, subject, hourly rate, "
-            + "or universally across all fields.\n"
-            + "Parameters: [KEYWORD [MORE_KEYWORDS]] [n/NAME [MORE_NAME_KEYWORDS]] [s/SUBJECT]... [r/RATE]\n"
-            + "Note: Unprefixed keywords (universal search) must appear before any prefixes.\n"
-            + "If keywords are placed after a prefix, they are treated as that prefix's value.\n"
+    public static final String MESSAGE_USAGE = COMMAND_WORD + ": Finds tutors by keywords.\n"
+            + "Format: " + COMMAND_WORD + " [KEYWORD] [n/NAME] [s/SUBJECT]... [r/RATE]\n"
             + "Examples:\n"
-            + COMMAND_WORD + " alice\n"
-            + COMMAND_WORD + " 50\n"
-            + COMMAND_WORD + " n/Jo\n"
-            + COMMAND_WORD + " s/Math s/Science\n"
-            + COMMAND_WORD + " r/16\n"
-            + COMMAND_WORD + " r/<10\n"
-            + COMMAND_WORD + " r/>10\n"
-            + COMMAND_WORD + " r/10-20\n"
-            + COMMAND_WORD + " n/Alex r/15 s/Chemistry";
+            + "• " + COMMAND_WORD + " alice\n"
+            + "• " + COMMAND_WORD + " n/Alex r/15-20 s/Math";
 
     private final Predicate<Person> predicate;
     private final String findDescription;
@@ -66,18 +56,6 @@ public class FindCommand extends Command {
         return predicate;
     }
 
-    @Override
-    public CommandResult execute(Model model) {
-        requireNonNull(model);
-        model.updateFilteredPersonList(Model.PREDICATE_SHOW_ALL_PERSONS);
-        ObservableList<Person> displayedPersons = model.getFilteredPersonList();
-        List<Person> foundPersons = getFoundPersons(displayedPersons);
-        List<PersonIndexPair> foundPersonIndices = getPersonIndices(foundPersons, displayedPersons);
-        String resultMessage = buildResultMessage(foundPersonIndices);
-
-        return new CommandResult(resultMessage, foundPersonIndices);
-    }
-
     private List<Person> getFoundPersons(ObservableList<Person> allPersons) {
         return allPersons.stream()
                 .filter(predicate)
@@ -93,13 +71,29 @@ public class FindCommand extends Command {
         return pairs;
     }
 
-    private String buildResultMessage(List<PersonIndexPair> pairs) {
-        String count = String.format(Messages.MESSAGE_PERSONS_LISTED_OVERVIEW, pairs.size());
+    private String buildResultCount(List<PersonIndexPair> pairs) {
+        return String.format(Messages.MESSAGE_PERSONS_LISTED_OVERVIEW, pairs.size());
+    }
 
-        if (findDescription != null && !findDescription.isEmpty()) {
-            return "Find results for:\n" + findDescription + "\n" + count;
+    private String buildResultDescription() {
+        if (findDescription == null || findDescription.isEmpty()) {
+            return "";
         }
-        return count;
+        return findDescription;
+    }
+
+    @Override
+    public CommandResult execute(Model model) {
+        requireNonNull(model);
+        model.updateFilteredPersonList(Model.PREDICATE_SHOW_ALL_PERSONS);
+        ObservableList<Person> displayedPersons = model.getFilteredPersonList();
+        List<Person> foundPersons = getFoundPersons(displayedPersons);
+        List<PersonIndexPair> foundPersonIndices = getPersonIndices(foundPersons, displayedPersons);
+
+        String countMessage = buildResultCount(foundPersonIndices);
+        String description = buildResultDescription();
+
+        return new CommandResult(countMessage, foundPersonIndices, description);
     }
 
     @Override

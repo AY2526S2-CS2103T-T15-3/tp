@@ -99,20 +99,20 @@ public class FindCommandParser implements Parser<FindCommand> {
         addRatePart(argMultimap, parts);
         addTagPart(argMultimap, parts);
 
-        return parts.isEmpty() ? "" : String.join(", ", parts);
+        return parts.isEmpty() ? "" : String.join(" • ", parts);
     }
 
     private void addUniversalPart(ArgumentMultimap argMultimap, List<String> parts) {
         String preamble = argMultimap.getPreamble().trim();
         if (!preamble.isEmpty()) {
-            parts.add("universal search: '" + preamble + "'");
+            parts.add("All fields: \"" + preamble + "\"");
         }
     }
 
     private void addNamePart(ArgumentMultimap argMultimap, List<String> parts) {
         if (argMultimap.getValue(PREFIX_NAME).isPresent()) {
             String nameValue = argMultimap.getValue(PREFIX_NAME).get().trim();
-            parts.add("name: '" + nameValue + "'");
+            parts.add("Name: \"" + nameValue + "\"");
         }
     }
 
@@ -122,14 +122,14 @@ public class FindCommandParser implements Parser<FindCommand> {
                     argMultimap.getAllValues(PREFIX_SUBJECT).stream()
                             .map(String::trim)
                             .toList());
-            parts.add("subject: '" + subjectValue + "'");
+            parts.add("Subject: \"" + subjectValue + "\"");
         }
     }
 
     private void addRatePart(ArgumentMultimap argMultimap, List<String> parts) {
         if (argMultimap.getValue(PREFIX_RATE).isPresent()) {
             String rateValue = argMultimap.getValue(PREFIX_RATE).get().trim();
-            parts.add("hourly payment rate: '" + rateValue + "'");
+            parts.add("Rate: \"" + rateValue + "\"");
         }
     }
 
@@ -139,7 +139,7 @@ public class FindCommandParser implements Parser<FindCommand> {
                     argMultimap.getAllValues(PREFIX_TAG).stream()
                             .map(String::trim)
                             .toList());
-            parts.add("tag: '" + tagValue + "'");
+            parts.add("Tag: \"" + tagValue + "\"");
         }
     }
 
@@ -324,7 +324,7 @@ public class FindCommandParser implements Parser<FindCommand> {
             return new RateGreaterThanPredicate(Integer.parseInt(num));
         }
 
-        // Case 3: Range search, e.g. r/10-20
+        // Case 3: Rate range search, e.g. r/10-20
         if (rateArgs.contains("-")) {
             // Reject malformed inputs like r/10-20-30, restrict to only 1 dash
             if (rateArgs.chars().filter(ch -> ch == '-').count() != 1) {

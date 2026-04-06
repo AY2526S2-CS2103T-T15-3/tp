@@ -15,7 +15,7 @@ import seedu.address.testutil.PersonBuilder;
 public class SubjectContainsKeywordsPredicateTest {
 
     @Test
-    public void equals() {
+    public void equals_differentConditions_returnsCorrectResult() {
         List<String> firstPredicateKeywordList = Collections.singletonList("first");
         List<String> secondPredicateKeywordList = Arrays.asList("first", "second");
 
@@ -44,37 +44,61 @@ public class SubjectContainsKeywordsPredicateTest {
 
     @Test
     public void test_subjectContainsKeywords_returnsTrue() {
-        // One keyword
+        // [Equivalence Partitioning] Single keyword matching full subject
         SubjectContainsKeywordsPredicate predicate =
                 new SubjectContainsKeywordsPredicate(Collections.singletonList("Math"));
         assertTrue(predicate.test(new PersonBuilder().withSubject("Math").build()));
 
-        // Multiple keywords (AND)
+        // [Equivalence Partitioning] Word-Prefix keyword matching at the start of a subsequent word
+        predicate = new SubjectContainsKeywordsPredicate(Collections.singletonList("Math"));
+        assertTrue(predicate.test(new PersonBuilder().withSubject("Advanced Math").build()));
+
+        // [Equivalence Partitioning] Multi-word keyword exact phrase match with spaces
+        predicate = new SubjectContainsKeywordsPredicate(Collections.singletonList("Advanced Math"));
+        assertTrue(predicate.test(new PersonBuilder().withSubject("Advanced Math").build()));
+
+        // [Boundary Testing] Subject with multiple consecutive spaces (edge case allowed by regex)
+        predicate = new SubjectContainsKeywordsPredicate(Collections.singletonList("Math"));
+        assertTrue(predicate.test(new PersonBuilder().withSubject("Advanced  Math").build()));
+
+        // [Equivalence Partitioning] Multiple matching keywords (AND logic)
         predicate = new SubjectContainsKeywordsPredicate(Arrays.asList("Math", "Physics"));
         assertTrue(predicate.test(new PersonBuilder().withSubject("Math", "Physics").build()));
 
-        // Mixed-case keywords
+        // [Equivalence Partitioning] Case-insensitivity match
         predicate = new SubjectContainsKeywordsPredicate(Arrays.asList("mAtH", "pHySiCs"));
         assertTrue(predicate.test(new PersonBuilder().withSubject("Math", "Physics").build()));
     }
 
     @Test
     public void test_subjectDoesNotContainKeywords_returnsFalse() {
-        // Zero keywords
-        SubjectContainsKeywordsPredicate predicate = new SubjectContainsKeywordsPredicate(Collections.emptyList());
+        // [Boundary Testing] Null keywords list
+        SubjectContainsKeywordsPredicate predicate = new SubjectContainsKeywordsPredicate(null);
         assertFalse(predicate.test(new PersonBuilder().withSubject("Math").build()));
 
-        // Non-matching keyword
+        // [Boundary Testing] Zero keywords (empty list)
+        predicate = new SubjectContainsKeywordsPredicate(Collections.emptyList());
+        assertFalse(predicate.test(new PersonBuilder().withSubject("Math").build()));
+
+        // [Boundary Testing] Keyword list containing a null keyword
+        predicate = new SubjectContainsKeywordsPredicate(Collections.singletonList(null));
+        assertFalse(predicate.test(new PersonBuilder().withSubject("Math").build()));
+
+        // [Equivalence Partitioning] Keyword not matching subject prefix or any exact subsequent words
+        predicate = new SubjectContainsKeywordsPredicate(Collections.singletonList("g"));
+        assertFalse(predicate.test(new PersonBuilder().withSubject("Biology").build()));
+
+        // [Equivalence Partitioning] Totally unmatching keyword
         predicate = new SubjectContainsKeywordsPredicate(Arrays.asList("Physics"));
         assertFalse(predicate.test(new PersonBuilder().withSubject("Math").build()));
 
-        // Only one matching keyword
+        // [Equivalence Partitioning] Partial match in AND logic (one matches, one doesn't)
         predicate = new SubjectContainsKeywordsPredicate(Arrays.asList("Math", "Biology"));
         assertFalse(predicate.test(new PersonBuilder().withSubject("Math").build()));
     }
 
     @Test
-    public void toStringMethod() {
+    public void toString_validKeywords_returnsExpectedString() {
         List<String> keywords = List.of("keyword1", "keyword2");
         SubjectContainsKeywordsPredicate predicate = new SubjectContainsKeywordsPredicate(keywords);
 

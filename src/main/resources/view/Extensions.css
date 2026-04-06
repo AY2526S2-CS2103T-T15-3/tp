@@ -46,3 +46,8 @@
 .error {
     -fx-effect: dropshadow(gaussian, rgba(217,54,81,0.12), 6, 0.2, 0, 2);
 }
+
+.success {
+    /* Success text with vibrant green for light theme */
+    -fx-text-fill: #229954 !important;
+}

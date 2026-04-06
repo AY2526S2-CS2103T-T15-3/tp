@@ -15,8 +15,27 @@ import seedu.address.commons.core.LogsCenter;
  */
 public class HelpWindow extends UiPart<Stage> {
 
-    public static final String USERGUIDE_URL = "https://ay2526s2-cs2103t-t15-3.github.io/tp/";
-    public static final String HELP_MESSAGE = "Refer to the user guide: " + USERGUIDE_URL;
+    public static final String USERGUIDE_URL = "https://ay2526s2-cs2103t-t15-3.github.io/tp/UserGuide.html";
+    public static final String HELP_MESSAGE = "For more detailed instructions, refer to the user guide: "
+            + USERGUIDE_URL + "\n\n"
+            + "Available Commands:\n"
+            + "• add    : Adds a tutor (e.g. add n/John p/91234567 e/j@o.com s/Math r/50 [a/ADDR] [t/TAG])\n"
+            + "• list   : Shows all tutors\n"
+            + "• find   : Finds tutors by keywords (e.g. find n/John r/50)\n"
+            + "• edit   : Edits an existing tutor (e.g. edit 1 p/98765432)\n"
+            + "• delete : Deletes a tutor (e.g. delete 1)\n"
+            + "• sort   : Sorts tutors by name or rate (e.g. sort rate asc)\n"
+            + "• clear  : Clears all tutors\n"
+            + "• help   : Shows this window\n"
+            + "• exit   : Closes Tuto\n\n"
+            + "Some Important Constraints:\n"
+            + "• Names should only contain alphanumeric characters and spaces.\n"
+            + "• Phone numbers should only contain numbers, and it should be at least 3 digits long.\n"
+            + "• Emails should be of the format local-part@domain and adhere to standard constraints.\n"
+            + "• Addresses can take any values.\n"
+            + "• Rates should only contain numbers, and it should not be blank.\n"
+            + "• Subjects should only contain alphanumeric characters and spaces, and it should not be blank.\n"
+            + "• Tags names should be alphanumeric.";
 
     private static final Logger logger = LogsCenter.getLogger(HelpWindow.class);
     private static final String FXML = "HelpWindow.fxml";

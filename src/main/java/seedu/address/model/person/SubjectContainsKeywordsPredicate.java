@@ -1,6 +1,7 @@
 package seedu.address.model.person;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.function.Predicate;
 
 import seedu.address.commons.util.ToStringBuilder;
@@ -38,8 +39,19 @@ public class SubjectContainsKeywordsPredicate implements Predicate<Person> {
 
     private List<String> getPersonSubjectsLower(Person person) {
         return person.getSubjects().stream()
-                .map(subject -> subject.subject == null ? "" : subject.subject.toLowerCase())
+                .map(subject -> getNormalizedLowerSubject(subject))
                 .toList();
+    }
+
+    private String getNormalizedLowerSubject(Subject subject) {
+        if (subject.subject == null) {
+            return "";
+        }
+        return normalizeSpaces(subject.subject.toLowerCase());
+    }
+
+    private String normalizeSpaces(String subject) {
+        return subject.trim().replaceAll("\\s+", " ");
     }
 
     private boolean matchesAll(List<String> personSubjectsLower) {
@@ -48,9 +60,20 @@ public class SubjectContainsKeywordsPredicate implements Predicate<Person> {
     }
 
     private boolean hasSubjectMatchingKeywordLower(List<String> personSubjectsLower, String keyword) {
-        String kwLower = keyword == null ? "" : keyword.toLowerCase();
+        if (keyword == null || keyword.trim().isEmpty()) {
+            return false;
+        }
+        String kwLower = keyword.toLowerCase().trim().replaceAll("\\s+", " ");
+
         return personSubjectsLower.stream()
-                .anyMatch(personSubject -> personSubject.startsWith(kwLower));
+                .anyMatch(normalizedSubject -> isSubjectMatchingNormalizedKeyword(normalizedSubject, kwLower));
+    }
+
+    private boolean isSubjectMatchingNormalizedKeyword(String normalizedSubject, String kwLower) {
+        if (normalizedSubject.startsWith(kwLower)) {
+            return true;
+        }
+        return normalizedSubject.contains(" " + kwLower);
     }
 
     @Override
@@ -66,7 +89,7 @@ public class SubjectContainsKeywordsPredicate implements Predicate<Person> {
 
         SubjectContainsKeywordsPredicate otherSubjectContainsKeywordsPredicate =
                 (SubjectContainsKeywordsPredicate) other;
-        return keywords.equals(otherSubjectContainsKeywordsPredicate.keywords);
+        return Objects.equals(keywords, otherSubjectContainsKeywordsPredicate.keywords);
     }
 
     @Override

@@ -15,11 +15,11 @@ public class SortCommand extends Command {
     public static final String COMMAND_WORD = "sort";
 
     public static final String MESSAGE_USAGE = COMMAND_WORD
-            + ": Sorts the persons in the displayed list by the given field.\n"
-            + "Parameters: name|rate asc|desc\n"
+            + ": Sorts the tutors in the displayed list by the given field.\n"
+            + "Parameters: field (name | rate) order (asc | desc)\n"
             + "Example: " + COMMAND_WORD + " name asc";
 
-    public static final String MESSAGE_SUCCESS = "Sorted persons by %1$s in %2$s order";
+    public static final String MESSAGE_SUCCESS = "Sorted tutors by %1$s in %2$s order!";
 
     private final PersonSortField sortField;
     private final PersonSortOrder sortOrder;

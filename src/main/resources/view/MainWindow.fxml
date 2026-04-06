@@ -43,24 +43,21 @@
           <SplitPane style="-fx-background-color: transparent;">
             <items>
               <!-- Left Side: Person List -->
-              <VBox fx:id="personList" minWidth="350" prefWidth="350">
-                 <padding>
-                    <Insets top="0" right="15" bottom="0" left="0" />
-                 </padding>
+              <VBox fx:id="personList" minWidth="375" maxWidth="475" prefWidth="375">
                 <StackPane fx:id="personListPanelPlaceholder" VBox.vgrow="ALWAYS"/>
               </VBox>
 
               <!-- Right Side: Result Display (Top) & Command Box (Bottom) -->
               <VBox spacing="15">
                 <padding>
-                    <Insets top="0" right="0" bottom="0" left="15" />
+                    <Insets top="8" right="8" bottom="8" left="8" />
                 </padding>
                 <StackPane fx:id="resultDisplayPlaceholder" VBox.vgrow="ALWAYS"
-                           minWidth="450" style="-fx-background-color: transparent;">
+                           minWidth="450" minHeight="0" style="-fx-background-color: transparent;">
                 </StackPane>
 
                 <StackPane fx:id="commandBoxPlaceholder" VBox.vgrow="NEVER" minWidth="450" minHeight="67.5"
-                           maxHeight="200"
+                           maxHeight="350" alignment="BOTTOM_CENTER"
                            style="-fx-background-color: transparent;">
                 </StackPane>
               </VBox>

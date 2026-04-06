@@ -118,13 +118,27 @@ How the `Logic` component works:
 
 Here are the other classes in `Logic` (omitted from the class diagram above) that are used for parsing a user command:
 
-<puml src="diagrams/ParserClasses.puml" width="600"/>
+<puml src="diagrams/ParserClasses.puml" width="600"></puml>
 
 How the parsing works:
 
 - When called upon to parse a user command, the `AddressBookParser` class creates an `XYZCommandParser` (`XYZ` is a placeholder for the specific command name e.g., `AddCommandParser`) which uses the other classes shown above to parse the user command and create a `XYZCommand` object (e.g., `AddCommand`) which the `AddressBookParser` returns back as a `Command` object.
 - All `XYZCommandParser` classes (e.g., `AddCommandParser`, `DeleteCommandParser`, ...) inherit from the `Parser` interface so that they can be treated similarly where possible e.g, during testing.
 
+### Find command
+
+The `find` command allows users to filter the displayed person list based on the specified search criteria.
+
+The diagram below shows the parser classes involved in handling the `find` command.
+
+<puml src="diagrams/FindParserClassDiagram.puml" width="500"/>
+
+When the user enters a `find` command, `AddressBookParser` identifies the command word and creates a `FindCommandParser`.  
+`FindCommandParser` then parses the input arguments and constructs a `FindCommand`, which is returned as a `Command` object for execution.
+
+Upon execution, `FindCommand` calls `Model#updateFilteredPersonList(...)` to update the displayed list according to the given predicate.
+
+The `find` command can support different forms of filtering through different predicates, making the search functionality flexible and extensible.
 ### Model component
 
 **API** : [`Model.java`](https://github.com/AY2526S2-CS2103T-T15-3/tp/tree/master/src/main/java/seedu/address/model/Model.java)
@@ -290,8 +304,8 @@ _{Explain here how the data archiving feature will be implemented}_
 
 **Target user profile**:
 
-- has a need to manage multiple freelance tutor contacts for their children
-- wants a structured way to store tutor information (subjects, rates, availability)
+- has a need to manage multiple freelance tutor profile for their children
+- wants a structured way to store tutor information (subjects, rates)
 - prefer desktop apps over other types
 - prefers typing to mouse interactions
 - is reasonably comfortable using CLI apps
@@ -304,27 +318,33 @@ make decisions of a Tutor for their Children.
 
 Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unlikely to have) - `*`
 
-| Priority | As a …​ | I can…​                              | So that...​                                           |
-| -------- | ------- | ------------------------------------ | ----------------------------------------------------- |
-| `* * *`  | parent  | view a tutor profile                 | I can decide whether the tutor is good for my child   |
-| `* * *`  | parent  | delete a tutor from the address book | the address book stays relevant and uncluttered       |
-| `* * *`  | parent  | add a tutor profile                  | I can keep track of tutors                            |
-| `* * *`  | parent  | view a tutor's hourly rate           | I can find someone who fits within my family's budget |
-| `* * `   | parent  | search for tutors by subject         | I can match a tutor to my child's academic needs      |
-
-_{More to be added}_
+| Priority | As a …​ | I can…​                                                         | So that...​                                                         |
+| ----- | ------- |-----------------------------------------------------------------|---------------------------------------------------------------------|
+| `* * *` | parent  | add a tutor profile with name,phone,email,subject and rate      | I can keep track of tutors for my child                             |
+| `* * *` | parent  | view all tutors profiles in a list                              | I can have an overview of available tutors for my child             |
+| `* * *` | parent  | view a tutor's full profile details                             | I can evaluate if the tutor is suitable for my child                |
+| `* * *` | parent  | delete a tutor profile                                          | I can remove outdated or irrelevant tutors                          |
+| `* * *` | parent  | edit a tutor's details                                          | I can keep tutor information up to date                             |
+| `* * *` | parent  | search tutors by subject                                        | I can match tutors to my child's academic needs                     |
+| `* * *` | parent  | search tutors by name                                           | I can quickly locate a specific tutor                               |
+| `* * *` | parent  | search tutors within a rate range                               | I can shortlist affordable tutors within my budget                  |
+| `* * ` | parent  | search tutors by multiple attributes (e.g. name, subject, rate) | I can refine my search results                                      |
+| `* * ` | parent  | tag tutors with labels                                          | I can categorise or leave a note on tutors for easier management    |
+| `* * ` | parent  | clear all entries                                               | I can reset the application to an empty state                       |
+| `*  ` | parent  | sort tutors by ascending or descending rate                     | I can easily identify the most affordable and most expensive tutors |
+| `*  ` | parent  | sort tutors by alphabetical order                               | I can browse through Tuto in a predictable manner                   |
 
 ### Use cases
 
 (For all use cases below, the **System** is the `Tuto` and the **Actor** is the `Parent`, unless specified otherwise)
 
-#### Use Case: U1. View all Tutor Contacts
+#### Use Case: U1. View all Tutor Profile
 
 Preconditions: `Tuto` is running
 
 **MSS:**
 
-1. `Parent` requests to list all tutor contacts
+1. `Parent` requests to list all tutor profile
 2. `Tuto` returns a list of all stored Tutor Profiles
    Use Case ends
 
@@ -340,13 +360,13 @@ Preconditions: `Tuto` is running
 
         Use case ends.
 
-#### Use Case: U2. View a specific Tutor Contact
+#### Use Case: U2. View a specific Tutor Profile
 
 Preconditions: `Tuto` is running
 
 **MSS:**
 
-1. `Parent` requests to list all Tutor Contacts (U1)
+1. `Parent` requests to list all Tutor Profile (U1)
 2. `Parent` enters the command specifying the Index
 3. `Tuto` displays the tutor's full profile
    Use Case ends
@@ -365,16 +385,16 @@ Preconditions: `Tuto` is running
 
 #### Use Case: U3. Delete a Tutor from Tuto
 
-Preconditions: `Tuto` is running and `Tuto` contains at least one Tutor Contact
+Preconditions: `Tuto` is running and `Tuto` contains at least one Tutor Profile
 
-Guarantees: The Tutor Contact is removed from storage upon successful completion.
+Guarantees: The Tutor Profile is removed from storage upon successful completion.
 
 **MSS:**
 
-1. `Parent` requests to list all Tutor Contacts (U1)
+1. `Parent` requests to list all Tutor Profiles (U1)
 2. `Parent` enters the delete command specifying the Index of the tutor.
 3. `Tuto` deletes the contact
-4. `Tuto` displays a confirmation message that the Tutor Contact has been deleted successfully
+4. `Tuto` displays a confirmation message that the Tutor Profile has been deleted successfully
    Use Case ends
 
 **Extensions**
@@ -393,7 +413,7 @@ Guarantees: The Tutor Contact is removed from storage upon successful completion
 
 Preconditions: `Tuto` is running
 
-Guarantees: If MSS completes until step 3, Tutor contact will be added to Tuto’s storage
+Guarantees: If MSS completes until step 3, Tutor Profile will be added to Tuto’s storage
 
 **MSS:**
 
@@ -447,13 +467,13 @@ Guarantees: If MSS completes until step 3, `Tuto` displays all tutors in the con
 
 #### Use Case: U6. Edit a Tutor Profile
 
-Preconditions: `Tuto` is running and `Tuto` contains at least one Tutor Contact
+Preconditions: `Tuto` is running and `Tuto` contains at least one Tutor Profile
 
-Guarantees: If MSS completes until step 4, the Tutor Contact will be updated in `Tuto's` storage.
+Guarantees: If MSS completes until step 4, the Tutor Profile will be updated in `Tuto's` storage.
 
 **MSS:**
 
-1. `Parent` requests to list all Tutor Contacts (U1).
+1. `Parent` requests to list all Tutor Profile (U1).
 2. `Parent` enters the edit command, specifying the Index of the tutor and the Parameters to update.
 3. `Tuto` validates the index and the new parameters.
 4. `Tuto` updates the Tutor Profile
@@ -472,7 +492,7 @@ Guarantees: If MSS completes until step 4, the Tutor Contact will be updated in 
 
         Use case ends
 
-- 3c. The update results in a Duplicate Entry of an existing Tutor Contact.
+- 3c. The update results in a Duplicate Entry of an existing Tutor Profile.
     - 3c1. `Tuto` shows a duplicate entry error message.
 
         Use case ends
@@ -491,16 +511,24 @@ Guarantees: If MSS completes until step 4, the Tutor Contact will be updated in 
 
 ### Glossary
 
+- **ArgumentMultimap**: A data structure that stores mappings between prefixes and their associated values after tokenization
+- **Argument Tokenization**: The process of splitting user input into key-value pairs based on prefixes.
 - **Command**: The entire line of text entered by the user (containing the command word, flags, and parameters) to execute a specific task.
+- **CommandResult**: An object that encapsulate the result of a command execution, including feedback to be displayed to the user.
 - **Command Word**: The first word of a Command (e.g., add, edit, delete) that identifies the action to be performed.
-- **Flag**: A specific prefix (e.g., /n, /p, /e) used to identify the type of data following it.
+- **Duplicate Entry**: A tutor profile with the same phone number or email as an existing profile.
+- **Exception**: An error condition (e.g. ParseException) that interrupts normal execution and is handled gracefully.
 - **Human-readable**: A file format (like JSON or Text) that allows data to be read and edited using a standard text editor, without Tuto.
 - **Index**: The number displayed next to a tutor's name in the contact list (e.g., the 3 in 3. John Doe). Used to select a specific tutor for commands like edit or delete.
 - **JAR File**: The file format used to distribute Tuto, allowing it to run on any computer with Java installed without a setup wizard.
+- **Model**: The component responsible for storing and managing application data.
 - **Parameter**: The specific information provided after a Flag (e.g., John is the parameter for /n).
+- **Person**: A data entity representing a tutor profile, containing attributes such as name, phone, email, address, subject, rate and tags.
+- **Prefix**: A specific prefix (e.g., /n, /p, /e) used to identify the type of data following it.
+- **Rate**: The cost per hour for hiring the tutor.
 - **Subject**: The academic discipline a tutor teaches (e.g., Math, Physics).
+- **Tag**: A customisable label user can put on a tutor profile.
 - **Tutor Profile**: The complete set of data (Name, Phone, Email, etc.) stored for one specific tutor.
-
 ---
 
 ## **Appendix: Instructions for manual testing**

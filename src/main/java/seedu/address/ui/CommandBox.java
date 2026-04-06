@@ -1,8 +1,5 @@
 package seedu.address.ui;
 
-import javafx.animation.KeyFrame;
-import javafx.animation.KeyValue;
-import javafx.animation.Timeline;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextArea;
@@ -10,7 +7,6 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Region;
 import javafx.scene.text.Text;
-import javafx.util.Duration;
 import seedu.address.logic.commands.CommandResult;
 import seedu.address.logic.commands.exceptions.CommandException;
 import seedu.address.logic.parser.exceptions.ParseException;
@@ -22,7 +18,11 @@ public class CommandBox extends UiPart<Region> {
 
     public static final String ERROR_STYLE_CLASS = "error";
     private static final String FXML = "CommandBox.fxml";
-    private Timeline resizeTimeline;
+
+    private static final double MIN_HEIGHT = 50.0;
+    private static final double MAX_HEIGHT = 350.0;
+    private static final double HEIGHT_PADDING_BUFFER = 50.0;
+    private static final double WIDTH_PADDING_BUFFER = 60.0;
 
     private final CommandExecutor commandExecutor;
 
@@ -37,6 +37,7 @@ public class CommandBox extends UiPart<Region> {
         this.commandExecutor = commandExecutor;
         commandTextField.textProperty().addListener((observable, oldValue, newValue) -> {
             setStyleToDefault();
+
             int oldLength;
             if (oldValue == null) {
                 oldLength = 0;
@@ -50,16 +51,18 @@ public class CommandBox extends UiPart<Region> {
             } else {
                 newLength = newValue.length();
             }
+
             boolean isPaste = (newLength - oldLength) > 1;
             handleHeightChange(isPaste);
         });
 
         commandTextField.addEventFilter(KeyEvent.KEY_PRESSED, event -> {
-            if (event.getCode() == KeyCode.ENTER) {
-                if (!event.isShiftDown()) {
-                    event.consume();
-                    handleCommandEntered();
-                }
+            boolean isEnterKey = event.getCode() == KeyCode.ENTER;
+            boolean isShiftDown = event.isShiftDown();
+
+            if (isEnterKey && !isShiftDown) {
+                event.consume();
+                handleCommandEntered();
             }
         });
 
@@ -76,35 +79,56 @@ public class CommandBox extends UiPart<Region> {
             return;
         }
 
-        Text text = new Text(commandTextField.getText());
+        double newHeight = computeContentHeight(width);
+        double targetHeight = Math.min(newHeight, MAX_HEIGHT);
+
+        updateCommandBoxHeight(targetHeight);
+        adjustScrollPosition(newHeight, isPaste);
+    }
+
+    /**
+     * Computes the height required for the content in the command box.
+     */
+    private double computeContentHeight(double width) {
+        String content = getFormattedTextContent();
+
+        Text text = new Text(content);
         text.setFont(commandTextField.getFont());
-        text.setWrappingWidth(width - 60); // Buffer for padding and scrollbar
+        text.setWrappingWidth(width - WIDTH_PADDING_BUFFER);
 
         double height = text.getLayoutBounds().getHeight();
+        double computedHeight = Math.ceil(height + HEIGHT_PADDING_BUFFER);
 
-        double fontSize = commandTextField.getFont().getSize();
-        double verticalBuffer = fontSize + 20;
+        return Math.max(computedHeight, MIN_HEIGHT);
+    }
 
-        double newHeight = Math.ceil(height + verticalBuffer);
-
-        if (newHeight < 50) {
-            newHeight = 50;
+    /**
+     * Formats the text content to ensure accurate height calculation.
+     */
+    private String getFormattedTextContent() {
+        String content = commandTextField.getText();
+        if (content == null || content.isEmpty()) {
+            return " "; // use a placeholder to calculate minimum height
+        } else if (content.endsWith("\n")) {
+            return content + " "; // so that trailing newlines are accounted for by Text bounds
         }
+        return content;
+    }
 
-        double maxHeight = 200;
-        double targetHeight = Math.min(newHeight, maxHeight);
-
+    /**
+     * Updates the command box preferred height if it differs from the target.
+     */
+    private void updateCommandBoxHeight(double targetHeight) {
         if (commandTextField.getPrefHeight() != targetHeight) {
-            if (resizeTimeline != null) {
-                resizeTimeline.stop();
-            }
-
-            resizeTimeline = new Timeline(new KeyFrame(Duration.millis(50),
-                    new KeyValue(commandTextField.prefHeightProperty(), targetHeight)));
-            resizeTimeline.play();
+            commandTextField.setPrefHeight(targetHeight);
         }
+    }
 
-        if (isPaste && newHeight > maxHeight) {
+    /**
+     * Adjusts the scroll position of the command box.
+     */
+    private void adjustScrollPosition(double newHeight, boolean isPaste) {
+        if (newHeight <= MAX_HEIGHT || isPaste) {
             commandTextField.setScrollTop(0);
         }
     }

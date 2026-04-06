@@ -15,6 +15,12 @@ import seedu.address.model.person.Person;
  */
 public class PersonListPanel extends UiPart<Region> {
     private static final String FXML = "PersonListPanel.fxml";
+    private static final String EMPTY_LIST_PLACEHOLDER_TEXT = "No tutors found.";
+    private static final String EMPTY_LIST_PLACEHOLDER_STYLE = "-fx-text-fill: grey; "
+            + "-fx-alignment: center; -fx-padding: 20;";
+    private static final String NO_CONTACTS_TITLE = "Tuto has no Contacts Yet";
+    private static final String ONE_CONTACT_TITLE = "Tuto has 1 Contact";
+    private static final String MULTIPLE_CONTACTS_TITLE_FORMAT = "Tuto has %d Contacts";
 
     private final Logic logic;
     private final ObservableList<Person> displayedPersons;
@@ -35,14 +41,36 @@ public class PersonListPanel extends UiPart<Region> {
         super(FXML);
         this.logic = logic;
         this.displayedPersons = logic.getFilteredPersonList();
+
+        initializeListView();
+        initializeHeaderListeners();
+        updateHeaderLabels();
+    }
+
+    private void initializeListView() {
         personListView.setItems(displayedPersons);
         personListView.setCellFactory(listView -> new PersonListViewCell());
+        updatePlaceholder();
+    }
 
+    private void initializeHeaderListeners() {
         ObservableList<Person> allPersons = logic.getAddressBook().getPersonList();
-        ListChangeListener<Person> headerRefreshListener = c -> updateHeaderLabels();
+        ListChangeListener<Person> headerRefreshListener = c -> {
+            updateHeaderLabels();
+            updatePlaceholder();
+        };
         allPersons.addListener(headerRefreshListener);
         displayedPersons.addListener(headerRefreshListener);
-        updateHeaderLabels();
+    }
+
+    private void updatePlaceholder() {
+        if (displayedPersons.isEmpty()) {
+            Label placeholder = new Label(EMPTY_LIST_PLACEHOLDER_TEXT);
+            placeholder.setStyle(EMPTY_LIST_PLACEHOLDER_STYLE);
+            personListView.setPlaceholder(placeholder);
+        } else {
+            personListView.setPlaceholder(null);
+        }
     }
 
     /**
@@ -53,15 +81,19 @@ public class PersonListPanel extends UiPart<Region> {
     }
 
     private void updateHeaderLabels() {
-        int n = logic.getAddressBook().getPersonList().size();
-        if (n == 0) {
-            contactHeaderLabel.setText("No Contacts Yet");
-        } else if (n == 1) {
-            contactHeaderLabel.setText("Tuto: 1 Contact");
-        } else {
-            contactHeaderLabel.setText("Tuto: " + n + " Contacts");
-        }
+        int totalContacts = logic.getAddressBook().getPersonList().size();
+        contactHeaderLabel.setText(getContactHeaderTitle(totalContacts));
         sortHeaderLabel.setText(logic.getDisplayedListSortDescription());
+    }
+
+    private String getContactHeaderTitle(int numContacts) {
+        if (numContacts == 0) {
+            return NO_CONTACTS_TITLE;
+        } else if (numContacts == 1) {
+            return ONE_CONTACT_TITLE;
+        } else {
+            return String.format(MULTIPLE_CONTACTS_TITLE_FORMAT, numContacts);
+        }
     }
 
     /**

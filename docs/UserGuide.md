@@ -348,62 +348,144 @@ Edited Person: John Doe; Phone: 91234567; Email: johndoe@example.com; Address: ;
 ---
 ### Finding Tutors : `find`
 
-Searches for tutors by name, subject, or hourly rate. Can combine prefixes (`n/`, `s/`, `r/`) in one command.
+Search for tutors by keyword, name, subject, or hourly rate — or combine them for precise filtering.
 
-| Prefix | Description | Behaviour                                                                                                               | Example                                          |
-|--------|------------|-------------------------------------------------------------------------------------------------------------------------|--------------------------------------------------|
-| `n/NAME_KEYWORD [MORE_NAME_KEYWORDS]` (Name) | Search by tutor name | - Multiple keywords allowed (space-separated)<br>- Case-insensitive<br>- Prefix matching<br>- Only **one `n/` allowed** | `find n/Hans` |
-| `s/SUBJECT` (Subject) | Search by subject taught | - Multiple `s/` prefixes allowed<br>- Case-insensitive<br>- Prefix matching<br>                                         | `find s/math s/science`                          |
-| `r/RATE` (Rate) | Search by hourly rate | - Matches **exact rate**<br>- Only **one `r/` allowed**                                                                 | `find r/50`                                      |
+---
 
-- Name and subject searches support **prefix-based matching**
-  - e.g. `find n/Han` matches "Hans"
-  - e.g. `find s/Mat` matches "Math", "Mathematics"
-- Multiple name keywords return tutors matching any of the keywords (OR logic). 
-  - e.g. `find n/Han Bo` returns all tutors with names starting with "Han" or "Bo" (e.g. "Hans", "Bo").
-- Multiple subject prefixes return tutors matching any of the keywords (OR logic).
-  - e.g. `find s/Math s/Chemistry` returns all tutors with subject Math or Chemistry.
-- Spaces after prefixes are optional (`find n/John` and `find n/ John` both work)
-- When different prefixes are used together, tutors must match **all conditions**  
-  (e.g. `find n/Alex r/40 s/Math` returns tutors named Alex, charging 40, and teaching Math)
-- **Invalid usage**
-  - Multiple `r/` → ❌ `find r/16 r/17`
-  - Multiple `n/` → ❌ `find n/Alice n/Bob`
+#### Prefixes
+
+| Prefix | Filters by | Behaviour |
+|--------|------------|-----------|
+| `n/NAME_KEYWORDS` | Name | Prefix match · Case-insensitive · Space-separate multiple keywords · Only **one `n/`** allowed |
+| `s/SUBJECT` | Subject taught | Prefix match · Case-insensitive · Multiple `s/` allowed (AND logic) |
+| `r/RATE` | Hourly rate | Exact, range, or comparison match · Only **one `r/`** allowed |
 
 <box type="tip" seamless>
 
-**Tip:** After a `find`, use `list` to return to the full tutor list.
+**Tip:** Spaces after prefixes are optional — `find n/John` and `find n/ John` both work.
 
 </box>
 
 ---
-**Examples:**
 
-`find n/John`  
-Returns all tutors with "John" in their name.
+#### Search Modes
 
-`find s/Math`  
-Returns tutors who teach Math.
+| Mode                 | Syntax                                                                                  | Returns                                                                |
+|----------------------|-----------------------------------------------------------------------------------------|------------------------------------------------------------------------|
+| **General Search**   | `find KEYWORD [MORE_KEYWORDS]` (case-insensitive)                                       | Tutors where **any** attribute has a word starting with any keyword    |
+| **Filtering**        | `find [PREFIXES]` (case-insensitive)                                                    | Tutors matching **all** prefix conditions                              |
+| **General + Filter** | `find KEYWORD [MORE_KEYWORDS] [PREFIXES]`  (case-insensitive; keywords before prefixes) | Tutors matching **any** keyword, narrowed by **all** prefix conditions |
 
-`find s/Math s/Chemistry`  
-Returns tutors who teach Math **OR** Chemistry.
+---
 
-`find r/50`  
-Returns tutors charging exactly $50/hr.
+#### How Matching Works
 
-`find n/Alex r/40 s/Physics`  
-Returns tutors named Alex, charging $40, **AND** teaching Physics.
+**Name (`n/`)** — OR logic across keywords
+- `n/Ed` matches "Eddy", "Edward", "Eddie" etc.
+- `n/Dar Vic` matches tutors named "Dar…" **or** "Vic…" e.g. "Daren", "Victoria"
 
-![Result for 'find n/alex david'](images/findAlexDavidResult.png)
+**Subject (`s/`)** — AND logic across prefixes
+- `s/Mat` matches "Math", "Mathematics"
+- `s/Math s/Chemistry` returns tutors teaching Math **and** Chemistry
 
-**Expected output:**
-If there are matching tutors, it will show only matching tutors on the right panel. 
+**Rate (`r/`)** — supports four formats
 
-Else, will display:
+| Format | Example | Matches |
+|--------|---------|---------|
+| Exact | `r/RATE` | Tutors charging exactly `RATE` |
+| Range | `r/RATE1-RATE2` | Tutors charging between `RATE1` and `RATE2` (inclusive) |
+| Above | `r/>RATE` | Tutors charging more than `RATE` |
+| Below | `r/<RATE` | Tutors charging less than `RATE` |
+
+**Mixed prefixes** — all conditions must be met
+- `find n/Alex r/40 s/Math` → named "Alex…", rate $40, teaches Math
+
+---
+
+#### Examples
+
+**General Search**
 ```
-0 persons listed!
+find math
 ```
+Returns all tutors containing "math" in any field.
 
+![Result for 'find math'](images/find_Math.png)
+
+---
+
+**Filtering by name**
+```
+find n/Eunwoo
+find n/Dar Vic
+```
+Returns tutors named "Eunwoo…" 
+
+![Result for 'find n/Eunwoo'](images/find_N_Eunwoo.png)
+
+Returns tutors named "Dar…" **or** "Vic…" respectively.
+
+![Result for 'find n/Dar Vic'](images/find_N_Dar_Vic.png)
+
+---
+
+**Filtering by subject and rate**
+```
+find s/Math s/Chemistry
+find s/Physics r/>40
+find s/History r/40-80
+```
+Returns tutors teaching Math **and** Chemistry
+
+![Result for 'find s/Math s/Chemistry'](images/find_S_math_S_chem.png)
+
+Returns tutors teaching Physics above a rate
+
+![Result for 'find s/Physics r/>40'](images/find_S_phy_R_40.png)
+
+Returns tutors teaching History within a rate range
+
+![Result for 'find s/History r/40-80'](images/find_S_hist_R_40_80.png)
+
+---
+
+**Combined search**
+```
+find math s/advanced math
+find n/Qi r/60 s/History
+```
+Narrows a general keyword search with prefix filters, or combines multiple prefix conditions.
+
+![Result for 'find math s/advanced math'](images/find_math_S_advancedmath.png)
+
+![Result for 'find n/Qi r/60 s/History'](images/find_N_qi_R_60_S_history.png)
+
+---
+
+Matching tutors appear in the right panel. If no matches are found:
+
+![Result for 'find spanish'](images/find_spanish.png)
+
+<box type="tip" seamless>
+
+**Tip:** After a `find`, run `list` to return to the full tutor list when running on CLI.
+
+</box>
+
+---
+
+#### Invalid Usage
+
+<box type="warning" seamless>
+
+Only **one** `n/` and one `r/` are allowed per command.
+
+| ❌ Invalid | Reason |
+|-----------|--------|
+| `find r/16 r/17` | Multiple `r/` not allowed |
+| `find n/Alice n/Bob` | Multiple `n/` not allowed |
+
+</box>
 
 ---
 
@@ -498,14 +580,14 @@ A: The Help Window may be minimised. Check your taskbar and restore it manually.
 
 ## Command Summary
 
-| Action | Format | Example |
-|---|---|---|
-| **Help** | `help` | `help` |
-| **Add** | `add n/NAME p/PHONE_NUMBER e/EMAIL s/SUBJECT1 s/SUBJECT2 ... s/SUBJECTn r/RATE [a/ADDRESS] [t/TAG]…​` | `add n/James Ho p/22224444 e/jamesho@example.com a/123, Clementi Rd, 1234665 s/Biology r/45 t/friend t/colleague` |
-| **List** | `list` | `list` |
-| **Sort** | `sort FIELD ORDER` | `sort name asc`, `sort rate desc` |
-| **Edit** | `edit INDEX [n/NAME] [p/PHONE] [e/EMAIL] [a/ADDRESS] [s/SUBJECT] [r/RATE] [t/TAG]…` | `edit 2 n/James Lee e/james@example.com` |
-| **Find** | `find n/KEYWORD [MORE_KEYWORDS]` \| `find s/SUBJECT` \| `find r/RATE` | `find n/James`, `find s/Biology`, `find r/45` |
-| **Delete** | `delete INDEX` | `delete 3` |
-| **Clear** | `clear` | `clear` |
-| **Exit** | `exit` | `exit` |
+| Action     | Format                                                                                                | Example                                                                                                           |
+|------------|-------------------------------------------------------------------------------------------------------|-------------------------------------------------------------------------------------------------------------------|
+| **Help**   | `help`                                                                                                | `help`                                                                                                            |
+| **Add**    | `add n/NAME p/PHONE_NUMBER e/EMAIL s/SUBJECT1 s/SUBJECT2 ... s/SUBJECTn r/RATE [a/ADDRESS] [t/TAG]…​` | `add n/James Ho p/22224444 e/jamesho@example.com a/123, Clementi Rd, 1234665 s/Biology r/45 t/friend t/colleague` |
+| **List**   | `list`                                                                                                | `list`                                                                                                            |
+| **Sort**   | `sort FIELD ORDER`                                                                                    | `sort name asc`, `sort rate desc`                                                                                 |
+| **Edit**   | `edit INDEX [n/NAME] [p/PHONE] [e/EMAIL] [a/ADDRESS] [s/SUBJECT] [r/RATE] [t/TAG]…`                   | `edit 2 n/James Lee e/james@example.com`                                                                          |
+| **Find**   | `find KEYWORD` \| `find [PREFIXES]` \| `find KEYWORD [PREFIXES]`                                      | `find geography`, `find s/Biology r/45`, `find korean r/>50`                                                      |
+| **Delete** | `delete INDEX`                                                                                        | `delete 3`                                                                                                        |
+| **Clear**  | `clear`                                                                                               | `clear`                                                                                                           |
+| **Exit**   | `exit`                                                                                                | `exit`                                                                                                            |

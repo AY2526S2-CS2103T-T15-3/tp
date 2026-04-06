@@ -5,9 +5,9 @@
 <?import javafx.scene.control.ListView?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" spacing="6">
+<VBox xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" spacing="8">
   <padding>
-    <Insets bottom="4" left="10" right="10" top="8" />
+    <Insets bottom="8" left="8" right="8" top="8" />
   </padding>
   <Label fx:id="contactHeaderLabel" styleClass="person-list-header-title" wrapText="true" />
   <Label fx:id="sortHeaderLabel" styleClass="person-list-header-subtitle" wrapText="true" />

@@ -173,14 +173,7 @@ public class MainWindow extends UiPart<Stage> {
             logger.info("Result: " + commandResult.getFeedbackToUser());
             personListPanel.refreshHeaderLabels();
 
-            if (commandResult.getFoundPersons().isPresent() && !commandResult.getFoundPersons().get().isEmpty()) {
-                resultDisplay.setPersonList(
-                        commandResult.getFoundPersons().get(),
-                        commandResult.getFeedbackToUser()
-                );
-            } else {
-                resultDisplay.setFeedbackToUser(commandResult.getFeedbackToUser());
-            }
+            displayResult(commandResult);
 
             if (commandResult.isShowHelp()) {
                 handleHelp();
@@ -193,8 +186,23 @@ public class MainWindow extends UiPart<Stage> {
             return commandResult;
         } catch (CommandException | ParseException e) {
             logger.info("An error occurred while executing command: " + commandText);
-            resultDisplay.setFeedbackToUser(e.getMessage());
+            resultDisplay.setFeedbackToUser(e.getMessage(), true);
             throw e;
+        }
+    }
+
+    /**
+     * Displays the result logic to the user in the UI, either via full list update
+     * or a generic feedback text area.
+     */
+    private void displayResult(CommandResult commandResult) {
+        if (commandResult.getFoundPersons().isPresent()) {
+            resultDisplay.setPersonList(
+                    commandResult.getFoundPersons().get(),
+                    commandResult.getDescription().orElse("")
+            );
+        } else {
+            resultDisplay.setFeedbackToUser(commandResult.getFeedbackToUser());
         }
     }
 }
