@@ -209,7 +209,7 @@ Format: `add n/NAME p/PHONE_NUMBER e/EMAIL s/SUBJECT1 s/SUBJECT2 ... s/SUBJECTn 
 | `e/` | Email             | Yes       | Valid email format (e.g. `user@example.com`)                            |
 | `a/` | Address           | No        | Any text                                                                |
 | `s/` | Subject           | Yes       | Only Alphnumeric Text + Spaces (e.g. `Advanced Mathematics`, `Biology`) |
-| `r/` | Hourly rate (SGD) | Yes       | Positive number (Including Zero)                                        |
+| `r/` | Hourly rate (SGD) | Yes       | Positive Integer Value (Including Zero)                                 |
 | `t/` | Tag               | No        | Alphanumeric, no spaces                                                 |
 
 <box type="tip" seamless>
