@@ -1,8 +1,9 @@
 @startuml
+!include style.puml
 skinparam ArrowThickness 1.1
 actor User
-participant AddCommand
-participant Model
+participant AddCommand LOGIC_COLOR
+participant Model MODEL_COLOR
 
 User -> AddCommand : execute(model)
 
