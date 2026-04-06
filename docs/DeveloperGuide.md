@@ -268,6 +268,16 @@ This ensures that name conflicts are detected first, followed by contact informa
     - Pros: Simpler implementation
     - Cons: Allows duplicate entries with identical contact details
 
+**Aspect: Rates are restricted to whole numbers**
+
+  - **Alternative 1 (current choice):** Rates are restricted to whole numbers
+      - Pros: Reflects common real-world practice, where tutors typically state their hourly rates as whole numbers
+      - Cons: Does not account for edge cases where fractional rates (e.g. $25.50/hour) may be used
+
+  - **Alternative 2:** Rates allow decimal values
+      - Pros: More flexible and accommodates all possible pricing formats
+      - Cons: Adds unnecessary complexity for a feature that is rarely used in practice
+      - 
 #### Class Diagram
 
 The following class diagram shows the key classes involved in enforcing uniqueness constraints,
@@ -378,32 +388,6 @@ Standard commands return temporary text feedback. However, a `find` command show
 **Alternative 2: Standard text feedback only (e.g., "0 persons listed")**
 - **Pros:** Keeps `CommandResult` pure and strictly decoupled from UI-specific display needs, reducing data passing.
 - **Cons:** Severe usability flaw. If the user executes a complex filter like `find Math r/<50` and the app just says "0 persons listed" while showing an empty UI, the user immediately loses context of the active constraints governing the screen.
-
----
-
-### \[Proposed\] Undo/redo feature
-
-
-#### Design considerations:
-
-**Aspect: How undo & redo executes:**
-
-- **Alternative 1 (current choice):** Saves the entire address book.
-    - Pros: Easy to implement.
-    - Cons: May have performance issues in terms of memory usage.
-
-- **Alternative 2:** Individual command knows how to undo/redo by
-  itself.
-    - Pros: Will use less memory (e.g. for `delete`, just save the person being deleted).
-    - Cons: We must ensure that the implementation of each individual command are correct.
-
-_{more aspects and alternatives to be added}_
-
-### \[Proposed\] Data archiving
-
-_{Explain here how the data archiving feature will be implemented}_
-
----
 
 ## **Documentation, logging, testing, configuration, dev-ops**
 
@@ -673,6 +657,9 @@ testers are expected to do more _exploratory_ testing.
        Expected: The most recent window size and location is retained.
 
 3. _{ more test cases …​ }_
+
+### Adding a person
+1. Test case: `add n/Joe p/12345678 e/joe@example.com`
 
 ### Deleting a person
 
