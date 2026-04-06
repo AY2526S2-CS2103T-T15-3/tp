@@ -202,15 +202,15 @@ Adds a new tutor profile to Tuto.
 
 Format: `add n/NAME p/PHONE_NUMBER e/EMAIL s/SUBJECT1 s/SUBJECT2 ... s/SUBJECTn r/RATE [a/ADDRESS] [t/TAG]…​`
 
-| Flag | Field             | Required? | Accepted values                                    |
-| ---- | ----------------- | --------- | -------------------------------------------------- |
-| `n/` | Name              | Yes       | Any non-empty text                                 |
-| `p/` | Phone number      | Yes       | Digits only, at least 3 digits                     |
-| `e/` | Email             | Yes       | Valid email format (e.g. `user@example.com`)       |
-| `a/` | Address           | No        | Any text                                           |
-| `s/` | Subject           | Yes       | Any non-empty text (e.g. `Mathematics`, `Biology`) |
-| `r/` | Hourly rate (SGD) | Yes       | Positive number                                    |
-| `t/` | Tag               | No        | Alphanumeric, no spaces                            |
+| Flag | Field             | Required? | Accepted values                                                         |
+| ---- | ----------------- | --------- | ----------------------------------------------------------------------- |
+| `n/` | Name              | Yes       | Only Alphnumeric Text + Spaces                                          |
+| `p/` | Phone number      | Yes       | Digits only, at least 3 digits                                          |
+| `e/` | Email             | Yes       | Valid email format (e.g. `user@example.com`)                            |
+| `a/` | Address           | No        | Any text                                                                |
+| `s/` | Subject           | Yes       | Only Alphnumeric Text + Spaces (e.g. `Advanced Mathematics`, `Biology`) |
+| `r/` | Hourly rate (SGD) | Yes       | Positive number (Including Zero)                                        |
+| `t/` | Tag               | No        | Alphanumeric, no spaces                                                 |
 
 <box type="tip" seamless>
 
@@ -225,7 +225,7 @@ Format: `add n/NAME p/PHONE_NUMBER e/EMAIL s/SUBJECT1 s/SUBJECT2 ... s/SUBJECTn 
 
 <box type="warning" seamless>
 
-**Note:** Adding a tutor with the same name, phone number, or email as an existing entry is not allowed. Tuto treats each field as unique and will reject the operation if any duplicate is detected. If two tutors happen to share a name, consider using a middle initial to differentiate them.
+**Note:** Adding a tutor with the same phone number, or email as an existing entry is not allowed. Tuto treats each field as unique and will reject the operation if any duplicate is detected.
 
 </box>
 
