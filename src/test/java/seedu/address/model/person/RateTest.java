@@ -14,6 +14,13 @@ public class RateTest {
     }
 
     @Test
+    public void constructor_rateWithLeadingZeroes_storesNormalisedRate() {
+        Rate rate = new Rate("0000000007");
+        assertTrue(rate.equals(new Rate("7")));
+        assertTrue(rate.toString().equals("7"));
+    }
+
+    @Test
     public void constructor_invalidRate_throwsIllegalArgumentException() {
         //empty String
         assertThrows(IllegalArgumentException.class, () -> new Rate(""));
@@ -48,6 +55,7 @@ public class RateTest {
         // valid rates
         assertTrue(Rate.isValidRate("10"));
         assertTrue(Rate.isValidRate("0"));
+        assertTrue(Rate.isValidRate("00000000007"));
     }
 
     @Test
