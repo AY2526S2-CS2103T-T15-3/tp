@@ -52,9 +52,9 @@
         "storage-component": "Storage component",
         "common-classes": "Common classes",
         "implementation": "Implementation",
-        "adding-a-tutor-add": "Adding a Tutor : add",
+        "adding-a-tutor-add": "Adding a Tutor: add",
         "uniqueness-constraints": "Uniqueness Constraints",
-        "finding-a-tutor-find": "Finding a Tutor : find",
+        "finding-a-tutor-find": "Finding a Tutor: find",
         "documentation-logging-testing-configuration-dev-ops": "Documentation, logging, testing, configuration, dev-ops",
         "appendix-requirements": "Appendix: Requirements",
         "product-scope": "Product scope",
@@ -66,6 +66,7 @@
         "launch-and-shutdown": "Launch and shutdown",
         "adding-a-person": "Adding a person",
         "deleting-a-person": "Deleting a person",
+        "finding-a-person": "Finding a person",
         "saving-data": "Saving data"
       },
       "headingKeywords": {}
