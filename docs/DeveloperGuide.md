@@ -743,6 +743,115 @@ testers are expected to do more _exploratory_ testing.
     4. Other incorrect delete commands to try: `delete`, `delete x`, `...` (where x is larger than the list size)<br>
        Expected: Similar to previous.
 
+### Editing a person
+
+1. Editing a person with no fields given
+    1. Prerequisites: List all persons using the `list` command. At least one person exists in the list.
+    2. Test case: `edit 1`<br>
+       Expected: No person is edited. An error message that displays the correct command format and indicates that at least one field to edit must be provided is shown.
+
+2. Editing a person by updating one field at a time
+    1. Editing a person's name
+        1. Prerequisites: List all persons using the `list` command. At least one person exists in the list.
+        2. Test case: `edit 1 n/Jane Doe`<br>
+           Expected: The first tutor's name is updated to `Jane Doe`. A success message showing the updated tutor details is displayed.
+    2. Editing a person's phone number
+        1. Prerequisites: List all persons using the `list` command. No other person in the list has the phone number `91234567`.
+        2. Test case: `edit 1 p/91234567`<br>
+           Expected: The first tutor's phone number is updated to `91234567`. A success message showing the updated tutor details is displayed.
+    3. Editing a person's email
+        1. Prerequisites: List all persons using the `list` command. No other person in the list has the email `janedoe@example.com`.
+        2. Test case: `edit 1 e/janedoe@example.com`<br>
+           Expected: The first tutor's email is updated to `janedoe@example.com`. A success message showing the updated tutor details is displayed.
+    4. Editing a person's rate
+        1. Prerequisites: List all persons using the `list` command. At least one person exists in the list.
+        2. Test case: `edit 1 r/60`<br>
+           Expected: The first tutor's rate is updated to `60`. A success message showing the updated tutor details is displayed.
+
+3. Editing a person with optional fields
+    1. Editing a person's address
+        1. Prerequisites: List all persons using the `list` command. At least one person exists in the list.
+        2. Test case: `edit 1 a/Clementi Ave 3`<br>
+           Expected: The first tutor's address is updated to `Clementi Ave 3`. A success message showing the updated tutor details is displayed.
+    2. Editing a person's tag
+        1. Prerequisites: List all persons using the `list` command. At least one person exists in the list.
+        2. Test case: `edit 1 t/friend`<br>
+           Expected: The first tutor's tags are updated to include `friend`. A success message showing the updated tutor details is displayed.
+    3. Removing an existing address
+        1. Prerequisites: List all persons using the `list` command. The first tutor currently has an address.
+        2. Test case: `edit 1 a/`<br>
+           Expected: The first tutor's address is removed. A success message showing the updated tutor details is displayed. The tutor card shows `Address:` with no value.
+    4. Removing an existing tag
+        1. Prerequisites: List all persons using the `list` command. The first tutor currently has at least one tag.
+        2. Test case: `edit 1 t/`<br>
+           Expected: The first tutor's existing tags are removed. A success message showing the updated tutor details is displayed. No tags are shown on the tutor card.
+
+4. Editing multiple fields of a person
+    1. Prerequisites: List all persons using the `list` command. No other person in the list has the phone number `91234567` and email `janedoe@example.com`.
+    2. Test case: `edit 1 n/Jane Doe p/91234567 e/janedoe@example.com r/60 a/Clementi Ave 3`<br>
+       Expected: The specified fields of the first tutor are updated accordingly. A success message showing the updated tutor details is displayed.
+
+5. Editing a person's phone or email to that of an existing tutor
+    1. Prerequisites: List all persons using the `list` command. At least two persons exist in the list. Another existing tutor already has phone number `91234567` and email `jane@example.com`.
+    2. Test case: `edit 1 p/91234567`<br>
+       Expected: No person is edited. A duplicate phone number error message is shown.
+    3. Test case: `edit 1 e/jane@example.com`<br>
+       Expected: No person is edited. A duplicate email error message is shown.
+
+6. Editing a person with an invalid index
+    1. Prerequisites: List all persons using the `list` command. Multiple persons in the list.
+    2. Test case: `edit 0 n/Jane Doe`<br>
+       Expected: No person is edited. An invalid index error message is shown.
+    3. Test case: `edit 999 n/Jane Doe`<br>
+       Expected: No person is edited. An invalid index error message is shown.
+    4. Other incorrect edit commands to try: `edit x`, `edit 1x n/Jane Doe`, `edit -1 n/Jane Doe`<br>
+       Expected: No person is edited. An error message that displays the correct command format is shown.
+
+7. Editing with multiple values for single-valued fields
+    1. Prerequisites: List all persons using the `list` command. At least one person exists in the list.
+    2. Test case: `edit 1 n/Jane Doe n/Mary Doe`<br>
+       Expected: No person is edited. An error message indicating that multiple values have been specified for the field `n/` is shown.
+    3. Test case: `edit 1 p/91234567 p/98765432`<br>
+       Expected: No person is edited. An error message indicating that multiple values have been specified for the field `p/` is shown.
+    4. Test case: `edit 1 e/jane@example.com e/mary@example.com`<br>
+       Expected: No person is edited. An error message indicating that multiple values have been specified for the field `e/` is shown.
+    5. Test case: `edit 1 a/Clementi Ave 3 a/Orchard Road`<br>
+       Expected: No person is edited. An error message indicating that multiple values have been specified for the field `a/` is shown.
+    6. Test case: `edit 1 r/50 r/60`<br>
+       Expected: No person is edited. An error message indicating that multiple values have been specified for the field `r/` is shown.
+    7. Test case: `edit 1 s/Math s/English`<br>
+       Expected: No person is edited. An error message indicating that multiple values have been specified for the field `s/` is shown.
+
+8. Editing a person with invalid field values
+    1. Prerequisites: List all persons using the `list` command. At least one person exists in the list.
+    2. Test case: `edit 1 p/91s34567`<br>
+       Expected: No person is edited. An error message indicating that phone number can only contain numbers and should be at least 3 digits long is shown.
+    3. Test case: `edit 1 p/91`<br>
+       Expected: No person is edited. An error message indicating that phone number can only contain numbers and should be at least 3 digits long is shown.
+    4. Test case: `edit 1 e/invalid-email`<br>
+       Expected: No person is edited. An error message indicating that emails should be of the format `local-part@domain` is shown.
+    5. Test case: `edit 1 r/s`<br>
+       Expected: No person is edited. An error message indicating that rates can only contain numbers is shown.
+
+9. Editing a person without changing any actual value
+    1. Prerequisites: List all persons using the `list` command. The first tutor already has the name `Jane Doe`.
+    2. Test case: `edit 1 n/Jane Doe`<br>
+       Expected: A success message such as `Tutor updated!` is shown. The tutor profile remains unchanged.
+
+10. Editing a person's subjects
+    1. Editing the subject when the tutor previously has one subject
+        1. Prerequisites: List all persons using the `list` command. The first tutor currently has subject `Math`.
+        2. Test case: `edit 1 s/Physics`<br>
+           Expected: The first tutor's subject is updated to `Physics`. A success message showing the updated tutor details is displayed.
+    2. Editing the subject when the tutor previously has multiple subjects
+        1. Prerequisites: List all persons using the `list` command. The first tutor currently has subjects `Math` and `English`.
+        2. Test case: `edit 1 s/Physics`<br>
+           Expected: The first tutor's subjects are replaced with `Physics`. A success message showing the updated tutor details is displayed.
+    3. Editing a tutor to have multiple subjects in a single subject field
+        1. Prerequisites: List all persons using the `list` command. At least one person exists in the list.
+        2. Test case: `edit 1 s/Math English Physics`<br>
+           Expected: The first tutor's subject field is updated to `Math English Physics` as a single subject string. In the updated display, the subjects may appear without commas because the input is treated as a single string during editing. Other edit and find behaviour remains functional.
+
 ### Finding a person
 
 #### Negative Cases & Error Handling
