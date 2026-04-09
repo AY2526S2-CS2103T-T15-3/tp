@@ -19,11 +19,16 @@ import static seedu.address.logic.commands.CommandTestUtil.VALID_EMAIL_AMY;
 import static seedu.address.logic.commands.CommandTestUtil.VALID_NAME_AMY;
 import static seedu.address.logic.commands.CommandTestUtil.VALID_PHONE_AMY;
 import static seedu.address.logic.commands.CommandTestUtil.VALID_PHONE_BOB;
+import static seedu.address.logic.commands.CommandTestUtil.SUBJECT_DESC_AMY;
+import static seedu.address.logic.commands.CommandTestUtil.SUBJECT_DESC_BOB;
+import static seedu.address.logic.commands.CommandTestUtil.VALID_SUBJECT_AMY;
+import static seedu.address.logic.commands.CommandTestUtil.VALID_SUBJECT_BOB;
 import static seedu.address.logic.commands.CommandTestUtil.VALID_TAG_FRIEND;
 import static seedu.address.logic.commands.CommandTestUtil.VALID_TAG_HUSBAND;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_ADDRESS;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_EMAIL;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_PHONE;
+import static seedu.address.logic.parser.CliSyntax.PREFIX_SUBJECT;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_TAG;
 import static seedu.address.logic.parser.CommandParserTestUtil.assertParseFailure;
 import static seedu.address.logic.parser.CommandParserTestUtil.assertParseSuccess;
@@ -40,12 +45,14 @@ import seedu.address.logic.commands.EditCommand.EditPersonDescriptor;
 import seedu.address.model.person.Email;
 import seedu.address.model.person.Name;
 import seedu.address.model.person.Phone;
+import seedu.address.model.person.Subject;
 import seedu.address.model.tag.Tag;
 import seedu.address.testutil.EditPersonDescriptorBuilder;
 
 public class EditCommandParserTest {
 
     private static final String TAG_EMPTY = " " + PREFIX_TAG;
+    private static final String SUBJECT_EMPTY = " " + PREFIX_SUBJECT;
 
     private static final String MESSAGE_INVALID_FORMAT =
             String.format(MESSAGE_INVALID_COMMAND_FORMAT, EditCommand.MESSAGE_USAGE);
@@ -98,6 +105,10 @@ public class EditCommandParserTest {
         // multiple invalid values, but only the first invalid value is captured
         assertParseFailure(parser, "1" + INVALID_NAME_DESC + INVALID_EMAIL_DESC + VALID_ADDRESS_AMY + VALID_PHONE_AMY,
                 Name.MESSAGE_CONSTRAINTS);
+
+        // bare s/ or empty subject value
+        assertParseFailure(parser, "1" + SUBJECT_EMPTY, Subject.MESSAGE_CONSTRAINTS);
+        assertParseFailure(parser, "1" + SUBJECT_DESC_AMY + SUBJECT_EMPTY, Subject.MESSAGE_CONSTRAINTS);
     }
 
     @Test
@@ -157,6 +168,18 @@ public class EditCommandParserTest {
         userInput = targetIndex.getOneBased() + TAG_DESC_FRIEND;
         descriptor = new EditPersonDescriptorBuilder().withTags(VALID_TAG_FRIEND).build();
         expectedCommand = new EditCommand(targetIndex, descriptor);
+        assertParseSuccess(parser, userInput, expectedCommand);
+    }
+
+    @Test
+    public void parse_multipleSubjectsSpecified_success() {
+        Index targetIndex = INDEX_FIRST_PERSON;
+        String userInput = targetIndex.getOneBased() + SUBJECT_DESC_AMY + SUBJECT_DESC_BOB;
+
+        EditPersonDescriptor descriptor = new EditPersonDescriptorBuilder()
+                .withSubjects(VALID_SUBJECT_AMY, VALID_SUBJECT_BOB).build();
+        EditCommand expectedCommand = new EditCommand(targetIndex, descriptor);
+
         assertParseSuccess(parser, userInput, expectedCommand);
     }
 

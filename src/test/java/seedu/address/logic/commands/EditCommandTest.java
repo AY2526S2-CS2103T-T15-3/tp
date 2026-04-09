@@ -15,6 +15,8 @@ import static seedu.address.testutil.TypicalIndexes.INDEX_FIRST_PERSON;
 import static seedu.address.testutil.TypicalIndexes.INDEX_SECOND_PERSON;
 import static seedu.address.testutil.TypicalPersons.getTypicalAddressBook;
 
+import java.util.Collections;
+
 import org.junit.jupiter.api.Test;
 
 import seedu.address.commons.core.index.Index;
@@ -191,6 +193,15 @@ public class EditCommandTest {
         EditCommand editCommand = new EditCommand(INDEX_FIRST_PERSON, descriptor);
 
         assertCommandFailure(editCommand, model, EditCommand.MESSAGE_DUPLICATE_EMAIL);
+    }
+
+    @Test
+    public void execute_emptySubjectsInDescriptor_failure() {
+        EditPersonDescriptor descriptor = new EditPersonDescriptor();
+        descriptor.setSubject(Collections.emptySet());
+        EditCommand editCommand = new EditCommand(INDEX_FIRST_PERSON, descriptor);
+
+        assertCommandFailure(editCommand, model, EditCommand.MESSAGE_SUBJECTS_EMPTY);
     }
 
     @Test

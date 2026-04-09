@@ -47,7 +47,7 @@ public class EditCommandParser implements Parser<EditCommand> {
         }
 
         argMultimap.verifyNoDuplicatePrefixesFor(PREFIX_NAME, PREFIX_PHONE, PREFIX_EMAIL, PREFIX_ADDRESS,
-                PREFIX_SUBJECT, PREFIX_RATE);
+                PREFIX_RATE);
 
         EditPersonDescriptor editPersonDescriptor = new EditPersonDescriptor();
 
@@ -63,7 +63,7 @@ public class EditCommandParser implements Parser<EditCommand> {
         if (argMultimap.getValue(PREFIX_ADDRESS).isPresent()) {
             editPersonDescriptor.setAddress(ParserUtil.parseAddress(argMultimap.getValue(PREFIX_ADDRESS).get()));
         }
-        if (argMultimap.getValue(PREFIX_SUBJECT).isPresent()) {
+        if (!argMultimap.getAllValues(PREFIX_SUBJECT).isEmpty()) {
             editPersonDescriptor.setSubject(ParserUtil.parseSubjects(argMultimap.getAllValues(PREFIX_SUBJECT)));
         }
         if (argMultimap.getValue(PREFIX_RATE).isPresent()) {

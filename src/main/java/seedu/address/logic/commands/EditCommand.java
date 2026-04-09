@@ -45,7 +45,7 @@ public class EditCommand extends Command {
             + "[" + PREFIX_PHONE + "PHONE] "
             + "[" + PREFIX_EMAIL + "EMAIL] "
             + "[" + PREFIX_ADDRESS + "ADDRESS] "
-            + "[" + PREFIX_SUBJECT + "SUBJECT] "
+            + "[" + PREFIX_SUBJECT + "SUBJECT]... "
             + "[" + PREFIX_RATE + "RATE] "
             + "[" + PREFIX_TAG + "TAG]...\n"
             + "Example: " + COMMAND_WORD + " 1 "
@@ -56,8 +56,8 @@ public class EditCommand extends Command {
     public static final String MESSAGE_NOT_EDITED = "At least one field to edit must be provided.";
     public static final String MESSAGE_DUPLICATE_PHONE = "Another tutor already uses this phone number!";
     public static final String MESSAGE_DUPLICATE_EMAIL = "Another tutor already uses this email address!";
-
-
+    public static final String MESSAGE_SUBJECTS_EMPTY = "Tutors must teach at least one subject; "
+            + "You cannot edit a tutor to have no subjects.";
 
     private final Index index;
     private final EditPersonDescriptor editPersonDescriptor;
@@ -86,6 +86,10 @@ public class EditCommand extends Command {
         Person personToEdit = lastShownList.get(index.getZeroBased());
         Person editedPerson = createEditedPerson(personToEdit, editPersonDescriptor);
 
+        if (editedPerson.getSubjects().isEmpty()) {
+            throw new CommandException(MESSAGE_SUBJECTS_EMPTY);
+        }
+
         if (!personToEdit.getPhone().equals(editedPerson.getPhone()) && model.hasDuplicatePhone(editedPerson)) {
             throw new CommandException(MESSAGE_DUPLICATE_PHONE);
         }
@@ -97,8 +101,8 @@ public class EditCommand extends Command {
         model.setPerson(personToEdit, editedPerson);
         model.updateFilteredPersonList(PREDICATE_SHOW_ALL_PERSONS);
         int displayedIndex = model.getFilteredPersonList().indexOf(editedPerson) + 1;
-        List<CommandResult.PersonIndexPair> personsToDisplay =
-                List.of(new CommandResult.PersonIndexPair(editedPerson, displayedIndex));
+        List<CommandResult.PersonIndexPair> personsToDisplay = List
+                .of(new CommandResult.PersonIndexPair(editedPerson, displayedIndex));
 
         return new CommandResult(MESSAGE_EDIT_PERSON_SUCCESS, personsToDisplay);
     }

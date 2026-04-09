@@ -318,7 +318,7 @@ Updates one or more fields of an existing tutor profile.
 **Format:**
 
 ```
-edit INDEX [n/NAME] [p/PHONE] [e/EMAIL] [a/ADDRESS] [s/SUBJECT] [r/RATE] [t/TAG]…
+edit INDEX [n/NAME] [p/PHONE] [e/EMAIL] [a/ADDRESS] [s/SUBJECT]… [r/RATE] [t/TAG]…
 ```
 
 - `INDEX` refers to the number shown next to the tutor in the current list. It must be a **positive integer** (1, 2, 3 …).
@@ -328,9 +328,13 @@ edit INDEX [n/NAME] [p/PHONE] [e/EMAIL] [a/ADDRESS] [s/SUBJECT] [r/RATE] [t/TAG]
 
 <box type="warning" seamless>
 
-**Note:** Unlike the `add` command, the `edit` command currently supports only a single `s/` prefix.
-Providing multiple `s/` prefixes will result in an error.
-To update a tutor to multiple subjects, provide them as a single value within one `s/` prefix (e.g. `edit INDEX s/Math Physics`).
+**Note:** Editing subjects **replaces all existing subjects** for that tutor — it does not add to them. Use multiple `s/` prefixes for multiple subjects (e.g. `edit INDEX s/Math s/English`). A single `s/Math Physics` value is **one** subject whose name contains a space, not two separate subjects.
+
+</box>
+
+<box type="warning" seamless>
+
+**Note:** Tutors must always have **at least one subject** (same as when adding a tutor). You cannot clear all subjects with a bare `s/` or leave a profile with no subjects. If a data file is damaged and a tutor has no subjects, use `edit` with at least one valid `s/SUBJECT` to fix the profile.
 
 </box>
 
@@ -364,7 +368,13 @@ Renames the 2nd tutor and removes all of their tags.
 edit 1 s/Physics r/30
 ```
 
-Changes the 1st tutor's subject to Physics and rate to $30/hr.
+Changes the 1st tutor's subjects to Physics only (replacing any previous subjects) and rate to $30/hr.
+
+```
+edit 2 s/Math s/English
+```
+
+Sets the 2nd tutor's subjects to Math and English only (replacing any previous subjects).
 
 **Expected output:**
 
@@ -640,7 +650,7 @@ A: The Help Window may be minimised. Check your taskbar and restore it manually.
 | **Add**    | `add n/NAME p/PHONE_NUMBER e/EMAIL s/SUBJECT1 s/SUBJECT2 ... s/SUBJECTn r/RATE [a/ADDRESS] [t/TAG]…​` | `add n/James Ho p/22224444 e/jamesho@example.com a/123, Clementi Rd, 1234665 s/Biology r/45 t/friend t/colleague` |
 | **List**   | `list`                                                                                                | `list`                                                                                                            |
 | **Sort**   | `sort FIELD ORDER`                                                                                    | `sort name asc`, `sort rate desc`                                                                                 |
-| **Edit**   | `edit INDEX [n/NAME] [p/PHONE] [e/EMAIL] [a/ADDRESS] [s/SUBJECT] [r/RATE] [t/TAG]…`                   | `edit 2 n/James Lee e/james@example.com`                                                                          |
+| **Edit**   | `edit INDEX [n/NAME] [p/PHONE] [e/EMAIL] [a/ADDRESS] [s/SUBJECT]… [r/RATE] [t/TAG]…`                   | `edit 2 n/James Lee e/james@example.com`                                                                          |
 | **Find**   | `find KEYWORD` \| `find [PREFIXES]` \| `find KEYWORD [PREFIXES]`                                      | `find geography`, `find s/Biology r/45`, `find korean r/>50`                                                      |
 | **Delete** | `delete INDEX`                                                                                        | `delete 3`                                                                                                        |
 | **Clear**  | `clear`                                                                                               | `clear`                                                                                                           |
