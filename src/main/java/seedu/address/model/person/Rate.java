@@ -60,6 +60,13 @@ public class Rate {
     }
 
     /**
+     * Returns true if the rate contains the keyword as a word prefix, ignoring case.
+     */
+    public boolean isMatchingKeyword(String keyword) {
+        return seedu.address.commons.util.StringUtil.containsWordPrefixIgnoreCase(this.rate, keyword);
+    }
+
+    /**
      * Compares this rate's numeric value with {@code other}.
      *
      * @return a negative integer, zero, or a positive integer as this value is numerically less than, equal to,

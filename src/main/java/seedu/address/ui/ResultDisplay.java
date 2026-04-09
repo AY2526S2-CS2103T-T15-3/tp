@@ -20,10 +20,10 @@ import seedu.address.logic.commands.CommandResult.PersonIndexPair;
 public class ResultDisplay extends UiPart<Region> {
 
     private static final String FXML = "ResultDisplay.fxml";
-    private static final String ERROR_STYLE_CLASS = "error";
-    private static final String SUCCESS_STYLE_CLASS = "success";
-    private static final String ERROR_ICON = "❌  ";
-    private static final String SUCCESS_ICON = "✨  ";
+    private static final String STYLE_CLASS_ERROR = "error";
+    private static final String STYLE_CLASS_SUCCESS = "success";
+    private static final String ICON_ERROR = "❌  ";
+    private static final String ICON_SUCCESS = "✨  ";
     private static final String EMPTY_LIST_PLACEHOLDER_TEXT = "No tutors found.";
     private static final String EMPTY_LIST_PLACEHOLDER_STYLE = "-fx-text-fill: grey; "
             + "-fx-alignment: center; -fx-padding: 20;";
@@ -51,10 +51,21 @@ public class ResultDisplay extends UiPart<Region> {
         }
     }
 
+    /**
+     * Sets the feedback text to be displayed to the user.
+     *
+     * @param feedbackToUser The string feedback to display.
+     */
     public void setFeedbackToUser(String feedbackToUser) {
         setFeedbackToUser(feedbackToUser, false);
     }
 
+    /**
+     * Sets the feedback text to be displayed to the user, with an optional error style.
+     *
+     * @param feedbackToUser The string feedback to display.
+     * @param isError True if the feedback represents an error, false otherwise.
+     */
     public void setFeedbackToUser(String feedbackToUser, boolean isError) {
         requireNonNull(feedbackToUser);
         showFeedbackTextArea(feedbackToUser, isError);
@@ -64,26 +75,26 @@ public class ResultDisplay extends UiPart<Region> {
 
     private void showFeedbackTextArea(String feedbackToUser, boolean isError) {
         if (isError) {
-            resultDisplay.setText(ERROR_ICON + feedbackToUser);
+            resultDisplay.setText(ICON_ERROR + feedbackToUser);
             setStyleToIndicateError();
         } else {
-            resultDisplay.setText(SUCCESS_ICON + feedbackToUser);
+            resultDisplay.setText(ICON_SUCCESS + feedbackToUser);
             setStyleToIndicateSuccess();
         }
         resultDisplay.setVisible(true);
     }
 
     private void setStyleToIndicateError() {
-        resultDisplay.getStyleClass().remove(SUCCESS_STYLE_CLASS);
-        if (!resultDisplay.getStyleClass().contains(ERROR_STYLE_CLASS)) {
-            resultDisplay.getStyleClass().add(ERROR_STYLE_CLASS);
+        resultDisplay.getStyleClass().remove(STYLE_CLASS_SUCCESS);
+        if (!resultDisplay.getStyleClass().contains(STYLE_CLASS_ERROR)) {
+            resultDisplay.getStyleClass().add(STYLE_CLASS_ERROR);
         }
     }
 
     private void setStyleToIndicateSuccess() {
-        resultDisplay.getStyleClass().remove(ERROR_STYLE_CLASS);
-        if (!resultDisplay.getStyleClass().contains(SUCCESS_STYLE_CLASS)) {
-            resultDisplay.getStyleClass().add(SUCCESS_STYLE_CLASS);
+        resultDisplay.getStyleClass().remove(STYLE_CLASS_ERROR);
+        if (!resultDisplay.getStyleClass().contains(STYLE_CLASS_SUCCESS)) {
+            resultDisplay.getStyleClass().add(STYLE_CLASS_SUCCESS);
         }
     }
 

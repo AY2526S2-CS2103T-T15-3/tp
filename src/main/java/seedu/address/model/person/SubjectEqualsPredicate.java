@@ -100,7 +100,7 @@ public class SubjectEqualsPredicate implements Predicate<Person> {
     }
 
     /**
-     * Split the given string into lower-cased words, trimming whitespace.
+     * Splits the given string into lower-cased words, trimming whitespace.
      * Returns an empty array for null or blank input.
      */
     private String[] splitLowerWords(String s) {

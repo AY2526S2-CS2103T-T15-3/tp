@@ -33,6 +33,13 @@ public class Phone {
         return test.matches(VALIDATION_REGEX);
     }
 
+    /**
+     * Returns true if the phone number contains the keyword as a word prefix, ignoring case.
+     */
+    public boolean isMatchingKeyword(String keyword) {
+        return seedu.address.commons.util.StringUtil.containsWordPrefixIgnoreCase(this.value, keyword);
+    }
+
     @Override
     public String toString() {
         return value;

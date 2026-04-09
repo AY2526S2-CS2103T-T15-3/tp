@@ -38,6 +38,12 @@ public class Name {
         return test.matches(VALIDATION_REGEX);
     }
 
+    /**
+     * Returns true if the full name contains the keyword as a word prefix, ignoring case.
+     */
+    public boolean isMatchingKeyword(String keyword) {
+        return seedu.address.commons.util.StringUtil.containsWordPrefixIgnoreCase(this.fullName, keyword);
+    }
 
     @Override
     public String toString() {

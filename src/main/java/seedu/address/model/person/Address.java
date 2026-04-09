@@ -37,6 +37,13 @@ public class Address {
         return test.matches(VALIDATION_REGEX) || test.isEmpty();
     }
 
+    /**
+     * Returns true if the address contains the keyword as a word prefix, ignoring case.
+     */
+    public boolean isMatchingKeyword(String keyword) {
+        return seedu.address.commons.util.StringUtil.containsWordPrefixIgnoreCase(this.value, keyword);
+    }
+
     @Override
     public String toString() {
         return value;

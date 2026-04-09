@@ -35,12 +35,12 @@ public class UniversalSearchPredicate implements Predicate<Person> {
     }
 
     private boolean isPersonMatchingKeyword(Person person, String keyword) {
-        return StringUtil.containsWordPrefixIgnoreCase(person.getName().fullName, keyword)
-                || StringUtil.containsWordPrefixIgnoreCase(person.getPhone().value, keyword)
-                || StringUtil.containsWordPrefixIgnoreCase(person.getEmail().value, keyword)
-                || StringUtil.containsWordPrefixIgnoreCase(person.getAddress().value, keyword)
+        return person.getName().isMatchingKeyword(keyword)
+                || person.getPhone().isMatchingKeyword(keyword)
+                || person.getEmail().isMatchingKeyword(keyword)
+                || person.getAddress().isMatchingKeyword(keyword)
                 || isSubjectMatching(person, keyword)
-                || StringUtil.containsWordPrefixIgnoreCase(person.getRate().rate, keyword)
+                || person.getRate().isMatchingKeyword(keyword)
                 || isTagMatching(person, keyword);
     }
 

@@ -3,7 +3,6 @@ package seedu.address.model.person;
 import java.util.List;
 import java.util.function.Predicate;
 
-import seedu.address.commons.util.StringUtil;
 import seedu.address.commons.util.ToStringBuilder;
 
 /**
@@ -28,26 +27,20 @@ public class NameContainsKeywordsPredicate implements Predicate<Person> {
             return false;
         }
 
-        String fullName = getPersonFullName(person);
-
-        return matchesAny(fullName);
+        return matchesAny(person);
     }
 
     private boolean isKeywordsEmpty() {
         return keywords == null || keywords.isEmpty();
     }
 
-    private String getPersonFullName(Person person) {
-        return person.getName().fullName;
-    }
-
-    private boolean matchesAny(String fullName) {
+    private boolean matchesAny(Person person) {
         return keywords.stream()
-                .anyMatch(keyword -> matchesKeyword(fullName, keyword));
+                .anyMatch(keyword -> matchesKeyword(person, keyword));
     }
 
-    private boolean matchesKeyword(String fullName, String keyword) {
-        return StringUtil.containsWordPrefixIgnoreCase(fullName, keyword);
+    private boolean matchesKeyword(Person person, String keyword) {
+        return person.getName().isMatchingKeyword(keyword);
     }
 
     @Override

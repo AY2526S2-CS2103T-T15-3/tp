@@ -29,7 +29,7 @@ public class TagContainsKeywordsPredicate implements Predicate<Person> {
     }
 
     /**
-     * Normalize the supplied keywords to a lower-cased, trimmed, unmodifiable list.
+     * Normalizes the supplied keywords to a lower-cased, trimmed, unmodifiable list.
      * This keeps the constructor at a higher level of abstraction.
      */
     private static List<String> normalizeKeywordsLower(List<String> keywords) {
