@@ -271,6 +271,8 @@ add n/ gabrielle chee p/ 87429246 e/ gabrielle@example.com s/ computing r/ 85 a/
 
 Updates one or more fields of an existing Tutor Profile.
 
+![Edit command hero image](images/editMessage.png)
+
 **Format:** `edit INDEX [n/NAME] [p/PHONE] [e/EMAIL] [a/ADDRESS] [s/SUBJECT] [r/RATE] [t/TAG]…`
 
 ---
@@ -288,21 +290,10 @@ Updates one or more fields of an existing Tutor Profile.
 
 <box type="warning" seamless>
 
-**Note:** Unlike the `add` command, the `edit` command currently supports only a single `s/` prefix.
-Providing multiple `s/` prefixes will result in an error.
-To update a tutor to multiple subjects, provide them as a single value within one `s/` prefix (e.g. `edit INDEX s/Math Physics`).
-
-</box>
-
-<box type="warning" seamless>
-
-**Note:** Editing tags **replaces all existing tags** — it does not add to them. To remove all tags, use `t/` with nothing after it. To keep existing tags while adding a new one, you must retype all the tags you want to keep.
-
-</box>
-
-<box type="warning" seamless>
-
-**Note:** Editing a tutor with same phone number or email as an existing entry is not allowed. See [Duplicate Tutors are Not Allowed](#duplicate-tutors-are-not-allowed).
+- **Single subject update:** Unlike `add`, you can only provide **one** `s/` prefix. To assign multiple subjects, map them all under a single prefix separated by spaces: `edit INDEX s/Math Physics`.
+- **Tags are replaced, not added:** Any new tags you provide will completely overwrite the tutor's existing tags. To clear all tags, use an empty prefix: `t/`. To append a new tag, you must retype the existing ones.
+- **Identical edits are accepted:** Editing a tutor with values they already have (e.g. changing their rate to the same rate they currently charge) will be accepted as a valid command without throwing an error.
+- **No duplicates:** You cannot edit a profile to have the exact same phone number or email address as another tutor. See [Duplicate Tutors are Not Allowed](#duplicate-tutors-are-not-allowed).
 
 </box>
 
@@ -313,15 +304,15 @@ To update a tutor to multiple subjects, provide them as a single value within on
 **Editing multiple fields at once**
 
 ```
-edit 1 p/91234567 e/johndoe@example.com
+edit 3 e/ qingrong@example.com t/ best
 ```
 
-Updates the phone number and email of the 1st tutor in the list.
+Updates the phone number and email of the 3rd tutor in the list.
 
 **Replacing tags**
 
 ```
-edit 2 n/Betsy Crower t/
+edit 2 t/
 ```
 
 Renames the 2nd tutor and removes all of their tags.
@@ -336,9 +327,17 @@ Changes the 1st tutor's subject to Physics and rate to $30/hr.
 
 **Expected output:**
 
-```
-Edited Person: John Doe; Phone: 91234567; Email: johndoe@example.com; Address: ; Subject: Chemistry; Rate: 50; Tags:
-```
+![edit_expected](images/edit_expected.png)
+
+---
+
+#### Invalid Usage
+
+**Duplicate Output:**
+![edit_duplicate](images/edit_duplicate.png)
+
+**Error Output:**
+![edit_error](images/edit_error.png)
 
 ---
 
@@ -386,6 +385,8 @@ Deleted Person: Betsy Crowe; Phone: 1234567; Email: betsycrowe@example.com; Addr
 ### Finding Tutors : `find`
 
 Search for tutors by keyword, name, subject, or hourly rate — or combine them for precise filtering.
+
+![Find message](images/find_math_S_advancedmath.png)
 
 ---
 
