@@ -16,6 +16,7 @@ import java.util.Optional;
 import java.util.Set;
 
 import seedu.address.commons.core.index.Index;
+import seedu.address.logic.Messages;
 import seedu.address.logic.commands.EditCommand;
 import seedu.address.logic.commands.EditCommand.EditPersonDescriptor;
 import seedu.address.logic.parser.exceptions.ParseException;
@@ -39,10 +40,21 @@ public class EditCommandParser implements Parser<EditCommand> {
                 PREFIX_ADDRESS, PREFIX_SUBJECT, PREFIX_RATE, PREFIX_TAG);
 
         Index index;
+        String preamble = argMultimap.getPreamble().trim();
 
         try {
-            index = ParserUtil.parseIndex(argMultimap.getPreamble());
+            index = ParserUtil.parseIndex(preamble);
         } catch (ParseException pe) {
+            if (preamble.matches("-?\\d+")) {
+                try {
+                    long parsedIndex = Long.parseLong(preamble);
+                    if (parsedIndex <= 0) {
+                        throw new ParseException(Messages.MESSAGE_INVALID_PERSON_DISPLAYED_INDEX);
+                    }
+                } catch (NumberFormatException nfe) {
+                    // fall through to invalid command format
+                }
+            }
             throw new ParseException(String.format(MESSAGE_INVALID_COMMAND_FORMAT, EditCommand.MESSAGE_USAGE), pe);
         }
 
