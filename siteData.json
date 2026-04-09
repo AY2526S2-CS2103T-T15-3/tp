@@ -66,6 +66,7 @@
         "launch-and-shutdown": "Launch and shutdown",
         "adding-a-person": "Adding a person",
         "deleting-a-person": "Deleting a person",
+        "editing-a-person": "Editing a person",
         "finding-a-person": "Finding a person",
         "saving-data": "Saving data"
       },
