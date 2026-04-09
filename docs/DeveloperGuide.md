@@ -979,5 +979,30 @@ See also: [Sorting the Tutor List](UserGuide.md#sorting-the-tutor-list-sort) in 
 
 ### Saving data
 
-1. Dealing with missing/corrupted data files
-    1. _{explain how to simulate a missing/corrupted file, and the expected behavior}_
+1. **Missing data file**
+    1. Prerequisites: Tuto is not running.
+    2. Delete `data/addressbook.json`, or move it aside. You may delete the whole `data` directory instead if it only contains that file.
+    3. Relaunch Tuto.
+    4. Expected:
+        - The app starts normally.
+        - The tutor list shows the **built-in sample tutors**, not an empty list.
+        - The in-memory data is that sample set until the next save.
+        - A new `data/addressbook.json` appears after a command that persists data (any normal command that saves).
+
+2. **Corrupted or unreadable data file**
+    1. Prerequisites: Tuto is not running.
+    2. Open `data/addressbook.json` in a text editor. Replace the entire file with invalid JSON (for example a single `{` or arbitrary non-JSON text). Save.
+    3. Relaunch Tuto.
+    4. Expected:
+        - The app starts without crashing.
+        - The tutor list is **empty**; the bad file is not loaded as valid data.
+        - After a successful save, the file on disk is overwritten with valid JSON for the current in-memory book (usually empty until you add tutors).
+
+3. Adverserial case of poisoned JSON file 3. Invalid but well-formed JSON (passes parsing, fails validation/model rules)
+    1. Prerequisites: Tuto is not running.
+    2. Open `data/addressbook.json` in a text editor. Enter valid JSON such as an object with duplicate tutors in the `persons` array (i.e. two identical tutor entries). Save.
+    3. Relaunch Tuto.
+    4. Expected:
+        - The app starts without crashing.
+        - The tutor list is **empty** (no tutors are shown), as the file violates model rules.
+        - After a successful save, the file on disk is overwritten with valid JSON for the current in-memory book (usually empty until you add tutors).
