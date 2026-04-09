@@ -635,9 +635,9 @@ Guarantees: If MSS completes until step 4, the Tutor Profile will be updated in 
 - **Index**: The number displayed next to a tutor's name in the contact list (e.g., the 3 in 3. John Doe). Used to select a specific tutor for commands like edit or delete.
 - **JAR File**: The file format used to distribute Tuto, allowing it to run on any computer with Java installed without a setup wizard.
 - **Model**: The component responsible for storing and managing application data.
-- **Parameter**: The specific information provided after a Flag (e.g., John is the parameter for /n).
+- **Parameter**: The specific information provided after a Flag (e.g., John is the parameter for n/).
 - **Person**: A data entity representing a tutor profile, containing attributes such as name, phone, email, address, subject, rate and tags.
-- **Prefix**: A specific prefix (e.g., /n, /p, /e) used to identify the type of data following it.
+- **Prefix**: A specific prefix (e.g., n/, p/, e/) used to identify the type of data following it.
 - **Rate**: The cost per hour for hiring the tutor.
 - **Subject**: The academic discipline a tutor teaches (e.g., Math, Physics).
 - **Tag**: A customisable label user can put on a tutor profile.
@@ -669,14 +669,17 @@ testers are expected to do more _exploratory_ testing.
 3. _{ more test cases …​ }_
 
 ### Adding a person
+
 1. Adding a person with all fields given
     1. Prerequisites: No person in the list of tutor profiles has the contact number `91234567` and/or email address `jane@example.com`
        Reason: Tuto prohibits the addition of a person whose contact number and/or email address already exists within the current list of tutor profiles.
     2. Test case: `add n/Jane Smith p/91234567 e/jane@example.com a/Clementi 6th Street s/Mathematics r/60 t/friend`<br>
        Expected: A card displaying the newly added tutor details is displayed and the profile is added to list of tutor profiles
+
 2. Adding a person with no fields given
     1. Test case: `add`<br>
        Expected: No person is added. An error message that displays the correct command format and an example is shown
+
 3. Adding a person with any of the mandatory fields (e.g. name, phone number, email, subject, rate) missing
     1. Prerequisites: No person in the list of tutor profiles has the contact number `91234567` and/or email address `jane@example.com`
        Reason: Tuto prohibits the addition of a person whose contact number and/or email address already exists within the current list of tutor profiles.
@@ -690,6 +693,7 @@ testers are expected to do more _exploratory_ testing.
        Expected: No person is added. An error message that displays the correct command format and an example is shown
     6. Test case: `add n/Jane Smith p/91234567 e/jane@example.com s/Mathematics`<br>
        Expected: No person is added. An error message that displays the correct command format and an example is shown
+
 4. Adding a person with any/all optional fields missing
     1. Prerequisites: No person in the list of tutor profiles has the contact number `91234567` and/or email address `jane@example.com`
        Reason: Tuto prohibits the addition of a person whose contact number and/or email address already exists within the current list of tutor profiles.
@@ -699,11 +703,13 @@ testers are expected to do more _exploratory_ testing.
        Expected: A card displaying the newly added tutor details is displayed and the profile is added to list of tutor profiles
     4. Test case: `add n/Jane Smith p/91234567 e/jane@example.com a/Clementi 6th Street s/Mathematics r/60`<br>
        Expected: A card displaying the newly added tutor details is displayed and the profile is added to list of tutor profiles
+
 5. Adding a person with multiple subjects:
     1. Prerequisites: No person in the list of tutor profiles has the contact number `91234567` and/or email address `jane@example.com`
        Reason: Tuto prohibits the addition of a person whose contact number and/or email address already exists within the current list of tutor profiles.
     2. Test case: `add n/Jane Smith p/91234567 e/jane@example.com a/Clementi 6th Street s/Mathematics s/Korean r/60 t/friend`<br>
        Expected: A card displaying the newly added tutor details is displayed and the profile is added to list of tutor profiles
+
 6. Adding a person with multiple values specified for the same field:
     1. Prerequisites: No person in the list of tutor profiles has the contact number `91234567` and/or email address `jane@example.com`
        Reason: Tuto prohibits the addition of a person whose contact number and/or email address already exists within the current list of tutor profiles.
@@ -717,6 +723,7 @@ testers are expected to do more _exploratory_ testing.
        Expected: No person is added. An error message indicating that multiple values have been specified for the field `a/`
     6. Test case: `add n/Jane Smith p/91234567 e/jane@example.com a/Clementi 6th Street s/Mathematics s/Korean r/60 r/70 t/friend`<br>
        Expected: No person is added. An error message indicating that multiple values have been specified for the field `r/`
+
 7. Adding a person with inappropriate value for `phone number` field:
     1. Prerequisites: No person in the list of tutor profiles has the contact number `91234567` and/or email address `jane@example.com`
        Reason: Tuto prohibits the addition of a person whose contact number and/or email address already exists within the current list of tutor profiles.
@@ -724,6 +731,7 @@ testers are expected to do more _exploratory_ testing.
        Expected: No person is added. An error message indicating that phone number can only contain numbers and should be at least 3 digits long is shown
     3. Test case: `add n/Jane Smith p/91 e/jane@example.com a/Clementi 6th Street s/Mathematics s/Korean r/60 t/friend`<br>
        Expected: No person is added. An error message indicating that phone number can only contain numbers and should be at least 3 digits long is shown
+
 8. Adding a person with inappropriate value for `rate` field:
     1. Prerequisites: No person in the list of tutor profiles has the contact number `91234567` and email address `jane@example.com`
        Reason: Tuto prohibits the addition of a person whose contact number and/or email address already exists within the current list of tutor profiles.
