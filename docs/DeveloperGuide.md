@@ -22,55 +22,56 @@ It is intended for future developers, maintainers, and anyone interested in unde
 ## Table of Contents
 
 - [Tuto Developer Guide](#tuto-developer-guide)
-  - [Table of Contents](#table-of-contents)
-  - [**Acknowledgements**](#acknowledgements)
-  - [**Setting up, getting started**](#setting-up-getting-started)
-  - [**Design**](#design)
-    - [Architecture](#architecture)
-    - [UI component](#ui-component)
-    - [Logic component](#logic-component)
-    - [Model component](#model-component)
-    - [Storage component](#storage-component)
-    - [Common classes](#common-classes)
-  - [**Implementation**](#implementation)
-    - [Adding a Tutor: `add`](#adding-a-tutor-add)
-      - [Alternative flows](#alternative-flows)
-    - [Uniqueness Constraints](#uniqueness-constraints)
-      - [Current Implementation](#current-implementation)
-      - [Design Considerations](#design-considerations)
-      - [Class Diagram](#class-diagram)
-      - [Sequence Diagram](#sequence-diagram)
-    - [Finding a Tutor: `find`](#finding-a-tutor-find)
-      - [Alternative flows](#alternative-flows-1)
-      - [Search Modalities](#search-modalities)
-      - [Design Considerations](#design-considerations-1)
-        - [Aspect: Search Modalities and User Experience](#aspect-search-modalities-and-user-experience)
-        - [Aspect: UI Context and the Query Bar](#aspect-ui-context-and-the-query-bar)
-  - [**Documentation, logging, testing, configuration, dev-ops**](#documentation-logging-testing-configuration-dev-ops)
-  - [**Appendix: Requirements**](#appendix-requirements)
-    - [Product scope](#product-scope)
-    - [User stories](#user-stories)
-    - [Use cases](#use-cases)
-      - [Use Case: U1. View all Tutor Profile](#use-case-u1-view-all-tutor-profile)
-      - [Use Case: U2. View a specific Tutor Profile](#use-case-u2-view-a-specific-tutor-profile)
-      - [Use Case: U3. Delete a Tutor from Tuto](#use-case-u3-delete-a-tutor-from-tuto)
-      - [Use Case: U4. Add a Tutor Profile](#use-case-u4-add-a-tutor-profile)
-      - [Use Case: U5. Search for Tutors by Subject](#use-case-u5-search-for-tutors-by-subject)
-      - [Use Case: U6. Edit a Tutor Profile](#use-case-u6-edit-a-tutor-profile)
-    - [Non-Functional Requirements](#non-functional-requirements)
-    - [Glossary](#glossary)
-  - [**Appendix: Instructions for manual testing**](#appendix-instructions-for-manual-testing)
-    - [Launch and shutdown](#launch-and-shutdown)
-    - [Adding a person](#adding-a-person)
-    - [Deleting a person](#deleting-a-person)
-    - [Finding a person](#finding-a-person)
-      - [Negative Cases \& Error Handling](#negative-cases--error-handling)
-      - [Positive Cases (Universal Search)](#positive-cases-universal-search)
-      - [Complex Cases (Attribute Filtering \& Combinations)](#complex-cases-attribute-filtering--combinations)
-      - [Adversarial \& Edge Cases](#adversarial--edge-cases)
-    - [Sorting the tutor list](#sorting-the-tutor-list)
-      - [Invalid commands and errors](#invalid-commands-and-errors)
-    - [Saving data](#saving-data)
+    - [Table of Contents](#table-of-contents)
+    - [**Acknowledgements**](#acknowledgements)
+    - [**Setting up, getting started**](#setting-up-getting-started)
+    - [**Design**](#design)
+        - [Architecture](#architecture)
+        - [UI component](#ui-component)
+        - [Logic component](#logic-component)
+        - [Model component](#model-component)
+        - [Storage component](#storage-component)
+        - [Common classes](#common-classes)
+    - [**Implementation**](#implementation)
+        - [Adding a Tutor: `add`](#adding-a-tutor-add)
+            - [Alternative flows](#alternative-flows)
+        - [Uniqueness Constraints](#uniqueness-constraints)
+            - [Current Implementation](#current-implementation)
+            - [Design Considerations](#design-considerations)
+            - [Class Diagram](#class-diagram)
+            - [Sequence Diagram](#sequence-diagram)
+        - [Finding a Tutor: `find`](#finding-a-tutor-find)
+            - [Alternative flows](#alternative-flows-1)
+            - [Search Modalities](#search-modalities)
+            - [Design Considerations](#design-considerations-1)
+                - [Aspect: Search Modalities and User Experience](#aspect-search-modalities-and-user-experience)
+                - [Aspect: UI Context and the Query Bar](#aspect-ui-context-and-the-query-bar)
+    - [**Documentation, logging, testing, configuration, dev-ops**](#documentation-logging-testing-configuration-dev-ops)
+    - [**Appendix: Requirements**](#appendix-requirements)
+        - [Product scope](#product-scope)
+        - [User stories](#user-stories)
+        - [Use cases](#use-cases)
+            - [Use Case: U1. View all Tutor Profile](#use-case-u1-view-all-tutor-profile)
+            - [Use Case: U2. View a specific Tutor Profile](#use-case-u2-view-a-specific-tutor-profile)
+            - [Use Case: U3. Delete a Tutor from Tuto](#use-case-u3-delete-a-tutor-from-tuto)
+            - [Use Case: U4. Add a Tutor Profile](#use-case-u4-add-a-tutor-profile)
+            - [Use Case: U5. Search for Tutors by Subject](#use-case-u5-search-for-tutors-by-subject)
+            - [Use Case: U6. Edit a Tutor Profile](#use-case-u6-edit-a-tutor-profile)
+        - [Non-Functional Requirements](#non-functional-requirements)
+        - [Glossary](#glossary)
+    - [**Appendix: Instructions for manual testing**](#appendix-instructions-for-manual-testing)
+        - [Launch and shutdown](#launch-and-shutdown)
+        - [Adding a person](#adding-a-person)
+        - [Deleting a person](#deleting-a-person)
+        - [Editing a person](#editing-a-person)
+        - [Finding a person](#finding-a-person)
+            - [Negative Cases \& Error Handling](#negative-cases--error-handling)
+            - [Positive Cases (Universal Search)](#positive-cases-universal-search)
+            - [Complex Cases (Attribute Filtering \& Combinations)](#complex-cases-attribute-filtering--combinations)
+            - [Adversarial \& Edge Cases](#adversarial--edge-cases)
+        - [Sorting the tutor list](#sorting-the-tutor-list)
+            - [Invalid commands and errors](#invalid-commands-and-errors)
+        - [Saving data](#saving-data)
 
 ---
 
@@ -806,12 +807,12 @@ testers are expected to do more _exploratory_ testing.
         1. Prerequisites: List all persons using the `list` command. At least one person exists in the list.
         2. Test case: `edit 1 r/60`<br>
            Expected: The first tutor's rate is updated to `60`. A success message showing the updated tutor details is displayed.
-    5. Editing a person's subject 
+    5. Editing a person's subject
         1. Prerequisites: List all persons using the `list` command. At least one person exists in the list.
         2. Test case: `edit 1 s/Physics`<br>
            Expected: The first tutor's subject is updated to `Physics`. A success message showing the updated tutor details is displayed.
         3. Test case: `edit 1 s/Math s/English`<br>
-           Expected: The first tutor's subjects are updated to include `Math` and `English`. A success message showing the updated tutor details is displayed.
+           Expected: The first tutor's subjects are replaced and overwritten with `Math` and `English`. A success message showing the updated tutor details is displayed.
 
 3. Editing a person with missing values for required fields
     1. Prerequisites: List all persons using the `list` command. At least one person exists in the list.
@@ -834,7 +835,7 @@ testers are expected to do more _exploratory_ testing.
     2. Editing a person's tag
         1. Prerequisites: List all persons using the `list` command. At least one person exists in the list.
         2. Test case: `edit 1 t/friend`<br>
-           Expected: The first tutor's tags are updated to include `friend`. A success message showing the updated tutor details is displayed.
+           Expected: The first tutor's tags are replaced and overwritten with only `friend`. A success message showing the updated tutor details is displayed.
     3. Removing an existing address
         1. Prerequisites: List all persons using the `list` command. The first tutor currently has an address.
         2. Test case: `edit 1 a/`<br>
