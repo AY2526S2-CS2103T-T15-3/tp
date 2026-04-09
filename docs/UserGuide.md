@@ -328,7 +328,7 @@ Updates one or more fields of an existing Tutor Profile.
 edit 3 e/ qingrong@example.com t/ best
 ```
 
-Updates the phone number and email of the 3rd tutor in the list.
+Updates the email and tag of the 3rd tutor in the list.
 
 **Replacing tags**
 
@@ -336,7 +336,7 @@ Updates the phone number and email of the 3rd tutor in the list.
 edit 2 t/
 ```
 
-Renames the 2nd tutor and removes all of their tags.
+Removes all of their tags of the 2nd tutor.
 
 **Updating subject and rate**
 
