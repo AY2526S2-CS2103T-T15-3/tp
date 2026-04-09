@@ -793,21 +793,15 @@ testers are expected to do more _exploratory_ testing.
     2. Test case: `find geography`<br>
        Expected: A successful search occurs, but with no matches. The text feedback area is hidden. The blue search query bar should show `All fields: "geography"`. Below it, the result display list in the UI shows the placeholder text `No tutors found.`.
 
----
-
 2. Attempting to restrict universal search with unsupported prefixes (Constraint Error)
     1. Prerequisites: Tuto is running (contents of the list do not matter).
     2. Test case: `find John p/91234567`<br>
        Expected: No search is performed. Instead of the result display list and query bar, the text feedback area is shown displaying an error with a red cross icon indicating that unsupported flags (`p/`) exist when using universal search. The blue search query bar and result list are hidden.
 
----
-
 3. Executing find without any parameters (Format Error)
     1. Prerequisites: Tuto is running.
     2. Test case: `find `<br>
        Expected: No search is performed. The text feedback area is shown displaying an error about invalid command format. The blue search query bar and result list remain hidden.
-
----
 
 #### Positive Cases (Universal Search)
 
@@ -818,14 +812,10 @@ testers are expected to do more _exploratory_ testing.
     2. Test case: `find Doe`<br>
        Expected: The text feedback area is hidden. The blue search query bar should appear and show `All fields: "Doe"`. Below it, the list is updated to display the full tutor profiles of both 'John Doe' and 'Jane Doe' (and any other tutor profiles that contain the word `Doe`).
 
----
-
 5. Finding a person using universal search with no matching results
     1. Prerequisites: Ensure the contact list does not have anyone teaching "Chemistry" or containing the word "Chemistry" in any attribute field.
     2. Test case: `find Chemistry`<br>
        Expected: The text feedback area is hidden. The blue search query bar should show `All fields: "Chemistry"`. Below it, the result list shows the placeholder text `No tutors found.`.
-
----
 
 #### Complex Cases (Attribute Filtering & Combinations)
 
@@ -836,8 +826,6 @@ testers are expected to do more _exploratory_ testing.
     2. Test case: `find s/Physics r/<50`<br>
        Expected: The text feedback area is hidden. The blue search query bar should show `Subject: "Physics" • Rate: "<50"`. The result display list should show the tutor profile for "Alice" (and other tutor profiles if condition matches), as Bob is filtered out due to his rate.
 
----
-
 7. Finding persons using multiple instances of the same attribute type (AND / OR Logic checks)
     1. Prerequisites: Ensure the contact list has at least these Tutors with these specific attributes (the rest can be any permitted value subject to uniqueness constraint):
         - Name: "Charlie", Subject: "Math", "Chemistry"
@@ -846,8 +834,6 @@ testers are expected to do more _exploratory_ testing.
     2. Test case: `find n/Charlie David s/Math s/Chemistry`<br>
        Expected: The text feedback area is hidden. The blue search query bar should show `Name: "Charlie, David" • Subject: "Math, Chemistry"`. The result list displays only the tutor profile for "Charlie". The name prefix evaluates multiple words via OR logic (allowing either Charlie or David), but the multiple subject prefixes evaluate via AND logic simultaneously (requiring both Math AND Chemistry to be taught by the same tutor to pass).
 
----
-
 8. Finding a person combining universal search and specific attribute filtering (AND Logic)
     1. Prerequisites: Ensure the contact list has at least these Tutors with these specific attributes (the rest can be any permitted value subject to uniqueness constraint):
         - Name: "Eve", Subject: "Math", Rate: "40"
@@ -855,16 +841,12 @@ testers are expected to do more _exploratory_ testing.
     2. Test case: `find Eve r/40-50`<br>
        Expected: The text feedback area is hidden. The blue search query bar shows `All fields: "Eve" • Rate: "40-50"`. The result list shows only the tutor profile for "Eve" with the 'Math' subject and rate of 40 (and any other matching Tutor profiles), conforming to keywords and the defined rate boundaries successfully.
 
----
-
 #### Adversarial & Edge Cases
 
 9. Finding using multiple invalid format prefixes (Duplicate prefix errors)
     1. Prerequisites: Tuto is running.
     2. Test case: `find n/Alice n/Bob r/40 r/50`<br>
        Expected: No search is performed. The text feedback area displays a red cross error indicating that multiple values were specified for single-valued fields (Name and Rate). The blue search query bar and result display list remain hidden.
-
----
 
 10. Finding with trailing/leading whitespaces and empty attribute values
     1. Prerequisites: Tuto is running (contents of the list do not matter).
@@ -875,16 +857,12 @@ testers are expected to do more _exploratory_ testing.
     4. Test case: `find n/ [any amount of whitespaces given] Alice [any amount of whitespaces given] r/ [any amount of whitespaces given] 50   `<br>
        Expected: A successful search occurs. Arbitrary amounts of spaces between prefixes and values do not affect the parsing. The blue search query bar shows `Name: "Alice" • Rate: "50"`.
 
----
-
 11. Finding with different ordering of parameters
     1. Prerequisites: Ensure the contact list has at least one Tutor with the name "Alice", teaching "Math", with a rate of "50".
     2. Test case: `find r/50 s/Math n/Alice`<br>
        Expected: A successful search occurs. The ordering of prefixes does not matter. The blue search query bar shows `Name: "Alice" • Subject: "Math" • Rate: "50"`. The result list displays the matching tutor profile.
     3. Test case: `find s/Math r/50 n/Alice`<br>
        Expected: Same as above. The blue search query bar and result list remain consistent regardless of the input order.
-
----
 
 12. Stress testing the find logic (extreme number of keywords/prefixes)
     1. Prerequisites: Tuto is running.
@@ -893,8 +871,6 @@ testers are expected to do more _exploratory_ testing.
     3. Test case: `find n/Alice ` repeated 100 times.<br>
        Expected: No search is performed. The text feedback area displays an error indicating multiple values specified for single-valued fields (Name), preventing resource exhaustion.
 
----
-
 13. Finding with nonsensical rate boundary formatting
     1. Prerequisites: Tuto is running.
     2. Test case: `find r/ABC`<br>
@@ -902,49 +878,35 @@ testers are expected to do more _exploratory_ testing.
     3. Test case: `find r/50-40`<br>
        Expected: No search is performed. The text feedback area displays an error indicating that for a rate range, the lower bound cannot be strictly greater than the upper bound. The blue search query bar and result list remain hidden.
 
----
-
 14. Rate integer overflow vulnerabilities (Extreme limits)
     1. Prerequisites: Tuto is running.
     2. Test case: `find r/>9999999999999`<br>
        Expected: The system should not crash from an unhandled `NumberFormatException`. No search is performed. The text feedback area displays a red cross error indicating that the rate provided is invalid (violates valid Java integer limits or rate constraints). The blue search query bar and result list remain hidden.
-
----
 
 15. Prefix case sensitivity and preamble swallowing (Mistyping prefixes)
     1. Prerequisites: Ensure the contact list has at least one Tutor with the name "Alice".
     2. Test case: `find N/Alice`<br>
        Expected: The text feedback area is hidden. Because `N/` (capitalized) is not recognized as the official name prefix, the parser safely swallows it as a generic keyword. The blue search query bar shows `All fields: "N/Alice"`. Below it, the result list will show `No tutors found.` (unless a tutor profile literally contains "N/Alice").
 
----
-
 16. Regex and Special Character injection attempts
     1. Prerequisites: Tuto is running.
     2. Test case: `find *[a-z]+* ?.* {}`<br>
        Expected: The system should not crash due to regex compilation errors or illegal character parsing. The text feedback area is hidden. The blue search query bar safely escapes and displays `All fields: "*[a-z]+* ?.* {}"`. The result list predictably shows `No tutors found.` as it interprets the inputs as exact string literals rather than executable regular expressions.
-
----
 
 17. Conflicting valid constraints (Mathematically/Logically impossible sets)
     1. Prerequisites: Ensure the contact list has a tutor profile named "Jane" with a rate of `50` and subject `Math`.
     2. Test case: `find Jane r/<30`<br>
        Expected: A successful search occurs. The text feedback area is hidden. The blue search query bar shows `All fields: "Jane" • Rate: "<30"`. The result list displays `No tutors found.`. This definitively proves that even if the universal search positively matches the tutor profile "Jane", the restrictive rate filter acts as a pure AND gate to forcefully negate the inclusion, ensuring no false positives slip through.
 
----
-
 18. Backward slashes and parser confusion techniques
     1. Prerequisites: Tuto is running.
     2. Test case: `find /n Alice /s Math \t friend`<br>
        Expected: No search is performed. The system strictly expects `n/`, `s/`, etc. as prefixes and subject should only be alphanumeric. Since the slashes are inverted or prefixed, the parser safely swallows it as a generic keyword. The blue search query bar shows `All fields: "/n Alice /s Math \t friend"`. Below it, the result list will show tutor records that contains parts of the search keywords.
 
----
-
 19. Empty prefix values injected before valid constraints (Syntax gap traps)
     1. Prerequisites: Tuto is running.
     2. Test case: `find n/ s/Math r/50`<br>
        Expected: No search is performed. The text feedback area displays a constraint error stating that the Name cannot be empty (or violates validation rules). The parser successfully detects the missing value for `n/` despite `s/` immediately following it. The blue search query bar and result list remain hidden.
-
----
 
 20. Rate attribute formatting anomalies (Zero-padding and negatives)
     1. Prerequisites: Ensure the contact list contains a tutor profile with a rate of `0`.
