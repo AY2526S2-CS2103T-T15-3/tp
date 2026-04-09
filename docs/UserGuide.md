@@ -29,7 +29,7 @@ This guide is written for parents who are comfortable using a keyboard and want 
   - [Understanding the Interface](#understanding-the-interface)
   - [Features](#features)
     - [Notes on Command Format](#notes-on-command-format)
-    - [Viewing Help : `help`](#viewing-help--help)
+    - [Viewing Help `help`](#viewing-help--help)
     - [Clearing all entries: `clear`](#clearing-all-entries-clear)
     - [Adding a Tutor : `add`](#adding-a-tutor--add)
     - [Listing All Tutors : `list`](#listing-all-tutors--list)
@@ -325,6 +325,14 @@ edit INDEX [n/NAME] [p/PHONE] [e/EMAIL] [a/ADDRESS] [s/SUBJECT] [r/RATE] [t/TAG]
 - After a **`sort`** or **`delete`**, indices may no longer match what you saw earlier — see [Displayed indices change after `sort` and `delete`](#notes-on-command-format).
 - At least one field must be provided.
 - Existing values are replaced with the new values you provide.
+
+<box type="warning" seamless>
+
+**Note:** Unlike the `add` command, the `edit` command currently supports only a single `s/` prefix.
+Providing multiple `s/` prefixes will result in an error.
+To update a tutor to multiple subjects, provide them as a single value within one `s/` prefix (e.g. `edit INDEX s/Math Physics`).
+
+</box>
 
 <box type="warning" seamless>
 
