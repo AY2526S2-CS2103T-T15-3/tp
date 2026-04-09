@@ -109,7 +109,7 @@ public class FindCommandParserTest {
     public void parse_specificRateLeadingZeroes() throws Exception {
         FindCommand commandRate = parser.parse(" r/007");
         assertMatch(commandRate, personWithRate("007"));
-        assertNoMatch(commandRate, personWithRate("7"));
+        assertMatch(commandRate, personWithRate("7"));
     }
 
     @Test

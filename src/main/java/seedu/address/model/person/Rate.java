@@ -47,7 +47,7 @@ public class Rate {
     public Rate(String rate) {
         requireNonNull(rate);
         checkArgument(isValidRate(rate), MESSAGE_CONSTRAINTS);
-        this.rate = rate;
+        this.rate = String.valueOf(Integer.parseInt(rate));
     }
 
     /**
