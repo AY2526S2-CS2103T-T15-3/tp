@@ -590,7 +590,7 @@ Shows highest hourly rate first.
 
 Displays all tutor profiles stored in Tuto. The GUI features a left panel that displays the full contact list at all times, so this command is predominantly used in the CLI or to quickly clear search filters in the main view.
 
-![list message](images/listMessage.png)
+![List command hero image](images/listMessage.png)
 
 **Format:** `list`
 
@@ -604,13 +604,21 @@ Displays all tutor profiles stored in Tuto. The GUI features a left panel that d
 
 ---
 
-### Clearing all entries: `clear`
+### Clearing All Entries : `clear`
 
-Clears all entries from Tuto.
+Permanently clears all tutor entries from Tuto.
 
-![clear message](images/clearMessage.png)
+![Clear command hero image](images/clearMessage.png)
 
-Format: `clear`
+**Format:** `clear`
+
+**Expected output:** All tutor profiles are deleted, leaving the Tutor List Panel empty. The result display confirms that the data has been successfully cleared.
+
+<box type="warning" seamless>
+
+**Caution:** This action permanently deletes all data and cannot be undone. Use with extreme care!
+
+</box>
 
 ---
 
