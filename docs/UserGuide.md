@@ -116,7 +116,7 @@ Type a command into the **Command Box** at the bottom and press **Enter** to run
 
 </box>
 
----````
+---
 
 ## Understanding the Interface
 
