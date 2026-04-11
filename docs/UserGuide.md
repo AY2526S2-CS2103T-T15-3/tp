@@ -220,15 +220,15 @@ Adds a new Tutor Profile to Tuto.
 
 #### Parameters
 
-| Prefix | Field             | Required | Accepted values                                                     |
-| ------ | ----------------- | -------- | ------------------------------------------------------------------- |
-| `n/`   | Name              | Yes      | Alphanumeric text + spaces                                          |
-| `p/`   | Phone number      | Yes      | Digits only, at least 3 digits                                      |
-| `e/`   | Email             | Yes      | Valid email format (e.g. `user@example.com`)                        |
-| `s/`   | Subject           | Yes      | Alphanumeric text + spaces (e.g. `Advanced Mathematics`, `Biology`) |
-| `r/`   | Hourly rate (SGD) | Yes      | 0 or any positive integer                                           |
-| `a/`   | Address           | No       | Any text                                                            |
-| `t/`   | Tag               | No       | Alphanumeric text, no spaces                                        |
+| Prefix | Field             | Required | Accepted values                                                                 |
+| ------ | ----------------- | -------- |---------------------------------------------------------------------------------|
+| `n/`   | Name              | Yes      | Alphanumeric text + spaces                                                      |
+| `p/`   | Phone number      | Yes      | 8 digits for Singapore number, 10 digits excluding '+' for international number |
+| `e/`   | Email             | Yes      | Valid email format (e.g. `user@example.com`)                                    |
+| `s/`   | Subject           | Yes      | Alphanumeric text + spaces (e.g. `Advanced Mathematics`, `Biology`)             |
+| `r/`   | Hourly rate (SGD) | Yes      | 0 or any positive integer                                                       |
+| `a/`   | Address           | No       | Any text                                                                        |
+| `t/`   | Tag               | No       | Alphanumeric text, no spaces                                                    |
 
 <box type="tip" seamless>
 

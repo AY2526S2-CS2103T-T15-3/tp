@@ -316,6 +316,15 @@ This ensures that phone number conflict is detected first, followed by email add
     - Pros: Serves as a reminder to user to record address of tutor in cases where face-to-face tuition is arranged
     - Cons: Does not account for the case where tuition may be done online and hence tutor's address is not needed
 
+**Aspect: Phone number must either be 8 digits for Singapore number or 10 digits excluding '+' for international number**
+
+- **Alternative 1 (current choice):** Phone number field must either be 8 digits for Singapore number or 10 digits excluding '+' for international number
+    - Pros: Accounts for the case where tutor may only have international number (e.g. Tutor is from Malaysia)
+    - Cons: Feature may be rarely used in practice due to the small number of international tutors
+- **Alternative 2:** Phone number field follows the original implementation of at least 3 digits and no special characters
+    - Pros: Simple to implement, no changes required
+    - Cons: Does not account for the case where tutor may only have international number (e.g. Tutor is from Malaysia)
+  
 #### Class Diagram
 
 The following class diagram shows the key classes involved in enforcing uniqueness constraints,

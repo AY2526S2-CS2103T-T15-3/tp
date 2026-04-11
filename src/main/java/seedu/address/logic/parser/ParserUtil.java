@@ -67,7 +67,13 @@ public class ParserUtil {
     public static Phone parsePhone(String phone) throws ParseException {
         requireNonNull(phone);
         String trimmedPhone = phone.trim();
-        if (!Phone.isValidPhone(trimmedPhone)) {
+        String normalisedPhone;
+        if (trimmedPhone.matches("\\d{8}")) {
+            normalisedPhone = "+65" + trimmedPhone;
+        } else {
+            normalisedPhone = trimmedPhone;
+        }
+        if (!Phone.isValidPhone(normalisedPhone)) {
             throw new ParseException(Phone.MESSAGE_CONSTRAINTS);
         }
         return new Phone(trimmedPhone);

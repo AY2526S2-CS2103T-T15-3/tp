@@ -11,8 +11,11 @@ public class Phone {
 
 
     public static final String MESSAGE_CONSTRAINTS =
-            "Phone numbers should only contain numbers, and it should be at least 3 digits long";
-    public static final String VALIDATION_REGEX = "\\d{3,}";
+            "Phone numbers must either: \n"
+            + "1. Be 8 digits (will default to +65), OR \n"
+            + "2. Start with '+' followed up by 10 digits.";
+    private static final String DIGIT_REGEX = "\\d{8}";
+    private static String INTERNATIONAL_REGEX = "\\+\\d+";
     public final String value;
 
     /**
@@ -22,15 +25,27 @@ public class Phone {
      */
     public Phone(String phone) {
         requireNonNull(phone);
-        checkArgument(isValidPhone(phone), MESSAGE_CONSTRAINTS);
-        value = phone;
+        String localisedNumber = localise(phone);
+        checkArgument(isValidPhone(localisedNumber), MESSAGE_CONSTRAINTS);
+        value = localisedNumber;
     }
 
+    private static String localise(String input) {
+        if (input.matches(DIGIT_REGEX)) {
+            return "+65" + input;
+        }
+        return input;
+    }
     /**
      * Returns true if a given string is a valid phone number.
      */
     public static boolean isValidPhone(String test) {
-        return test.matches(VALIDATION_REGEX);
+        if (!test.matches(INTERNATIONAL_REGEX)) {
+            return false;
+        }
+
+        String digits = test.substring(1);
+        return digits.length() == 10;
     }
 
     /**
