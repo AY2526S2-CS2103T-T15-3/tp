@@ -349,10 +349,12 @@ Sets the 2nd tutor's subjects to Math and English only (replacing any previous s
 
 #### Invalid Usage
 
-**Duplicate Output:**
+**Duplicate Error:**
+Shown when the edited phone number or email already belongs to another tutor.
 ![edit_duplicate](images/edit_duplicate.png)
 
-**Error Output:**
+**Invalid Input Error:**
+Shown when the `edit` command is missing required fields.
 ![edit_error](images/edit_error.png)
 
 ---
@@ -568,6 +570,22 @@ Only **one** `n/` and one `r/` are allowed per command.
 ![Invalid Names](images/find_invalid_name.png)
 
 ![Invalid Command](images/find_generic_error.png)
+
+<box type="info" seamless>
+
+**Note on unrecognised or incorrectly formatted prefixes:**
+
+If a prefix is mistyped or uses incorrect casing (e.g. `N/Alice` instead of `n/Alice`, or an unsupported prefix such as `x/abc`), the application does not treat it as an error.
+
+Instead, the input will be interpreted as a general keyword and a search will be performed across all fields.
+
+This means:
+- `find N/Alice` will search for the keyword `"N/Alice"` instead of filtering by name.
+- `find x/abc n/Alex` will treat `x/abc` as a keyword and only apply the valid `n/` prefix.
+
+As a result, the search may return no results or unexpected results if prefixes are entered incorrectly.
+
+</box>
 
 ---
 
