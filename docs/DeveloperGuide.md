@@ -66,10 +66,10 @@ It is intended for future developers, maintainers, and anyone interested in unde
     - [Deleting a person](#deleting-a-person)
     - [Editing a person](#editing-a-person)
     - [Finding a person](#finding-a-person)
-      - [Negative Cases \& Error Handling](#negative-cases-and-amp-error-handling)
+      - [Negative Cases \& Error Handling](#negative-cases--error-handling)
       - [Positive Cases (Universal Search)](#positive-cases-universal-search)
-      - [Complex Cases (Attribute Filtering \& Combinations)](#complex-cases-attribute-filtering-and-amp-combinations)
-      - [Adversarial \& Edge Cases](#adversarial-and-amp-edge-cases)
+      - [Complex Cases (Attribute Filtering \& Combinations)](#complex-cases-attribute-filtering--combinations)
+      - [Adversarial \& Edge Cases](#adversarial--edge-cases)
     - [Sorting the tutor list](#sorting-the-tutor-list)
       - [Invalid commands and errors](#invalid-commands-and-errors)
     - [Saving data](#saving-data)
@@ -324,7 +324,7 @@ This ensures that phone number conflict is detected first, followed by email add
 - **Alternative 2:** Phone number field follows the original implementation of at least 3 digits and no special characters
     - Pros: Simple to implement, no changes required
     - Cons: Does not account for the case where tutor may only have international number (e.g. Tutor is from Malaysia)
-  
+
 #### Class Diagram
 
 The following class diagram shows the key classes involved in enforcing uniqueness constraints,
@@ -761,13 +761,10 @@ testers are expected to do more _exploratory_ testing.
     2. Test case: `add n/Jane Smith p/91234567 e/jane@example.com a/Clementi 6th Street s/Mathematics s/Korean r/60 t/friend`<br>
        Expected: A card displaying the newly added tutor details is displayed and the profile is added to list of tutor profiles
 
-5b. Adding a person with duplicate subject or tag values in the same command:
-    1. Prerequisites: No person in the list of tutor profiles has the contact number `91234567` and/or email address `jane@example.com`
-       Reason: Tuto prohibits the addition of a person whose contact number and/or email address already exists within the current list of tutor profiles.
-    2. Test case: `add n/Jane Smith p/91234567 e/jane@example.com s/Math s/Math r/60`<br>
-       Expected: No person is added. An error message indicating that duplicate subject values were specified is shown.
-    3. Test case: `add n/Jane Smith p/91234567 e/jane@example.com s/Math r/60 t/friend t/friend`<br>
-       Expected: No person is added. An error message indicating that duplicate tag values were specified is shown.
+5b. Adding a person with duplicate subject or tag values in the same command: 1. Prerequisites: No person in the list of tutor profiles has the contact number `91234567` and/or email address `jane@example.com`
+Reason: Tuto prohibits the addition of a person whose contact number and/or email address already exists within the current list of tutor profiles. 2. Test case: `add n/Jane Smith p/91234567 e/jane@example.com s/Math s/Math r/60`<br>
+Expected: No person is added. An error message indicating that duplicate subject values were specified is shown. 3. Test case: `add n/Jane Smith p/91234567 e/jane@example.com s/Math r/60 t/friend t/friend`<br>
+Expected: No person is added. An error message indicating that duplicate tag values were specified is shown.
 
 6. Adding a person with multiple values specified for the same field:
     1. Prerequisites: No person in the list of tutor profiles has the contact number `91234567` and/or email address `jane@example.com`
