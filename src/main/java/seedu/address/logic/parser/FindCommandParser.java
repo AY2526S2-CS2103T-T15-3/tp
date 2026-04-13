@@ -287,8 +287,8 @@ public class FindCommandParser implements Parser<FindCommand> {
      * Parses a non-empty digit sequence for find-command rate bounds.
      */
     private BigInteger parseRateBigIntegerBound(String digits) throws ParseException {
-        if (digits.isEmpty() || !digits.matches(Rate.VALIDATION_REGEX)) {
-            throw new ParseException(Rate.MESSAGE_CONSTRAINTS);
+        if (digits.isEmpty() || !digits.matches("\\d+")) {
+            throw new ParseException(Rate.MESSAGE_INVALID_RATE_FIND_FORMAT);
         }
         return new BigInteger(digits);
     }
@@ -302,12 +302,12 @@ public class FindCommandParser implements Parser<FindCommand> {
         }
 
         // If it contains ANY non-digit separator but no '-'
-        if (!rateArgs.contains("-") && !rateArgs.matches("[<>]?\\d+")) {
-            throw new ParseException(Rate.MESSAGE_INVALID_RATE_RANGE_DELIMITER);
+        if (!rateArgs.contains("-") && !rateArgs.matches("[<>]?\\d+(\\.\\d+)?")) {
+            throw new ParseException(Rate.MESSAGE_INVALID_RATE_FIND_FORMAT);
         }
 
         // Detect negative rate like r/-10 (but not range like 10-20)
-        if (rateArgs.matches("-\\d+")) {
+        if (rateArgs.matches("-\\d+(\\.\\d+)?")) {
             throw new ParseException(Rate.MESSAGE_NEGATIVE_RATE_NOT_ALLOWED);
         }
 
@@ -321,7 +321,9 @@ public class FindCommandParser implements Parser<FindCommand> {
         // Case 2: Greater-than search, e.g. r/>10
         if (rateArgs.startsWith(">")) {
             String num = rateArgs.substring(1).trim();
-
+            if (num.matches("-\\d+(\\.\\d+)?")) {
+                throw new ParseException(Rate.MESSAGE_NEGATIVE_RATE_NOT_ALLOWED);
+            }
             return new RateGreaterThanPredicate(parseRateBigIntegerBound(num));
         }
 

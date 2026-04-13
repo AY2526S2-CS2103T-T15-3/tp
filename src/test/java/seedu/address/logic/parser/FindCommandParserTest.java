@@ -14,6 +14,7 @@ import org.junit.jupiter.api.Test;
 
 import seedu.address.logic.commands.FindCommand;
 import seedu.address.model.person.Person;
+import seedu.address.model.person.Rate;
 import seedu.address.model.person.Subject;
 import seedu.address.model.tag.Tag;
 import seedu.address.testutil.PersonBuilder;
@@ -57,6 +58,14 @@ public class FindCommandParserTest {
         assertParseFailure(parser, " t/ ", Tag.MESSAGE_CONSTRAINTS);
         // "friend!" is invalid, "friend colleague" is valid (2 keywords)
         assertParseFailure(parser, " t/friend!", Tag.MESSAGE_CONSTRAINTS);
+
+        // Invalid rate: letters → format error (not delimiter error)
+        assertParseFailure(parser, " r/abc", Rate.MESSAGE_INVALID_RATE_FIND_FORMAT);
+        assertParseFailure(parser, " r/>abc", Rate.MESSAGE_INVALID_RATE_FIND_FORMAT);
+
+        // Negative rate in find → specific message
+        assertParseFailure(parser, " r/-1", Rate.MESSAGE_NEGATIVE_RATE_NOT_ALLOWED);
+        assertParseFailure(parser, " r/>-1", Rate.MESSAGE_NEGATIVE_RATE_NOT_ALLOWED);
     }
 
     @Test

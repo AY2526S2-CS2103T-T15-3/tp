@@ -127,6 +127,9 @@ public class ParserUtil {
     public static Rate parseRate(String rate) throws ParseException {
         requireNonNull(rate);
         String trimmedRate = rate.trim();
+        if (trimmedRate.matches("-\\d+(\\.\\d+)?")) {
+            throw new ParseException(Rate.MESSAGE_NEGATIVE_RATE_NOT_ALLOWED);
+        }
         if (!Rate.isValidRate(trimmedRate)) {
             throw new ParseException(Rate.MESSAGE_CONSTRAINTS);
         }

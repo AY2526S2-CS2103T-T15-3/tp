@@ -3,6 +3,7 @@ package seedu.address.model.person;
 import static java.util.Objects.requireNonNull;
 import static seedu.address.commons.util.AppUtil.checkArgument;
 
+import java.math.BigDecimal;
 import java.math.BigInteger;
 
 /**
@@ -37,7 +38,7 @@ public class Rate {
      * The first character of the address must not be a whitespace,
      * otherwise " " (a blank string) becomes a valid input.
      */
-    public static final String VALIDATION_REGEX = "\\d+";
+    public static final String VALIDATION_REGEX = "\\d+(\\.\\d+)?";
 
     public final String rate;
 
@@ -49,7 +50,7 @@ public class Rate {
     public Rate(String rate) {
         requireNonNull(rate);
         checkArgument(isValidRate(rate), MESSAGE_CONSTRAINTS);
-        this.rate = new BigInteger(rate).toString();
+        this.rate = new BigDecimal(rate).stripTrailingZeros().toPlainString();
     }
 
     /**
@@ -73,7 +74,7 @@ public class Rate {
      *         or greater than {@code other}
      */
     public int compareNumericValueTo(BigInteger other) {
-        return new BigInteger(rate).compareTo(other);
+        return new BigDecimal(rate).compareTo(new BigDecimal(other));
     }
 
     @Override

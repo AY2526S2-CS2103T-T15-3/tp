@@ -43,26 +43,39 @@ public class RateTest {
         // null rate
         assertFalse(Rate.isValidRate(null));
 
-        // valid rate
+        // invalid rates
         assertFalse(Rate.isValidRate("")); //Empty
         assertFalse(Rate.isValidRate(" ")); //Contains only space
         assertFalse(Rate.isValidRate("-")); //Contains only special character
         assertFalse(Rate.isValidRate("abc")); //letters
         assertFalse(Rate.isValidRate("10 20")); //spaces in between
         assertFalse(Rate.isValidRate("10!")); //Special character
-        assertFalse(Rate.isValidRate("-10")); //negative
+        assertFalse(Rate.isValidRate("-10")); //negative integer
+        assertFalse(Rate.isValidRate("-1.5")); //negative decimal
+        assertFalse(Rate.isValidRate("1.2.3")); //multiple decimal points
 
         // valid rates
         assertTrue(Rate.isValidRate("10"));
         assertTrue(Rate.isValidRate("0"));
         assertTrue(Rate.isValidRate("00000000007"));
+        assertTrue(Rate.isValidRate("49.50")); //decimal
+        assertTrue(Rate.isValidRate("0.5")); //decimal less than 1
         assertTrue(Rate.isValidRate(String.valueOf(Integer.MAX_VALUE)));
         assertTrue(Rate.isValidRate("2147483648"));
         assertTrue(Rate.isValidRate("999999999999999999999999"));
     }
 
     @Test
-    public void constructor_veryLargeDigitString_normalizesWithBigInteger() {
+    public void constructor_decimalRate_storesNormalisedRate() {
+        Rate rate = new Rate("49.50");
+        assertTrue(rate.toString().equals("49.5"));
+        assertTrue(rate.equals(new Rate("49.5")));
+        // trailing zeros after decimal dropped; whole numbers stay clean
+        assertTrue(new Rate("50.00").toString().equals("50"));
+    }
+
+    @Test
+    public void constructor_veryLargeDigitString_normalizesWithBigDecimal() {
         Rate rate = new Rate("2147483648");
         assertTrue(rate.toString().equals("2147483648"));
         assertTrue(rate.equals(new Rate("000002147483648")));
