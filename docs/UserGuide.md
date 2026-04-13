@@ -709,6 +709,12 @@ Permanently clears all tutor entries from Tuto.
 
 **Expected output:** All tutor profiles are deleted, leaving the Tutor List Panel empty. The result display confirms that the data has been successfully cleared.
 
+<box type="info" seamless>
+
+**Note:** The `clear` command empties your tutor list, but it **does not reset the active sorting order**. If the list was previously sorted by rate, any newly added tutors will continue to be automatically sorted by rate.
+
+</box>
+
 <box type="warning" seamless>
 
 **Caution:** This action permanently deletes all data and cannot be undone. Use with extreme care!
