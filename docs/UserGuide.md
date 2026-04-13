@@ -37,7 +37,7 @@ This guide is written for parents who are comfortable using a keyboard and want 
       - [Parameters](#parameters)
       - [Constraints](#constraints)
       - [Examples](#examples)
-    - [Editing a Tutor Profile : `edit`](#editing-a-tutor-profile--edit)
+    - [Editing a Tutor Profile : `edit`](#editing-a-tutor-profile-edit)
       - [Parameters](#parameters-1)
       - [Constraints](#constraints-1)
       - [Examples](#examples-1)
