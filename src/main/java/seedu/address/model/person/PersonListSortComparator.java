@@ -1,6 +1,6 @@
 package seedu.address.model.person;
 
-import java.math.BigInteger;
+import java.math.BigDecimal;
 import java.util.Comparator;
 
 /**
@@ -24,7 +24,7 @@ public final class PersonListSortComparator {
             primary = BY_NAME;
             break;
         case RATE:
-            primary = Comparator.comparing(p -> new BigInteger(p.getRate().rate));
+            primary = Comparator.comparing(p -> new BigDecimal(p.getRate().rate));
             break;
         default:
             throw new AssertionError(field);
