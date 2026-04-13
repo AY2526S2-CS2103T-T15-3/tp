@@ -21,7 +21,7 @@ public class HelpWindow extends UiPart<Stage> {
             + """
             Available Commands:
             • help        : Shows this window
-            • add         : Adds a tutor contact (e.g. add n/John p/91234567 e/j@o.com s/Math r/50 [a/ADDRESS] [t/TAG])
+            • add         : Adds a tutor contact (e.g. add n/John p/91234567 e/john@ex.com s/Math s/Physics r/50 [a/ADDRESS] [t/TAG]...)
             • edit        : Edits an existing tutor contact (e.g. edit 1 p/98765432)
             • delete      : Deletes a tutor contact (e.g. delete 1)
             • find        : Finds tutors by keywords (e.g. find n/John r/50)
