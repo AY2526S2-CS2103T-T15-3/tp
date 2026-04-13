@@ -605,15 +605,17 @@ Only **one** `n/` and one `r/` are allowed per command.
 
 **Note on unrecognised or incorrectly formatted prefixes:**
 
-If a prefix is mistyped or uses incorrect casing (e.g. `N/Alice` instead of `n/Alice`, or an unsupported prefix such as `x/abc`), the application does not treat it as an error.
+For the `find` command, Tuto only recognises the exact lowercase prefixes: `n/`, `s/`, `r/`, and `t/`. 
 
-Instead, the input will be interpreted as a general keyword and a search will be performed across all fields.
+**Uppercase prefixes (e.g., `N/`, `S/`) or unsupported prefixes (e.g., `p/`, `x/`) are NOT supported.**
 
-This means:
-- `find N/Alice` will search for the keyword `"N/Alice"` instead of filtering by name.
-- `find x/abc n/Alex` will treat `x/abc` as a keyword and only apply the valid `n/` prefix.
+If you type an unsupported or uppercase prefix, Tuto will **not** show an error. Instead, it treats the entire chunk as a general keyword to search for across all fields. 
 
-As a result, the search may return no results or unexpected results if prefixes are entered incorrectly.
+For example:
+- `find N/Alice` will search for the literal exact text `"N/Alice"` across all fields instead of filtering by name.
+- `find p/91234567 n/Alex` will treat `p/91234567` as a keyword to search for, and only use `n/Alex` to filter by name.
+
+If your search is returning confusing or empty results, double-check your prefixes to make sure they are exactly as listed!
 
 </box>
 
