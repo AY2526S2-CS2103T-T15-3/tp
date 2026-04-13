@@ -249,7 +249,7 @@ Adds a new Tutor Profile to Tuto.
 | `s/`   | Subject           | Yes      | Alphanumeric text + spaces (e.g. `Advanced Mathematics`, `Biology`)                                    |
 | `r/`   | Hourly rate (SGD) | Yes      | 0 or any decimal value e.g. `25` or `25.50`) |
 | `a/`   | Address           | No       | Any text (must not contain valid prefixes such as s/, as these will be interpreted as separate fields) |
-| `t/`   | Tag               | No       | Alphanumeric text, no spaces                                                                           |
+| `t/`   | Tag               | No       | Alphanumeric text, no spaces, maximum 20 characters                                                  |
 
 <box type="tip" seamless>
 
