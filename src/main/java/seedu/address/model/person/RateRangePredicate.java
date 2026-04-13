@@ -1,6 +1,6 @@
 package seedu.address.model.person;
 
-import java.math.BigInteger;
+import java.math.BigDecimal;
 import java.util.function.Predicate;
 
 import seedu.address.commons.util.ToStringBuilder;
@@ -9,14 +9,14 @@ import seedu.address.commons.util.ToStringBuilder;
  * Tests that a {@code Person}'s {@code Rate} is within the given inclusive range.
  */
 public class RateRangePredicate implements Predicate<Person> {
-    private final BigInteger lowerBound;
-    private final BigInteger upperBound;
+    private final BigDecimal lowerBound;
+    private final BigDecimal upperBound;
 
     /**
      * Creates a predicate that checks whether a person's rate is between
      * {@code lowerBound} and {@code upperBound}, inclusive.
      */
-    public RateRangePredicate(BigInteger lowerBound, BigInteger upperBound) {
+    public RateRangePredicate(BigDecimal lowerBound, BigDecimal upperBound) {
         this.lowerBound = lowerBound;
         this.upperBound = upperBound;
     }

@@ -1,6 +1,6 @@
 package seedu.address.model.person;
 
-import java.math.BigInteger;
+import java.math.BigDecimal;
 import java.util.function.Predicate;
 
 import seedu.address.commons.util.ToStringBuilder;
@@ -9,13 +9,13 @@ import seedu.address.commons.util.ToStringBuilder;
  * Tests that a {@code Person}'s {@code Rate} is greater than the given value.
  */
 public class RateGreaterThanPredicate implements Predicate<Person> {
-    private final BigInteger lowerBound;
+    private final BigDecimal lowerBound;
 
     /**
      * Creates a predicate that checks whether a person's rate is
      * greater than {@code lowerBound}.
      */
-    public RateGreaterThanPredicate(BigInteger lowerBound) {
+    public RateGreaterThanPredicate(BigDecimal lowerBound) {
         this.lowerBound = lowerBound;
     }
 

@@ -4,7 +4,6 @@ import static java.util.Objects.requireNonNull;
 import static seedu.address.commons.util.AppUtil.checkArgument;
 
 import java.math.BigDecimal;
-import java.math.BigInteger;
 
 /**
  * Represents a Person's rate in the address book.
@@ -73,8 +72,8 @@ public class Rate {
      * @return a negative integer, zero, or a positive integer as this value is numerically less than, equal to,
      *         or greater than {@code other}
      */
-    public int compareNumericValueTo(BigInteger other) {
-        return new BigDecimal(rate).compareTo(new BigDecimal(other));
+    public int compareNumericValueTo(BigDecimal other) {
+        return new BigDecimal(rate).compareTo(other);
     }
 
     @Override
