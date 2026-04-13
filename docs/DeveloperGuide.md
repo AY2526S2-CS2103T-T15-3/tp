@@ -761,10 +761,13 @@ testers are expected to do more _exploratory_ testing.
     2. Test case: `add n/Jane Smith p/91234567 e/jane@example.com a/Clementi 6th Street s/Mathematics s/Korean r/60 t/friend`<br>
        Expected: A card displaying the newly added tutor details is displayed and the profile is added to list of tutor profiles
 
-5b. Adding a person with duplicate subject or tag values in the same command: 1. Prerequisites: No person in the list of tutor profiles has the contact number `91234567` and/or email address `jane@example.com`
-Reason: Tuto prohibits the addition of a person whose contact number and/or email address already exists within the current list of tutor profiles. 2. Test case: `add n/Jane Smith p/91234567 e/jane@example.com s/Math s/Math r/60`<br>
-Expected: No person is added. An error message indicating that duplicate subject values were specified is shown. 3. Test case: `add n/Jane Smith p/91234567 e/jane@example.com s/Math r/60 t/friend t/friend`<br>
-Expected: No person is added. An error message indicating that duplicate tag values were specified is shown.
+5b. Adding a person with duplicate subject or tag values in the same command:
+    1. Prerequisites: No person in the list of tutor profiles has the contact number `91234567` and/or email address `jane@example.com`
+       Reason: Tuto prohibits the addition of a person whose contact number and/or email address already exists within the current list of tutor profiles.
+    2. Test case: `add n/Jane Smith p/91234567 e/jane@example.com s/Math s/Math r/60`<br>
+       Expected: No person is added. An error message indicating that duplicate subject values were specified is shown.
+    3. Test case: `add n/Jane Smith p/91234567 e/jane@example.com s/Math r/60 t/friend t/friend`<br>
+       Expected: No person is added. An error message indicating that duplicate tag values were specified is shown.
 
 6. Adding a person with multiple values specified for the same field:
     1. Prerequisites: No person in the list of tutor profiles has the contact number `91234567` and/or email address `jane@example.com`
