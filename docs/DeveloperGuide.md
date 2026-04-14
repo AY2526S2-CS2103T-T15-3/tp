@@ -73,6 +73,7 @@ It is intended for future developers, maintainers, and anyone interested in unde
     - [Sorting the tutor list](#sorting-the-tutor-list)
       - [Invalid commands and errors](#invalid-commands-and-errors)
     - [Saving data](#saving-data)
+  - [**Appendix: Planned Enhancements**](#appendix-planned-enhancements)
 
 ---
 
@@ -1119,3 +1120,33 @@ See also: [Sorting the Tutor List](UserGuide.md#sorting-the-tutor-list-sort) in 
     - The app starts without crashing.
         - The tutor list is **empty** (no tutors are shown), as the file violates model rules.
         - After a successful save, the file on disk is overwritten with valid JSON for the current in-memory book (usually empty until you add tutors).
+
+---
+
+## **Appendix: Planned Enhancements**
+
+The following are known limitations and planned improvements identified during testing:
+
+### 1. Prefix parsing ambiguity in fields
+Field inputs containing text such as "s/" may be incorrectly parsed as a prefix, leading to unintended field splitting. Future improvements may include stricter validation or escaping mechanisms.
+
+### 2. Inconsistent support for field-specific find prefixes
+Although universal search supports matching phone, email, and address fields, commands such as `find p/...`, `find e/...`, and `find a/...` are currently not supported. Future versions may introduce dedicated prefixes for these fields.
+
+### 3. Application window may open off-screen
+The application may open off-screen when external monitor configurations change. A future enhancement may reset window position automatically on launch.
+
+### 4. UI constraints for window resizing
+The minimum window width may be too large for certain use cases (e.g. split-screen). Future improvements may refine layout responsiveness.
+
+### 5. Truncated feedback for long search queries
+Long search command descriptions may not be fully displayed in the UI. Future enhancements may improve text wrapping or scrolling.
+
+### 6. Inconsistent error messages for invalid edit commands
+When the tutor list is empty, different invalid indices (e.g. `edit 0` vs `edit 1`) may produce different error messages.
+
+Specifically:
+- `edit 0` is treated as an invalid index (index must be a positive integer starting from 1).
+- `edit 1` is treated as a valid index format but refers to a non-existent entry in the empty list.
+
+This distinction may be unintuitive to users, and future versions may standardise the error messaging for such cases.
