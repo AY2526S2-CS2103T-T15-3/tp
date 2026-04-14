@@ -134,11 +134,11 @@ Type a command into the **Command Box** at the bottom and press **Enter** to run
 
 Tuto's interface has three main areas:
 
-- **Tutor List Panel (Left)** — shows all Tutor Profiles saved
+- **Tutor Profile List (Left)** — shows all Tutor Profiles saved
 - **Result Display (Top Right)** — shows feedback after each command (success or error messages and records retrieved from searches)
 - **Command Box (Bottom Right)** — where you type your commands
 
-Each tutor card in the panel shows the tutor's name, phone number, email, subject, and hourly rate. Tags (if any) appear as labels on the card.
+Each tutor card in the panel shows the tutor's name, phone number, email, subject, and hourly rate. Address and tags (if any) appear as labels on the card.
 
 ---
 
@@ -264,11 +264,9 @@ Adds a new Tutor Profile to Tuto.
 
 #### Constraints
 
-Tuto natively handles duplicates to secure your data. See [Duplicate Tutors are Not Allowed](#duplicate-tutors-are-not-allowed) for more details.
+Tuto validates all inputs to ensure data integrity. If you provide an invalid field, such as an incorrectly formatted phone number or email address, Tuto will reject the command and display a specific error message detailing the accepted format.
 
-![add constraint phone](images/add_cons_phone.png)
-
-![add constraint email](images/add_cons_email.png)
+Additionally, Tuto protects your data by natively preventing duplicate contacts. See [Duplicate Tutors are Not Allowed](#duplicate-tutors-are-not-allowed) for more details.
 
 ---
 
@@ -368,13 +366,10 @@ Sets the 2nd tutor's subjects to Math and English only (replacing any previous s
 
 #### Invalid Usage
 
-**Duplicate Error:**
-Shown when the edited phone number or email already belongs to another tutor.
-![edit_duplicate](images/edit_duplicate.png)
+Tuto provides clear error messages if an `edit` command cannot be executed:
 
-**Invalid Input Error:**
-Shown when the `edit` command is missing required fields.
-![edit_error](images/edit_error.png)
+- **Duplicate Error:** "Another tutor already uses this phone number" *or* "Another tutor already uses this email" (The exact message will specify which field caused the clash).
+- **Invalid Input Error:** "At least one field to edit must be provided." (Shown when the edit command is missing parameter fields).
 
 ---
 
@@ -441,34 +436,16 @@ Search for tutors by keyword, name, subject, or hourly rate — or combine them 
 
 #### Prefixes
 
-| Prefix            | Filters by     | Behaviour                                                                                      |
-| ----------------- | -------------- | ---------------------------------------------------------------------------------------------- |
-| `n/NAME_KEYWORDS` | Name           | Prefix match · Case-insensitive · Space-separate multiple keywords · Only **one `n/`** allowed |
-| `s/SUBJECT`       | Subject taught | Prefix match · Case-insensitive · Multiple `s/` allowed (AND logic)                            |
-| `r/RATE`          | Hourly rate    | Exact, range, or comparison match · Only **one `r/`** allowed                                  |
-| `t/TAG`           | Tag            | Matches tag(s) · Case-insensitive · Multiple `t/` allowed (AND logic)                          |
+| Prefix            | Filters by     | Behaviour                                                                                     |
+| ----------------- | -------------- | --------------------------------------------------------------------------------------------- |
+| `n/NAME_KEYWORDS` | Name           | Prefix match · Case-insensitive · Space-separate multiple keywords (OR logic) · Only **one `n/`** allowed |
+| `s/SUBJECT`       | Subject taught | Prefix match · Case-insensitive · Multiple `s/` allowed (AND logic)                           |
+| `r/RATE`          | Hourly rate    | Exact, range, or comparison match · Only **one `r/`** allowed        |
+| `t/TAG`           | Tag            | Matches tag(s) · Case-insensitive · Multiple `t/` allowed (AND logic)                         |
 
 <box type="tip" seamless>
 
 **Tip:** Spaces after prefixes are optional — `find n/John` and `find n/ John` both work.
-
-</box>
-
-<box type="info" seamless>
-
-**Note on unrecognised or incorrectly formatted prefixes:**
-
-For the `find` command, Tuto only recognises the exact lowercase prefixes: `n/`, `s/`, `r/`, and `t/`. 
-
-**Uppercase prefixes (e.g., `N/`, `S/`) or unsupported prefixes (e.g., `p/`, `x/`) are NOT supported.**
-
-If you type an unsupported or uppercase prefix, Tuto will **not** show an error. Instead, it treats the entire chunk as a general keyword to search for across all fields. 
-
-For example:
-- `find N/Alice` will search for the literal exact text `"N/Alice"` across all fields instead of filtering by name.
-- `find p/91234567 n/Alex` will treat `p/91234567` as a keyword to search for, and only use `n/Alex` to filter by name.
-
-If your search is returning confusing or empty results, double-check your prefixes to make sure they are exactly as listed!
 
 </box>
 
@@ -484,15 +461,13 @@ If your search is returning confusing or empty results, double-check your prefix
 
 <box type="warning" seamless>
 
-**Order Matters for Keywords!**
+**Keyword and Prefix Rules**
 
-Any general keywords (including unsupported prefixes you want treated as keywords) **MUST** be typed *before* any valid prefixes. 
+1. **Only exact lowercase prefixes (`n/`, `s/`, `r/`, `t/`) act as filters.** Unrecognised or uppercase prefixes (e.g., `N/`, `p/`) are treated as general keywords to search across all fields.
+2. **Keywords MUST be typed before prefixes.** Any keywords typed after a valid prefix will be absorbed as part of that prefix's value.
+    - ✅ `find x/abc n/Alex` — searches keyword `x/abc`, filters name by `Alex`
+    - ❌ `find n/Alex x/abc` — Tuto reads the name as `"Alex x/abc"`
 
-If you type a keyword *after* a valid prefix, Tuto will absorb it and think it is part of that prefix's value! 
-
-For example:
-- `find x/abc n/Alex` works correctly (searches for keyword `"x/abc"` and filters name by `"Alex"`).
-- `find n/Alex x/abc` will completely fail because Tuto thinks the name you are searching for is exactly `"Alex x/abc"`.
 
 </box>
 
@@ -533,67 +508,43 @@ For **above** (`r/>RATE`), `RATE` may be **negative, zero, or positive** (option
 
 #### Examples
 
-**General Search**
+**General keyword search**
 
 ```
 find math
 ```
 
-Returns all tutors containing "math" in any field.
+Returns all tutors containing "math" in any field (name, subject, tag, address, etc.).
 
-![Result for 'find math'](images/find_Math.png)
-
----
-
-**Filtering by name**
+**Filtering by prefixes**
 
 ```
-find n/Eunwoo
 find n/Dar Vic
 ```
 
-Returns tutors named "Eunwoo…"
-
-![Result for 'find n/Eunwoo'](images/find_N_Eunwoo.png)
-
-Returns tutors named "Dar…" **or** "Vic…" respectively.
+- `find n/Dar Vic` returns tutors whose name starts with "Dar..." **or** "Vic..." (OR logic is only for keywords in the `n/` prefix).
 
 ![Result for 'find n/Dar Vic'](images/find_N_Dar_Vic.png)
 
 ---
 
-**Filtering by subject and rate**
-
 ```
-find s/Math s/Chemistry
 find s/Physics r/>40
-find s/History r/40-80
 ```
 
-Returns tutors teaching Math **and** Chemistry
-
-![Result for 'find s/Math s/Chemistry'](images/find_S_math_S_chem.png)
-
-Returns tutors teaching Physics above a rate
+- `find s/Physics r/>40` returns tutors teaching Physics **and** charging more than $40/hr (all other fields and combinations use AND logic).
 
 ![Result for 'find s/Physics r/>40'](images/find_S_phy_R_40.png)
 
-Returns tutors teaching History within a rate range
-
-![Result for 'find s/History r/40-80'](images/find_S_hist_R_40_80.png)
-
 ---
 
-**Combined search**
+**Combined search (Keyword + Filters)**
 
 ```
-find math s/advanced math
 find n/Qi r/70 s/History
 ```
 
-Narrows a general keyword search with prefix filters, or combines multiple prefix conditions.
-
-![Result for 'find math s/advanced math'](images/find_math_S_advancedmath.png)
+Narrows down results by combining multiple prefix conditions to find tutors named "Qi...", charging exactly $70, and teaching History.
 
 ![Result for 'find n/Qi r/70 s/History'](images/find_N_qi_R_70_S_history.png)
 
@@ -615,21 +566,21 @@ Matching tutors appear in the right panel. If no matches are found:
 
 <box type="warning" seamless>
 
-Only **one** `n/` and one `r/` are allowed per command.
+**Only ONE `n/` and one `r/` are allowed per command.**
 
-| ❌ Invalid           | Reason                            |
+| ❌ Invalid Example   | Reason                            |
 | -------------------- | --------------------------------- |
-| `find r/16 r/17`     | Multiple `r/` not allowed         |
-| `find n/Alice n/Bob` | Multiple `n/` not allowed         |
 | `find`               | Keywords and/or Prefixes required |
+| `find n/Alice n/Bob` | Multiple `n/` not allowed         |
+| `find r/16 r/17`     | Multiple `r/` not allowed         |
+
+Tuto will reject invalid inputs and provide clear textual error messages to explain the issue:
+
+- **Missing input:** "Invalid command format! find: Finds all tutors whose..."
+- **Multiple names or rates:** "Multiple values specified for the following single-valued field(s): [n/ or r/]" (The exact message will dynamically specify whether the `n/` or `r/` prefix caused the error).
 
 </box>
 
-![Invalid Rates](images/find_invalid_rate.png)
-
-![Invalid Names](images/find_invalid_name.png)
-
-![Invalid Command](images/find_generic_error.png)
 
 ---
 
@@ -693,13 +644,10 @@ Shows highest hourly rate first.
 
 #### Invalid Usage
 
-**Error Output:**
+Tuto will return an error if `sort` is used without any parameters, or if the parameters provided are unrecognised:
 
-Tuto will return an error if an unrecognised field is used, or if the parameter is missing:
-
-![Sort error output](images/sort_error.png)
-
-![Sort error output - missing parameter](images/sort_no_param.png)
+- **No Parameters:** "Invalid command format! sort: Sorts the tutors in the displayed list by the given field..."
+- **Unrecognised Parameters:** "Sort expects exactly two parameters: field (name or rate) and order (asc or desc)..."
 
 ---
 
@@ -715,7 +663,7 @@ Displays all tutor profiles stored in Tuto. The GUI features a left panel that d
 
 <box type="info" seamless>
 
-**Note:** If your address book is completely empty, the `list` command will still display the exact same `✨  Listed all tutors!` success message. Since you have zero saved tutors, displaying an empty list technically means it has successfully listed all of them!
+**Note:** Running `list` on an empty address book will still display `✨  Listed all tutors!` because it successfully lists all zero of your saved tutors.
 
 </box>
 
