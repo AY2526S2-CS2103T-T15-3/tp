@@ -64,10 +64,10 @@
         "glossary": "Glossary",
         "appendix-instructions-for-manual-testing": "Appendix: Instructions for manual testing",
         "launch-and-shutdown": "Launch and shutdown",
-        "adding-a-person": "Adding a person",
-        "deleting-a-person": "Deleting a person",
-        "editing-a-person": "Editing a person",
-        "finding-a-person": "Finding a person",
+        "adding-a-tutor": "Adding a tutor",
+        "deleting-a-tutor": "Deleting a tutor",
+        "editing-a-tutor": "Editing a tutor",
+        "finding-a-tutor": "Finding a tutor",
         "sorting-the-tutor-list": "Sorting the tutor list",
         "saving-data": "Saving data"
       },
@@ -136,8 +136,6 @@
         "clearing-all-entries-clear": "Clearing All Entries : clear",
         "exiting-the-program-exit": "Exiting the Program : exit",
         "data-management": "Data Management",
-        "saving-your-data": "Saving Your Data",
-        "editing-the-data-file-directly": "Editing the Data File Directly",
         "faq": "FAQ",
         "known-issues": "Known Issues",
         "command-summary": "Command Summary"
