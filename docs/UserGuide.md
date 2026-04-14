@@ -38,29 +38,27 @@ This guide is written for parents who are comfortable using a keyboard and want 
       - [Constraints](#constraints)
       - [Examples](#examples)
     - [Editing a Tutor Profile : `edit`](#editing-a-tutor-profile-edit)
-      - [Parameters](#parameters-1)
-      - [Constraints](#constraints-1)
-      - [Examples](#examples-1)
+      - [Parameters](#parameters-2)
+      - [Constraints](#constraints-2)
+      - [Examples](#examples-2)
       - [Invalid Usage](#invalid-usage)
     - [Deleting a Tutor : `delete`](#deleting-a-tutor-delete)
-      - [Parameters](#parameters-2)
-      - [Examples](#examples-2)
+      - [Parameters](#parameters-3)
+      - [Examples](#examples-3)
     - [Finding Tutors : `find`](#finding-tutors-find)
       - [Prefixes](#prefixes)
       - [Search Modes](#search-modes)
       - [How Matching Works](#how-matching-works)
-      - [Examples](#examples-3)
+      - [Examples](#examples-4)
       - [Invalid Usage](#invalid-usage-1)
     - [Sorting the Tutor List : `sort`](#sorting-the-tutor-list-sort)
-      - [Parameters](#parameters-3)
-      - [Examples](#examples-4)
+      - [Parameters](#parameters-4)
+      - [Examples](#examples-5)
       - [Invalid Usage](#invalid-usage-2)
     - [Listing All Tutors : `list`](#listing-all-tutors-list)
     - [Clearing All Entries : `clear`](#clearing-all-entries-clear)
     - [Exiting the Program : `exit`](#exiting-the-program-exit)
   - [Data Management](#data-management)
-    - [Saving Your Data](#saving-your-data)
-    - [Editing the Data File Directly](#editing-the-data-file-directly)
   - [FAQ](#faq)
   - [Known Issues](#known-issues)
   - [Command Summary](#command-summary)
@@ -179,14 +177,23 @@ The following conventions apply to all commands in this guide:
 
 ### Understanding List Indices
 
-Commands such as `edit` and `delete` use **`INDEX`**: the number shown beside each tutor in the **Tutor List Panel** for the **current** list order.
+Commands such as `edit` and `delete` use **`INDEX`**: the number shown directly next to the name of the tutor contact in the **Tutor List Panel**.
+
+<box type="info" seamless>
+
+**Indices refer to the overall Global List**
+The index is the tutor's current position in your **full list of all saved tutors**.
+When you search for a tutor (e.g., using `find`), the index numbers **do not restart from 1**. Instead, Tuto just hides the tutors that don't match, so the remaining tutors keep their numbers from the full list (for example, your search results might show tutors numbered 4, 9, and 12). The index shown during a search and the index shown on the full list are exactly the same.
+
+</box>
 
 <box type="warning" seamless>
 
-**Displayed indices change after `sort` and `delete`**
+**Displayed indices change after `sort` and `delete`, and may differ during `find`**
 
-- After a **`sort`** command, tutors are reordered, so the same person may appear at a **different** index than before.
+- After a **`sort`** command, tutors are reordered in the global list, so the same person may appear at a **different** index than before.
 - After a **`delete`** command, the list becomes shorter and tutors below the removed row **shift up**, so their indices are **renumbered** (what was “tutor 5” may become “tutor 4”).
+- During a **`find`** command, never assume the first result is index 1. Always use the exact index displayed directly next to the name of the tutor contact in the current search results.
 
 **Always search with Find or look at the Tutor List Panel again** before typing the next `edit` or `delete` command. Do not assume indices from an earlier step are still correct.
 
@@ -196,11 +203,11 @@ Commands such as `edit` and `delete` use **`INDEX`**: the number shown beside ea
 
 ### Duplicate Tutors are Not Allowed
 
-Tuto considers a Tutor Profile to be a duplicate if it shares the exact same **Phone number** or **Email** as an existing tutor. Both during `add` and `edit` operations, Tuto protects your data by rejecting the command if it detects a clash.
+Tuto protects your data by ensuring no two tutor profiles share the exact same **Phone number** or **Email address**. 
 
 <box type="warning" seamless>
 
-**Duplicate Error:** Neither adding a new tutor nor editing an existing one is permitted if it would result in two Tutor Profiles having the same phone number or email address.
+**Duplicate Error:** If an `add` or `edit` command results in a clash with an existing phone number or email, the command will be rejected to prevent duplicate profiles.
 
 </box>
 
@@ -232,15 +239,15 @@ Adds a new Tutor Profile to Tuto.
 
 #### Parameters
 
-| Prefix | Field             | Required | Accepted values                                                                                                                                                                                                                                                                  |
-| ------ | ----------------- | -------- |----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `n/`   | Name              | Yes      | Alphanumeric text + spaces allowed only, no special characters are allowed                                                                                                                                                                                                       |
-| `p/`   | Phone number      | Yes      | 8 digits for Singapore number, 10 digits excluding '+' for international number                                                                                                                                                                                                  |
-| `e/`   | Email             | Yes      | Valid email format (e.g. `user@example.com`) The local-part must start and end with an alphanumeric character, and the domain must contain period-separated labels ending in a label of at least 2 characters. Consecutive special characters (e.g. `..`, `--`) are not allowed. |
-| `s/`   | Subject           | Yes      | Alphanumeric text + spaces (e.g. `Advanced Mathematics`, `Biology`)                                                                                                                                                                                                              |
-| `r/`   | Hourly rate (SGD) | Yes      | 0 or any positive decimal value (e.g. `25` or `25.50`)                                                                                                                                                                                                                           |
-| `a/`   | Address           | No       | Any text (must not contain valid prefixes such as s/, as these will be interpreted as separate fields)                                                                                                                                                                           |
-| `t/`   | Tag               | No       | Alphanumeric text, no spaces                                                                                                                                                                                                                                                     |
+| Prefix | Field             | Required | Accepted values                                                                                        |
+| ------ | ----------------- | -------- |--------------------------------------------------------------------------------------------------------|
+| `n/`   | Name              | Yes      | Alphanumeric text + spaces allowed only, no special characters are allowed                             |
+| `p/`   | Phone number      | Yes      | 8 digits for Singapore number, 10 digits excluding '+' for international number                        |
+| `e/`   | Email             | Yes      | Valid email format (e.g. `user@example.com`)                                                           |
+| `s/`   | Subject           | Yes      | Alphanumeric text + spaces (e.g. `Advanced Mathematics`, `Biology`)                                    |
+| `r/`   | Hourly rate (SGD) | Yes      | 0 or any decimal value e.g. `25` or `25.50`) |
+| `a/`   | Address           | No       | Any text (must not contain valid prefixes such as s/, as these will be interpreted as separate fields) |
+| `t/`   | Tag               | No       | Alphanumeric text, no spaces, maximum 20 characters                                                  |
 
 <box type="tip" seamless>
 
@@ -299,7 +306,7 @@ Updates one or more fields of an existing Tutor Profile.
 
 #### Parameters
 
-- `INDEX` refers to the number shown next to the tutor in the current list. It must be a **positive integer** (1, 2, 3 …).
+- `INDEX` refers to the number shown directly next to the name of the tutor contact in the current list. It must be a **positive integer** (1, 2, 3 …).
 - **Accepted Prefixes:** Accepts the same prefixes (`n/`, `p/`, `e/`, `s/`, `r/`, `a/`, `t/`) as the `add` command.
 - After a **`sort`** or **`delete`**, indices may no longer match what you saw earlier — see [Understanding List Indices](#understanding-list-indices).
 - At least one field must be provided.
@@ -383,7 +390,7 @@ Permanently removes a Tutor Profile from Tuto.
 
 #### Parameters
 
-- `INDEX` must be a **positive integer** matching a tutor's position in the currently displayed list.
+- `INDEX` must be a **positive integer** indicating the number shown directly next to the name of the tutor contact in the currently displayed list.
 - After you delete someone, **every tutor below that row moves up** and gets a new index. After a **`sort`**, positions change too. See [Understanding List Indices](#understanding-list-indices).
 
 <box type="warning" seamless>
@@ -404,14 +411,19 @@ delete 2
 
 Deletes the Tutor profile with index 2.
 
-**Deleting from search results**
+**Deleting after searching**
 
 ```
 find s/Biology
-delete 1
+delete [any index that appears]
 ```
 
-Deletes the Tutor Profile with index 1
+Deletes the Tutor Profile matching the specified index.
+
+<box type="warning" seamless>
+
+**Verify the index:** Do not assume the first matching tutor in your search results is at index 1. Because Tuto uses **global list indexing**, search results maintain their original list numbers (for example, the first result might actually be index 5). Be sure to look at the exact index number returned directly next to the name of the tutor contact in the search results, and use that specific index in your `delete` command.
+</box>
 
 **Expected output:**
 
@@ -442,6 +454,24 @@ Search for tutors by keyword, name, subject, or hourly rate — or combine them 
 
 </box>
 
+<box type="info" seamless>
+
+**Note on unrecognised or incorrectly formatted prefixes:**
+
+For the `find` command, Tuto only recognises the exact lowercase prefixes: `n/`, `s/`, `r/`, and `t/`. 
+
+**Uppercase prefixes (e.g., `N/`, `S/`) or unsupported prefixes (e.g., `p/`, `x/`) are NOT supported.**
+
+If you type an unsupported or uppercase prefix, Tuto will **not** show an error. Instead, it treats the entire chunk as a general keyword to search for across all fields. 
+
+For example:
+- `find N/Alice` will search for the literal exact text `"N/Alice"` across all fields instead of filtering by name.
+- `find p/91234567 n/Alex` will treat `p/91234567` as a keyword to search for, and only use `n/Alex` to filter by name.
+
+If your search is returning confusing or empty results, double-check your prefixes to make sure they are exactly as listed!
+
+</box>
+
 ---
 
 #### Search Modes
@@ -451,6 +481,20 @@ Search for tutors by keyword, name, subject, or hourly rate — or combine them 
 | **General Search**   | `find KEYWORD [MORE_KEYWORDS]` (case-insensitive)                                      | Tutors where **any** attribute has a word starting with any keyword    |
 | **Filtering**        | `find [PREFIXES]` (case-insensitive)                                                   | Tutors matching **all** prefix conditions                              |
 | **General + Filter** | `find KEYWORD [MORE_KEYWORDS] [PREFIXES]` (case-insensitive; keywords before prefixes) | Tutors matching **any** keyword, narrowed by **all** prefix conditions |
+
+<box type="warning" seamless>
+
+**Order Matters for Keywords!**
+
+Any general keywords (including unsupported prefixes you want treated as keywords) **MUST** be typed *before* any valid prefixes. 
+
+If you type a keyword *after* a valid prefix, Tuto will absorb it and think it is part of that prefix's value! 
+
+For example:
+- `find x/abc n/Alex` works correctly (searches for keyword `"x/abc"` and filters name by `"Alex"`).
+- `find n/Alex x/abc` will completely fail because Tuto thinks the name you are searching for is exactly `"Alex x/abc"`.
+
+</box>
 
 ---
 
@@ -587,27 +631,17 @@ Only **one** `n/` and one `r/` are allowed per command.
 
 ![Invalid Command](images/find_generic_error.png)
 
-<box type="info" seamless>
-
-**Note on unrecognised or incorrectly formatted prefixes:**
-
-If a prefix is mistyped or uses incorrect casing (e.g. `N/Alice` instead of `n/Alice`, or an unsupported prefix such as `x/abc`), the application does not treat it as an error.
-
-Instead, the input will be interpreted as a general keyword and a search will be performed across all fields.
-
-This means:
-- `find N/Alice` will search for the keyword `"N/Alice"` instead of filtering by name.
-- `find x/abc n/Alex` will treat `x/abc` as a keyword and only apply the valid `n/` prefix.
-
-As a result, the search may return no results or unexpected results if prefixes are entered incorrectly.
-
-</box>
-
 ---
 
 ### Sorting the Tutor List : `sort`
 
 Changes the **order** of tutors in the Tutor List Panel. Sorting is by **name** or **hourly rate** only; it does not remove or hide tutors.
+
+<box type="info" seamless>
+
+**Note:** Sorting is **temporary**! When you close and reopen Tuto, the list will always reset to its default original order (the exact order in which you added the tutors).
+
+</box>
 
 ![Sort command hero image](images/sort_hero.png)
 
@@ -661,9 +695,11 @@ Shows highest hourly rate first.
 
 **Error Output:**
 
+Tuto will return an error if an unrecognised field is used, or if the parameter is missing:
+
 ![Sort error output](images/sort_error.png)
 
-![Sort error output](images/sort_no_param.png)
+![Sort error output - missing parameter](images/sort_no_param.png)
 
 ---
 
@@ -676,6 +712,12 @@ Displays all tutor profiles stored in Tuto. The GUI features a left panel that d
 **Format:** `list`
 
 **Expected output:** The left panel automatically updates to show all stored tutors, and the result display shows `✨  Listed all tutors!`.
+
+<box type="info" seamless>
+
+**Note:** If your address book is completely empty, the `list` command will still display the exact same `✨  Listed all tutors!` success message. Since you have zero saved tutors, displaying an empty list technically means it has successfully listed all of them!
+
+</box>
 
 <box type="tip" seamless>
 
@@ -694,6 +736,12 @@ Permanently clears all tutor entries from Tuto.
 **Format:** `clear`
 
 **Expected output:** All tutor profiles are deleted, leaving the Tutor List Panel empty. The result display confirms that the data has been successfully cleared.
+
+<box type="info" seamless>
+
+**Note:** The `clear` command empties your tutor list, but it **does not reset the active sorting order**. If the list was previously sorted by rate, any newly added tutors will continue to be automatically sorted by rate.
+
+</box>
 
 <box type="warning" seamless>
 
@@ -715,22 +763,14 @@ When `exit` executes successfully, Tuto closes. Tutor data is saved automaticall
 
 ## Data Management
 
-### Saving Your Data
-
-Tuto's data are saved automatically as a JSON file `[JAR file location]/data/addressbook.json`. Advanced users are welcome to update data directly by editing that data file.
+Tuto's data is saved automatically as a JSON file at `[JAR file location]/data/addressbook.json`. Advanced users may update data directly by editing this file using any text editor.
 
 <box type="warning" seamless>
-**Caution:** If the file is saved in an invalid format, Tuto will discard all data and start fresh on the next launch. **Back up the file before making any edits.** Additionally, values outside accepted ranges may cause Tuto to behave unexpectedly.
-</box>
 
-### Editing the Data File Directly
+**Caution when editing the data file directly:**
+- If your changes make the file format invalid, Tuto will discard all data and start with an empty data file on the next launch. **Always back up the file before making any edits.**
+- Certain edits can cause Tuto to behave in unexpected ways (e.g., if a value is outside the acceptable range). Edit the data file only if you are confident that you can update it correctly.
 
-Advanced users may edit the data file manually using any text editor.
-
-<box type="warning" seamless>
-**Caution:** If your changes to the data file make its format invalid, Tuto will discard all data and start with an empty data file on the next launch. Back up the file before editing it.
-
-Furthermore, certain edits can cause Tuto to behave in unexpected ways (e.g., if a value is outside the acceptable range). Therefore, edit the data file only if you are confident that you can update it correctly.
 </box>
 
 ---

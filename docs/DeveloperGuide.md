@@ -62,10 +62,10 @@ It is intended for future developers, maintainers, and anyone interested in unde
     - [Glossary](#glossary)
   - [**Appendix: Instructions for manual testing**](#appendix-instructions-for-manual-testing)
     - [Launch and shutdown](#launch-and-shutdown)
-    - [Adding a person](#adding-a-person)
-    - [Deleting a person](#deleting-a-person)
-    - [Editing a person](#editing-a-person)
-    - [Finding a person](#finding-a-person)
+    - [Adding a tutor](#adding-a-tutor)
+    - [Deleting a tutor](#deleting-a-tutor)
+    - [Editing a tutor](#editing-a-tutor)
+    - [Finding a tutor](#finding-a-tutor)
       - [Negative Cases \& Error Handling](#negative-cases-and-amp-error-handling)
       - [Positive Cases (Universal Search)](#positive-cases-universal-search)
       - [Complex Cases (Attribute Filtering \& Combinations)](#complex-cases-attribute-filtering-and-amp-combinations)
@@ -173,7 +173,7 @@ How the `Logic` component works:
 
 1. When `Logic` is called upon to execute a command, it is passed to an `AddressBookParser` object which in turn creates a parser that matches the command (e.g., `DeleteCommandParser`) and uses it to parse the command.
 2. This results in a `Command` object (more precisely, an object of one of its subclasses e.g., `DeleteCommand`) which is executed by the `LogicManager`.
-3. The command can communicate with the `Model` when it is executed (e.g. to delete a person).<br>
+3. The command can communicate with the `Model` when it is executed (e.g. to delete a tutor).<br>
    Note that although this is shown as a single step in the diagram above (for simplicity), in the code it can take several interactions (between the command object and the `Model`) to achieve.
 4. The result of the command execution is encapsulated as a `CommandResult` object which is returned back from `Logic`.
 
@@ -237,7 +237,7 @@ The sequence diagram below illustrates the interactions between the Logic and Mo
 <puml src="diagrams/AddSequenceDiagram.puml" width="550"></puml>
 
 The `add` command is processed in two main phases: parsing and execution.
-The input string from user is first parsed into an `Person` object, which is then wrapped in an `AddCommand` object and executed to update the `Model` object.
+The input string from user is first parsed into a `Person` object, which is then wrapped in an `AddCommand` object and executed to update the `Model` object.
 
 The sequence of interactions is as follows:
 
@@ -275,8 +275,8 @@ If a duplicate is detected, a `CommandException` is thrown immediately with an a
 
 If any of the following conditions are met:
 
-- A person with the same phone number already exists
-- A person with the same email address already exists
+- A tutor with the same phone number already exists
+- A tutor with the same email address already exists
 
 The operation is rejected and an appropriate error message is shown to the user.
 
@@ -289,7 +289,7 @@ This ensures that phone number conflict is detected first, followed by email add
 
 #### Design Considerations
 
-**Aspect: What defines a duplicate person**
+**Aspect: What defines a duplicate tutor**
 
 - **Alternative 1 (current choice):** Use phone number, and email address as uniqueness constraints
     - Pros: Prevents duplicate entries effectively and maintains clean data
@@ -440,10 +440,10 @@ Standard commands return temporary text feedback. However, a `find` command show
 - **Pros:** Excellent UX. By parsing back the user's query into a human-readable `description` inside the `CommandResult`, the UI permanently displays the active search constraints above the list. It tells the user exactly _why_ the list looks the way it does.
 - **Cons / Opportunity costs:** Modifies the standard `CommandResult` object to carry an optional `description` string, mildly coupling what is classically a Logic-tier object to the specific layout needs of the UI tier.
 
-**Alternative 2: Standard text feedback only (e.g., "0 persons listed")**
+**Alternative 2: Standard text feedback only (e.g., "0 tutors listed")**
 
 - **Pros:** Keeps `CommandResult` pure and strictly decoupled from UI-specific display needs, reducing data passing.
-- **Cons:** Severe usability flaw. If the user executes a complex filter like `find Math r/<50` and the app just says "0 persons listed" while showing an empty UI, the user immediately loses context of the active constraints governing the screen.
+- **Cons:** Severe usability flaw. If the user executes a complex filter like `find Math r/<50` and the app just says "0 tutors listed" while showing an empty UI, the user immediately loses context of the active constraints governing the screen.
 
 ## **Documentation, logging, testing, configuration, dev-ops**
 
@@ -512,7 +512,7 @@ Preconditions: `Tuto` is running
 - 1a. Wrong Command given
     - 1a1. `Tuto` returns an error message
       Use case ends
-    - 2a. The contact list is empty
+    - 2a. The tutor list is empty
     - 2a1. `Tuto` displays a message indicating no contacts have been added yet.
       Use case ends.
 
@@ -526,7 +526,7 @@ Guarantees: The Tutor Profile is removed from storage upon successful completion
 
 1. `Parent` requests to list all Tutor Profiles (U1)
 2. `Parent` enters the delete command specifying the Index of the tutor.
-3. `Tuto` deletes the contact
+3. `Tuto` deletes the tutor profile
 4. `Tuto` displays a confirmation message that the Tutor Profile has been deleted successfully
    Use Case ends
 
@@ -549,7 +549,7 @@ Guarantees: If MSS completes until step 3, Tutor Profile will be added to Tuto�
 
 1. `Parent` enters the add command specifying the required Parameters
 2. `Tuto` validates the parameters.
-3. `Tuto` adds the Tutor Profile to the contact list
+3. `Tuto` adds the Tutor Profile to the tutor list
 4. `Tuto` displays a success message on the addition
    Use Case ends
 
@@ -569,7 +569,7 @@ Guarantees: If MSS completes until step 3, Tutor Profile will be added to Tuto�
 
 Preconditions: `Tuto` is running
 
-Guarantees: If MSS completes until step 3, `Tuto` displays all tutors in the contact list with matching subjects
+Guarantees: If MSS completes until step 3, `Tuto` displays all tutors in the tutor list with matching subjects
 
 **MSS:**
 
@@ -685,7 +685,7 @@ Guarantees: If MSS completes until step 3, `Tuto` reorders the currently display
 - **Duplicate Entry**: A tutor profile with the same phone number or email as an existing profile.
 - **Exception**: An error condition (e.g. ParseException) that interrupts normal execution and is handled gracefully.
 - **Human-readable**: A file format (like JSON or Text) that allows data to be read and edited using a standard text editor, without Tuto.
-- **Index**: The number displayed next to a tutor's name in the contact list (e.g., the 3 in 3. John Doe). Used to select a specific tutor for commands like edit or delete.
+- **Index**: The number displayed next to a tutor's name in the tutor list (e.g., the 3 in 3. John Doe). Used to select a specific tutor for commands like edit or delete.
 - **JAR File**: The file format used to distribute Tuto, allowing it to run on any computer with Java installed without a setup wizard.
 - **Model**: The component responsible for storing and managing application data.
 - **Parameter**: The specific information provided after a Flag (e.g., John is the parameter for n/).
@@ -719,35 +719,35 @@ testers are expected to do more _exploratory_ testing.
     2. Re-launch the app by double-clicking the jar file.<br>
        Expected: The most recent window size and location is retained.
 
-### Adding a person
+### Adding a tutor
 
-1. Adding a person with all fields given
-    1. Prerequisites: No person in the list of tutor profiles has the contact number `91234567` and/or email address `jane@example.com`
-       Reason: Tuto prohibits the addition of a person whose contact number and/or email address already exists within the current list of tutor profiles.
+1. Adding a tutor with all fields given
+    1. Prerequisites: No tutor in the list of tutor profiles has the contact number `91234567` and/or email address `jane@example.com`
+       Reason: Tuto prohibits the addition of a tutor whose contact number and/or email address already exists within the current list of tutor profiles.
     2. Test case: `add n/Jane Smith p/91234567 e/jane@example.com a/Clementi 6th Street s/Mathematics r/60 t/friend`<br>
        Expected: A card displaying the newly added tutor details is displayed and the profile is added to list of tutor profiles
 
-2. Adding a person with no fields given
+2. Adding a tutor with no fields given
     1. Test case: `add`<br>
-       Expected: No person is added. An error message that displays the correct command format and an example is shown
+       Expected: No tutor is added. An error message that displays the correct command format and an example is shown
 
-3. Adding a person with any of the mandatory fields (e.g. name, phone number, email, subject, rate) missing
-    1. Prerequisites: No person in the list of tutor profiles has the contact number `91234567` and/or email address `jane@example.com`
-       Reason: Tuto prohibits the addition of a person whose contact number and/or email address already exists within the current list of tutor profiles.
+3. Adding a tutor with any of the mandatory fields (e.g. name, phone number, email, subject, rate) missing
+    1. Prerequisites: No tutor in the list of tutor profiles has the contact number `91234567` and/or email address `jane@example.com`
+       Reason: Tuto prohibits the addition of a tutor whose contact number and/or email address already exists within the current list of tutor profiles.
     2. Test case: `add p/91234567 e/jane@example.com s/Mathematics r/60`<br>
-       Expected: No person is added. An error message that displays the correct command format and an example is shown
+       Expected: No tutor is added. An error message that displays the correct command format and an example is shown
     3. Test case: `add n/Jane Smith e/jane@example.com s/Mathematics r/60`<br>
-       Expected: No person is added. An error message that displays the correct command format and an example is shown
+       Expected: No tutor is added. An error message that displays the correct command format and an example is shown
     4. Test case: `add n/Jane Smith p/91234567 s/Mathematics r/60`<br>
-       Expected: No person is added. An error message that displays the correct command format and an example is shown
+       Expected: No tutor is added. An error message that displays the correct command format and an example is shown
     5. Test case: `add n/Jane Smith p/91234567 e/jane@example.com r/60`<br>
-       Expected: No person is added. An error message that displays the correct command format and an example is shown
+       Expected: No tutor is added. An error message that displays the correct command format and an example is shown
     6. Test case: `add n/Jane Smith p/91234567 e/jane@example.com s/Mathematics`<br>
-       Expected: No person is added. An error message that displays the correct command format and an example is shown
+       Expected: No tutor is added. An error message that displays the correct command format and an example is shown
 
-4. Adding a person with any/all optional fields missing
-    1. Prerequisites: No person in the list of tutor profiles has the contact number `91234567` and/or email address `jane@example.com`
-       Reason: Tuto prohibits the addition of a person whose contact number and/or email address already exists within the current list of tutor profiles.
+4. Adding a tutor with any/all optional fields missing
+    1. Prerequisites: No tutor in the list of tutor profiles has the contact number `91234567` and/or email address `jane@example.com`
+       Reason: Tuto prohibits the addition of a tutor whose contact number and/or email address already exists within the current list of tutor profiles.
     2. Test case: `add n/Jane Smith p/91234567 e/jane@example.com s/Mathematics r/60 t/friend`<br>
        Expected: A card displaying the newly added tutor details is displayed and the profile is added to list of tutor profiles
     3. Test case: `add n/Jane Smith p/91234567 e/jane@example.com s/Mathematics r/60`<br>
@@ -755,180 +755,180 @@ testers are expected to do more _exploratory_ testing.
     4. Test case: `add n/Jane Smith p/91234567 e/jane@example.com a/Clementi 6th Street s/Mathematics r/60`<br>
        Expected: A card displaying the newly added tutor details is displayed and the profile is added to list of tutor profiles
 
-5. Adding a person with multiple subjects:
-    1. Prerequisites: No person in the list of tutor profiles has the contact number `91234567` and/or email address `jane@example.com`
-       Reason: Tuto prohibits the addition of a person whose contact number and/or email address already exists within the current list of tutor profiles.
+5. Adding a tutor with multiple subjects:
+    1. Prerequisites: No tutor in the list of tutor profiles has the contact number `91234567` and/or email address `jane@example.com`
+       Reason: Tuto prohibits the addition of a tutor whose contact number and/or email address already exists within the current list of tutor profiles.
     2. Test case: `add n/Jane Smith p/91234567 e/jane@example.com a/Clementi 6th Street s/Mathematics s/Korean r/60 t/friend`<br>
        Expected: A card displaying the newly added tutor details is displayed and the profile is added to list of tutor profiles
 
-5b. Adding a person with duplicate subject or tag values in the same command:
-    1. Prerequisites: No person in the list of tutor profiles has the contact number `91234567` and/or email address `jane@example.com`
-       Reason: Tuto prohibits the addition of a person whose contact number and/or email address already exists within the current list of tutor profiles.
+5b. Adding a tutor with duplicate subject or tag values in the same command:
+    1. Prerequisites: No tutor in the list of tutor profiles has the contact number `91234567` and/or email address `jane@example.com`
+       Reason: Tuto prohibits the addition of a tutor whose contact number and/or email address already exists within the current list of tutor profiles.
     2. Test case: `add n/Jane Smith p/91234567 e/jane@example.com s/Math s/Math r/60`<br>
-       Expected: No person is added. An error message indicating that duplicate subject values were specified is shown.
+       Expected: No tutor is added. An error message indicating that duplicate subject values were specified is shown.
     3. Test case: `add n/Jane Smith p/91234567 e/jane@example.com s/Math r/60 t/friend t/friend`<br>
-       Expected: No person is added. An error message indicating that duplicate tag values were specified is shown.
+       Expected: No tutor is added. An error message indicating that duplicate tag values were specified is shown.
 
-6. Adding a person with multiple values specified for the same field:
-    1. Prerequisites: No person in the list of tutor profiles has the contact number `91234567` and/or email address `jane@example.com`
-       Reason: Tuto prohibits the addition of a person whose contact number and/or email address already exists within the current list of tutor profiles.
+6. Adding a tutor with multiple values specified for the same field:
+    1. Prerequisites: No tutor in the list of tutor profiles has the contact number `91234567` and/or email address `jane@example.com`
+       Reason: Tuto prohibits the addition of a tutor whose contact number and/or email address already exists within the current list of tutor profiles.
     2. Test case: `add n/Jane Smith n/jon p/91234567 e/jane@example.com a/Clementi 6th Street s/Mathematics s/Korean r/60 t/friend`<br>
-       Expected: No person is added. An error message indicating that multiple values have been specified for the field `n/`
+       Expected: No tutor is added. An error message indicating that multiple values have been specified for the field `n/`
     3. Test case: `add n/Jane Smith p/91234567 p/98765443 e/jane@example.com a/Clementi 6th Street s/Mathematics s/Korean r/60 t/friend`<br>
-       Expected: No person is added. An error message indicating that multiple values have been specified for the field `p/`
+       Expected: No tutor is added. An error message indicating that multiple values have been specified for the field `p/`
     4. Test case: `add n/Jane Smith p/91234567 e/jane@example.com e/jon@example.com a/Clementi 6th Street s/Mathematics s/Korean r/60 t/friend`<br>
-       Expected: No person is added. An error message indicating that multiple values have been specified for the field `e/`
+       Expected: No tutor is added. An error message indicating that multiple values have been specified for the field `e/`
     5. Test case: `add n/Jane Smith p/91234567 e/jane@example.com a/Clementi 6th Street a/Clementi 7th Street s/Mathematics s/Korean r/60 t/friend`<br>
-       Expected: No person is added. An error message indicating that multiple values have been specified for the field `a/`
+       Expected: No tutor is added. An error message indicating that multiple values have been specified for the field `a/`
     6. Test case: `add n/Jane Smith p/91234567 e/jane@example.com a/Clementi 6th Street s/Mathematics s/Korean r/60 r/70 t/friend`<br>
-       Expected: No person is added. An error message indicating that multiple values have been specified for the field `r/`
+       Expected: No tutor is added. An error message indicating that multiple values have been specified for the field `r/`
 
-7. Adding a person with inappropriate value for `phone number` field:
-    1. Prerequisites: No person in the list of tutor profiles has the contact number `91234567` and/or email address `jane@example.com`
-       Reason: Tuto prohibits the addition of a person whose contact number and/or email address already exists within the current list of tutor profiles.
+7. Adding a tutor with inappropriate value for `phone number` field:
+    1. Prerequisites: No tutor in the list of tutor profiles has the contact number `91234567` and/or email address `jane@example.com`
+       Reason: Tuto prohibits the addition of a tutor whose contact number and/or email address already exists within the current list of tutor profiles.
     2. Test case: `add n/Jane Smith p/91s34567 e/jane@example.com a/Clementi 6th Street s/Mathematics s/Korean r/60 t/friend`<br>
-       Expected: No person is added. An error message indicating that phone number can only contain numbers and should be at least 3 digits long is shown
+       Expected: No tutor is added. An error message indicating that phone number can only contain numbers and should be at least 3 digits long is shown
     3. Test case: `add n/Jane Smith p/91 e/jane@example.com a/Clementi 6th Street s/Mathematics s/Korean r/60 t/friend`<br>
-       Expected: No person is added. An error message indicating that phone number can only contain numbers and should be at least 3 digits long is shown
+       Expected: No tutor is added. An error message indicating that phone number can only contain numbers and should be at least 3 digits long is shown
 
-8. Adding a person with inappropriate value for `rate` field:
-    1. Prerequisites: No person in the list of tutor profiles has the contact number `91234567` and email address `jane@example.com`
-       Reason: Tuto prohibits the addition of a person whose contact number and/or email address already exists within the current list of tutor profiles.
+8. Adding a tutor with inappropriate value for `rate` field:
+    1. Prerequisites: No tutor in the list of tutor profiles has the contact number `91234567` and email address `jane@example.com`
+       Reason: Tuto prohibits the addition of a tutor whose contact number and/or email address already exists within the current list of tutor profiles.
     2. Test case: `add n/Jane Smith p/91234567 e/jane@example.com a/Clementi 6th Street s/Mathematics r/s t/friend`<br>
-       Expected: No person is added. An error message indicating that rates can only contain numbers is shown
+       Expected: No tutor is added. An error message indicating that rates can only contain numbers is shown
     3. Test case: `add n/Jane Smith p/91234567 e/jane@example.com a/Clementi 6th Street s/Mathematics r/-10 t/friend`<br>
-       Expected: No person is added. An error message indicating that the rate cannot be negative is shown
+       Expected: No tutor is added. An error message indicating that the rate cannot be negative is shown
 
-9. Adding a person with duplicate phone or email
-    1. Prerequisites: A person with phone number `91234567` already exists in the list, and a person with email `jane@example.com` already exists in the list.
+9. Adding a tutor with duplicate phone or email
+    1. Prerequisites: A tutor with phone number `91234567` already exists in the list, and A tutor with email `jane@example.com` already exists in the list.
     2. Test case: `add n/John Doe p/91234567 e/john@example.com s/Math r/50`<br>
-       Expected: No person is added. An error message indicating that a tutor with that phone number already exists is shown.
+       Expected: No tutor is added. An error message indicating that a tutor with that phone number already exists is shown.
     3. Test case: `add n/John Doe p/98765432 e/jane@example.com s/Math r/50`<br>
-       Expected: No person is added. An error message indicating that a tutor with that email already exists is shown.
+       Expected: No tutor is added. An error message indicating that a tutor with that email already exists is shown.
 
-### Deleting a person
+### Deleting a tutor
 
-1. Deleting a person while all persons are being shown
-    1. Prerequisites: List all persons using the `list` command. Multiple persons in the list.
+1. Deleting a tutor while all tutors are being shown
+    1. Prerequisites: List all tutors using the `list` command. Multiple tutors in the list.
     2. Test case: `delete 1`<br>
-       Expected: First contact is deleted from the list. Details of the deleted contact shown in the status message. Timestamp in the status bar is updated.
+       Expected: First tutor profile is deleted from the list. Details of the deleted tutor profile shown in the status message. Timestamp in the status bar is updated.
     3. Test case: `delete 0`<br>
-       Expected: No person is deleted. Error details shown in the status message. Status bar remains the same.
+       Expected: No tutor is deleted. Error details shown in the status message. Status bar remains the same.
     4. Other incorrect delete commands to try: `delete`, `delete x`, `...` (where x is larger than the list size)<br>
        Expected: Similar to previous.
 
-### Editing a person
+### Editing a tutor
 
-1. Editing a person with no fields given
-    1. Prerequisites: List all persons using the `list` command. At least one person exists in the list.
+1. Editing a tutor with no fields given
+    1. Prerequisites: List all tutors using the `list` command. At least one tutor exists in the list.
     2. Test case: `edit 1`<br>
-       Expected: No person is edited. An error message that at least one field to edit must be provided is shown.
+       Expected: No tutor is edited. An error message that at least one field to edit must be provided is shown.
 
-2. Editing a person by updating one field at a time
-    1. Editing a person's name
-        1. Prerequisites: List all persons using the `list` command. At least one person exists in the list.
+2. Editing a tutor by updating one field at a time
+    1. Editing a tutor's name
+        1. Prerequisites: List all tutors using the `list` command. At least one tutor exists in the list.
         2. Test case: `edit 1 n/Jane Doe`<br>
            Expected: The first tutor's name is updated to `Jane Doe`. A success message showing the updated tutor details is displayed.
-    2. Editing a person's phone number
-        1. Prerequisites: List all persons using the `list` command. No other person in the list has the phone number `91234567`.
+    2. Editing a tutor's phone number
+        1. Prerequisites: List all tutors using the `list` command. No other tutor in the list has the phone number `91234567`.
         2. Test case: `edit 1 p/91234567`<br>
            Expected: The first tutor's phone number is updated to `91234567`. A success message showing the updated tutor details is displayed.
-    3. Editing a person's email
-        1. Prerequisites: List all persons using the `list` command. No other person in the list has the email `janedoe@example.com`.
+    3. Editing a tutor's email
+        1. Prerequisites: List all tutors using the `list` command. No other tutor in the list has the email `janedoe@example.com`.
         2. Test case: `edit 1 e/janedoe@example.com`<br>
            Expected: The first tutor's email is updated to `janedoe@example.com`. A success message showing the updated tutor details is displayed.
-    4. Editing a person's rate
-        1. Prerequisites: List all persons using the `list` command. At least one person exists in the list.
+    4. Editing a tutor's rate
+        1. Prerequisites: List all tutors using the `list` command. At least one tutor exists in the list.
         2. Test case: `edit 1 r/60`<br>
            Expected: The first tutor's rate is updated to `60`. A success message showing the updated tutor details is displayed.
-    5. Editing a person's subject
-        1. Prerequisites: List all persons using the `list` command. At least one person exists in the list.
+    5. Editing a tutor's subject
+        1. Prerequisites: List all tutors using the `list` command. At least one tutor exists in the list.
         2. Test case: `edit 1 s/Physics`<br>
            Expected: The first tutor's subject is updated to `Physics`. A success message showing the updated tutor details is displayed.
         3. Test case: `edit 1 s/Math s/English`<br>
            Expected: The first tutor's subjects are replaced and overwritten with `Math` and `English`. A success message showing the updated tutor details is displayed.
-3. Editing a person with missing values for required fields
-    1. Prerequisites: List all persons using the `list` command. At least one person exists in the list.
+3. Editing a tutor with missing values for required fields
+    1. Prerequisites: List all tutors using the `list` command. At least one tutor exists in the list.
     2. Test case: `edit 1 n/`<br>
-       Expected: No person is edited. An error message indicating that the name cannot be blank is shown.
+       Expected: No tutor is edited. An error message indicating that the name cannot be blank is shown.
     3. Test case: `edit 1 p/`<br>
-       Expected: No person is edited. An error message indicating that the phone number should be at least 3 digits long.
+       Expected: No tutor is edited. An error message indicating that the phone number should be at least 3 digits long.
     4. Test case: `edit 1 e/`<br>
-       Expected: No person is edited. An error message indicating that the email should be of the format `local-part@domain` is shown.
+       Expected: No tutor is edited. An error message indicating that the email should be of the format `local-part@domain` is shown.
     5. Test case: `edit 1 r/`<br>
-       Expected: No person is edited. An error message indicating that the rate cannot be blank is shown.
+       Expected: No tutor is edited. An error message indicating that the rate cannot be blank is shown.
     6. Test case: `edit 1 s/`<br>
-       Expected: No person is edited. An error message indicating that the subject cannot be blank is shown.
-4. Editing a person with optional fields
-    1. Editing a person's address
-        1. Prerequisites: List all persons using the `list` command. At least one person exists in the list.
+       Expected: No tutor is edited. An error message indicating that the subject cannot be blank is shown.
+4. Editing a tutor with optional fields
+    1. Editing a tutor's address
+        1. Prerequisites: List all tutors using the `list` command. At least one tutor exists in the list.
         2. Test case: `edit 1 a/Clementi Ave 3`<br>
            Expected: The first tutor's address is updated to `Clementi Ave 3`. A success message showing the updated tutor details is displayed.
-    2. Editing a person's tag
-        1. Prerequisites: List all persons using the `list` command. At least one person exists in the list.
+    2. Editing a tutor's tag
+        1. Prerequisites: List all tutors using the `list` command. At least one tutor exists in the list.
         2. Test case: `edit 1 t/friend`<br>
            Expected: The first tutor's tags are replaced and overwritten with only `friend`. A success message showing the updated tutor details is displayed.
     3. Removing an existing address
-        1. Prerequisites: List all persons using the `list` command. The first tutor currently has an address.
+        1. Prerequisites: List all tutors using the `list` command. The first tutor currently has an address.
         2. Test case: `edit 1 a/`<br>
            Expected: The first tutor's address is removed. A success message showing the updated tutor details is displayed. The tutor card shows `Address:` with no value.
     4. Removing an existing tag
-        1. Prerequisites: List all persons using the `list` command. The first tutor currently has at least one tag.
+        1. Prerequisites: List all tutors using the `list` command. The first tutor currently has at least one tag.
         2. Test case: `edit 1 t/`<br>
            Expected: The first tutor's existing tags are removed. A success message showing the updated tutor details is displayed. No tags are shown on the tutor card.
-5. Editing multiple fields of a person
-    1. Prerequisites: List all persons using the `list` command. No other person in the list has the phone number `91234567` and email `janedoe@example.com`.
+5. Editing multiple fields of a tutor
+    1. Prerequisites: List all tutors using the `list` command. No other tutor in the list has the phone number `91234567` and email `janedoe@example.com`.
     2. Test case: `edit 1 n/Jane Doe p/91234567 e/janedoe@example.com r/60 a/Clementi Ave 3`<br>
        Expected: The specified fields of the first tutor are updated accordingly. A success message showing the updated tutor details is displayed.
-6. Editing a person's phone or email to that of an existing tutor
-    1. Prerequisites: List all persons using the `list` command. At least two persons exist in the list. Another existing tutor already has phone number `91234567` and email `jane@example.com`.
+6. Editing a tutor's phone or email to that of an existing tutor
+    1. Prerequisites: List all tutors using the `list` command. At least two tutors exist in the list. Another existing tutor already has phone number `91234567` and email `jane@example.com`.
     2. Test case: `edit 1 p/91234567`<br>
-       Expected: No person is edited. A duplicate phone number error message is shown.
+       Expected: No tutor is edited. A duplicate phone number error message is shown.
     3. Test case: `edit 1 e/jane@example.com`<br>
-       Expected: No person is edited. A duplicate email error message is shown.
-7. Editing a person with an invalid index
-    1. Prerequisites: List all persons using the `list` command. Multiple persons exist in the list, and the list size is smaller than 999.
+       Expected: No tutor is edited. A duplicate email error message is shown.
+7. Editing a tutor with an invalid index
+    1. Prerequisites: List all tutors using the `list` command. Multiple tutors exist in the list, and the list size is smaller than 999.
     2. Test case: `edit 0 n/Jane Doe`<br>
-       Expected: No person is edited. An invalid index error message is shown.
+       Expected: No tutor is edited. An invalid index error message is shown.
     3. Test case: `edit 999 n/Jane Doe`<br>
-       Expected: No person is edited. An invalid index error message is shown.
+       Expected: No tutor is edited. An invalid index error message is shown.
     4. Other incorrect edit commands to try: `edit x`, `edit 1x n/Jane Doe`, `edit -1 n/Jane Doe`<br>
-       Expected: No person is edited. An error message that displays the correct command format is shown.
+       Expected: No tutor is edited. An error message that displays the correct command format is shown.
 8. Editing with multiple values for single-valued fields
-    1. Prerequisites: List all persons using the `list` command. At least one person exists in the list.
+    1. Prerequisites: List all tutors using the `list` command. At least one tutor exists in the list.
     2. Test case: `edit 1 n/Jane Doe n/Mary Doe`<br>
-       Expected: No person is edited. An error message indicating that multiple values have been specified for the field `n/` is shown.
+       Expected: No tutor is edited. An error message indicating that multiple values have been specified for the field `n/` is shown.
     3. Test case: `edit 1 p/91234567 p/98765432`<br>
-       Expected: No person is edited. An error message indicating that multiple values have been specified for the field `p/` is shown.
+       Expected: No tutor is edited. An error message indicating that multiple values have been specified for the field `p/` is shown.
     4. Test case: `edit 1 e/jane@example.com e/mary@example.com`<br>
-       Expected: No person is edited. An error message indicating that multiple values have been specified for the field `e/` is shown.
+       Expected: No tutor is edited. An error message indicating that multiple values have been specified for the field `e/` is shown.
     5. Test case: `edit 1 a/Clementi Ave 3 a/Orchard Road`<br>
-       Expected: No person is edited. An error message indicating that multiple values have been specified for the field `a/` is shown.
+       Expected: No tutor is edited. An error message indicating that multiple values have been specified for the field `a/` is shown.
     6. Test case: `edit 1 r/50 r/60`<br>
-       Expected: No person is edited. An error message indicating that multiple values have been specified for the field `r/` is shown.
-9. Editing a person with invalid field values
-    1. Prerequisites: List all persons using the `list` command. At least one person exists in the list.
+       Expected: No tutor is edited. An error message indicating that multiple values have been specified for the field `r/` is shown.
+9. Editing a tutor with invalid field values
+    1. Prerequisites: List all tutors using the `list` command. At least one tutor exists in the list.
     2. Test case: `edit 1 p/91s34567`<br>
-       Expected: No person is edited. An error message indicating that phone number can only contain numbers and should be at least 3 digits long is shown.
+       Expected: No tutor is edited. An error message indicating that phone number can only contain numbers and should be at least 3 digits long is shown.
     3. Test case: `edit 1 p/91`<br>
-       Expected: No person is edited. An error message indicating that phone number can only contain numbers and should be at least 3 digits long is shown.
+       Expected: No tutor is edited. An error message indicating that phone number can only contain numbers and should be at least 3 digits long is shown.
     4. Test case: `edit 1 e/invalid-email`<br>
-       Expected: No person is edited. An error message indicating that emails should be of the format `local-part@domain` is shown.
+       Expected: No tutor is edited. An error message indicating that emails should be of the format `local-part@domain` is shown.
     5. Test case: `edit 1 r/s`<br>
-       Expected: No person is edited. An error message indicating that rates can only contain numbers is shown.
+       Expected: No tutor is edited. An error message indicating that rates can only contain numbers is shown.
     6. Test case: `edit 1 r/-5`<br>
-       Expected: No person is edited. An error message indicating that the rate cannot be negative is shown.
-10. Editing a person without changing any actual value
-    1. Prerequisites: List all persons using the `list` command. The first tutor already has the name `Jane Doe`.
+       Expected: No tutor is edited. An error message indicating that the rate cannot be negative is shown.
+10. Editing a tutor without changing any actual value
+    1. Prerequisites: List all tutors using the `list` command. The first tutor already has the name `Jane Doe`.
     2. Test case: `edit 1 n/Jane Doe`<br>
        Expected: A success message showing the updated tutor details is displayed. The tutor profile remains unchanged.
 
-### Finding a person
+### Finding a tutor
 
 #### Negative Cases & Error Handling
 
-1. Finding when the contact list is empty
-    1. Prerequisites: Tuto must have zero Tutor contacts saved. Execute `clear` to remove all existing contacts.
+1. Finding when the tutor list is empty
+    1. Prerequisites: Tuto must have zero tutor profiles saved. Execute `clear` to remove all existing tutor profiles.
     2. Test case: `find geography`<br>
        Expected: A successful search occurs, but with no matches. The text feedback area is hidden. The blue search query bar should show `All fields: "geography"`. Below it, the result display list in the UI shows the placeholder text `No tutors found.`.
 2. Attempting to restrict universal search with unsupported prefixes (Constraint Error)
@@ -942,34 +942,34 @@ testers are expected to do more _exploratory_ testing.
 
 #### Positive Cases (Universal Search)
 
-1. Finding persons using universal search (General keywords)
-    1. Prerequisites: Ensure the contact list has at least these two Tutors with these specific attributes (the rest can be any permitted value):
+1. Finding tutors using universal search (General keywords)
+    1. Prerequisites: Ensure the tutor list has at least these two Tutors with these specific attributes (the rest can be any permitted value):
     - Name: "John Doe", Subject: "Math", Rate: "50"
         - Name: "Jane Doe", Subject: "Physics", Rate: "60"
     2. Test case: `find Doe`<br>
        Expected: The text feedback area is hidden. The blue search query bar should appear and show `All fields: "Doe"`. Below it, the list is updated to display the full tutor profiles of both 'John Doe' and 'Jane Doe' (and any other tutor profiles that contain the word `Doe`).
-2. Finding a person using universal search with no matching results
-    1. Prerequisites: Ensure the contact list does not have anyone teaching "Chemistry" or containing the word "Chemistry" in any attribute field.
+2. Finding a tutor using universal search with no matching results
+    1. Prerequisites: Ensure the tutor list does not have anyone teaching "Chemistry" or containing the word "Chemistry" in any attribute field.
     2. Test case: `find Chemistry`<br>
        Expected: The text feedback area is hidden. The blue search query bar should show `All fields: "Chemistry"`. Below it, the result list shows the placeholder text `No tutors found.`.
 
 #### Complex Cases (Attribute Filtering & Combinations)
 
-1. Finding persons using specific attribute filtering with inequalities
-    1. Prerequisites: Ensure the contact list has at least these Tutors with these specific attributes (the rest can be any permitted value subject to uniqueness constraint):
+1. Finding tutors using specific attribute filtering with inequalities
+    1. Prerequisites: Ensure the tutor list has at least these Tutors with these specific attributes (the rest can be any permitted value subject to uniqueness constraint):
     - Name: "Alice", Subject: "Physics", Rate: "40"
         - Name: "Bob", Subject: "Physics", Rate: "70"
     2. Test case: `find s/Physics r/<50`<br>
        Expected: The text feedback area is hidden. The blue search query bar should show `Subject: "Physics" • Rate: "<50"`. The result display list should show the tutor profile for "Alice" (and other tutor profiles if condition matches), as Bob is filtered out due to his rate.
-2. Finding persons using multiple instances of the same attribute type (AND / OR Logic checks)
-    1. Prerequisites: Ensure the contact list has at least these Tutors with these specific attributes (the rest can be any permitted value subject to uniqueness constraint):
+2. Finding tutors using multiple instances of the same attribute type (AND / OR Logic checks)
+    1. Prerequisites: Ensure the tutor list has at least these Tutors with these specific attributes (the rest can be any permitted value subject to uniqueness constraint):
     - Name: "Charlie", Subject: "Math", "Chemistry"
         - Name: "David", Subject: "Chemistry", "Physics"
         - Name: "David", Subject: "Math"
     2. Test case: `find n/Charlie David s/Math s/Chemistry`<br>
        Expected: The text feedback area is hidden. The blue search query bar should show `Name: "Charlie, David" • Subject: "Math, Chemistry"`. The result list displays only the tutor profile for "Charlie". The name prefix evaluates multiple words via OR logic (allowing either Charlie or David), but the multiple subject prefixes evaluate via AND logic simultaneously (requiring both Math AND Chemistry to be taught by the same tutor to pass).
-3. Finding a person combining universal search and specific attribute filtering (AND Logic)
-    1. Prerequisites: Ensure the contact list has at least these Tutors with these specific attributes (the rest can be any permitted value subject to uniqueness constraint):
+3. Finding a tutor combining universal search and specific attribute filtering (AND Logic)
+    1. Prerequisites: Ensure the tutor list has at least these Tutors with these specific attributes (the rest can be any permitted value subject to uniqueness constraint):
     - Name: "Eve", Subject: "Math", Rate: "40"
         - Name: "Eve", Subject: "Physics", Rate: "60"
     2. Test case: `find Eve r/40-50`<br>
@@ -990,7 +990,7 @@ testers are expected to do more _exploratory_ testing.
     4. Test case: `find n/ [any amount of whitespaces given] Alice [any amount of whitespaces given] r/ [any amount of whitespaces given] 50`<br>
        Expected: A successful search occurs. Arbitrary amounts of spaces between prefixes and values do not affect the parsing. The blue search query bar shows `Name: "Alice" • Rate: "50"`.
 3. Finding with different ordering of parameters
-    1. Prerequisites: Ensure the contact list has at least one Tutor with the name "Alice", teaching "Math", with a rate of "50".
+    1. Prerequisites: Ensure the tutor list has at least one Tutor with the name "Alice", teaching "Math", with a rate of "50".
     2. Test case: `find r/50 s/Math n/Alice`<br>
        Expected: A successful search occurs. The ordering of prefixes does not matter. The blue search query bar shows `Name: "Alice" • Subject: "Math" • Rate: "50"`. The result list displays the matching tutor profile.
     3. Test case: `find s/Math r/50 n/Alice`<br>
@@ -1012,7 +1012,7 @@ testers are expected to do more _exploratory_ testing.
     2. Test case: `find r/>9999999999999`<br>
        Expected: The system should not crash. Rate bounds for `find` are parsed as decimal values, the search proceeds with the given bound or shows a format error if the value is invalid.
 7. Prefix case sensitivity and preamble swallowing (Mistyping prefixes)
-    1. Prerequisites: Ensure the contact list has at least one Tutor with the name "Alice".
+    1. Prerequisites: Ensure the tutor list has at least one Tutor with the name "Alice".
     2. Test case: `find N/Alice`<br>
        Expected: The text feedback area is hidden. Because `N/` (capitalized) is not recognized as the official name prefix, the parser treats it as a generic keyword instead The blue search query bar shows `All fields: "N/Alice"`. Below it, the result list will show `No tutors found.` (unless a tutor profile literally contains "N/Alice").
 8. Regex and Special Character injection attempts
@@ -1020,7 +1020,7 @@ testers are expected to do more _exploratory_ testing.
     2. Test case: `find *[a-z]+* ?.* {}`<br>
        Expected: The system should not crash due to regex compilation errors or illegal character parsing. The text feedback area is hidden. The blue search query bar safely escapes and displays `All fields: "*[a-z]+* ?.* {}"`. The result list predictably shows `No tutors found.` as it interprets the inputs as exact string literals rather than executable regular expressions.
 9. Conflicting valid constraints (Mathematically/Logically impossible sets)
-    1. Prerequisites: Ensure the contact list has a tutor profile named "Jane" with a rate of `50` and subject `Math`.
+    1. Prerequisites: Ensure the tutor list has a tutor profile named "Jane" with a rate of `50` and subject `Math`.
     2. Test case: `find Jane r/<30`<br>
        Expected: A successful search occurs. The text feedback area is hidden. The blue search query bar shows `All fields: "Jane" • Rate: "<30"`. The result list displays `No tutors found.`. This definitively proves that even if the universal search positively matches the tutor profile "Jane", the restrictive rate filter acts as a pure AND gate to forcefully negate the inclusion, ensuring no false positives slip through.
 10. Backward slashes and parser confusion techniques
@@ -1032,7 +1032,7 @@ testers are expected to do more _exploratory_ testing.
     2. Test case: `find n/ s/Math r/50`<br>
        Expected: No search is performed. The text feedback area displays a constraint error stating that the Name cannot be empty (or violates validation rules). The parser successfully detects the missing value for `n/` despite `s/` immediately following it. The blue search query bar and result list remain hidden.
 12. Rate attribute formatting anomalies (Zero-padding and negatives)
-    1. Prerequisites: Ensure the contact list contains a tutor profile with a rate of `0`.
+    1. Prerequisites: Ensure the tutor list contains a tutor profile with a rate of `0`.
     2. Test case: `find r/00000000`<br>
        Expected: A successful search occurs. The parser evaluates the heavily padded string as the numeric value `0`. The blue search query bar shows `Rate: "00000000"` (or mapped equivalent) and lists the matched tutor profiles matching the exact rate of 0.
     3. Test case: `find r/-5` or `find r/--50`<br>
