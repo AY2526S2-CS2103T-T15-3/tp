@@ -76,7 +76,8 @@
         "3-application-window-may-open-off-screen": "3. Application window may open off-screen",
         "4-ui-constraints-for-window-resizing": "4. UI constraints for window resizing",
         "5-truncated-feedback-for-long-search-queries": "5. Truncated feedback for long search queries",
-        "6-inconsistent-error-messages-for-invalid-edit-commands": "6. Inconsistent error messages for invalid edit commands"
+        "6-inconsistent-error-messages-for-invalid-edit-commands": "6. Inconsistent error messages for invalid edit commands",
+        "7-reverting-list-sort-state-back-to-based-on-tutor-insertion-order": "7. Reverting list sort state back to based on Tutor Insertion order."
       },
       "headingKeywords": {}
     },
