@@ -250,7 +250,7 @@ Adds a new Tutor Profile to Tuto.
 2. A person can have any number of tags (including 0) and multiple subjects.
 3. Command parameters can be entered in any order.
 4. You cannot repeat the same subject or tag value in one command, even if the casing is different (e.g. s/Math s/math or t/friend t/friend is rejected).
-5. Rate must be zero or positive; decimals are allowed.
+5. Rate must be zero or positive; decimals are allowed. Negative rates are rejected.
 </box>
 
 ---
