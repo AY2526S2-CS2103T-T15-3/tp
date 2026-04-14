@@ -1150,3 +1150,7 @@ Specifically:
 - `edit 1` is treated as a valid index format but refers to a non-existent entry in the empty list.
 
 This distinction may be unintuitive to users, and future versions may standardise the error messaging for such cases.
+
+### 7. Reverting list sort state back to based on Tutor Insertion order.
+A future enhancement will be done to gives users a command to change the sorting behaviour back to the original sort state of insertion order. For the user to do this known, they have to close and re-launch Tuto.
+
